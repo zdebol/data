@@ -1,0 +1,26 @@
+language: php
+
+matrix:
+    include:
+        - php: 7.1
+          env:
+            - COMPOSER_FLAGS='--prefer-lowest'
+        - php: 7.4
+        - php: 8.0
+
+sudo: false
+
+cache:
+    directories:
+        - $HOME/.composer/cache
+        - vendor
+
+before_script:
+    - phpenv config-rm xdebug.ini
+    - composer validate
+    - composer update $COMPOSER_FLAGS
+
+script:
+    - vendor/bin/phpcs
+    - vendor/bin/phpstan analyze -c phpstan.neon
+    - vendor/bin/phpunit

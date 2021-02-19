@@ -1,0 +1,11 @@
+includes:
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+parameters:
+    treatPhpDocTypesAsCertain: false
+    level: 3
+    paths:
+        - src
+        - tests
+    excludePaths:
+        - src/Bundle/DataGridBundle/DependencyInjection/Configuration.php
+        - src/Bundle/DataSourceBundle/DependencyInjection/Configuration.php
