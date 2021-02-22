@@ -99,6 +99,7 @@ class DoctrineDriverBasicTest extends TestCase
     {
         $em = $this->getEntityManagerMock();
         $qb = $this->getQueryBuilderMock($em);
+        $qb->method('getRootAliases')->willReturn(['e']);
         new DoctrineDriver([], $em, 'entity');
         new DoctrineDriver([], $em, $qb);
     }

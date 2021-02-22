@@ -205,7 +205,7 @@ class DataSource implements DataSourceInterface
 
         //PreBindParameters event.
         $event = new DataSourceEvent\ParametersEventArgs($this, $parameters);
-        $this->eventDispatcher->dispatch(DataSourceEvents::PRE_BIND_PARAMETERS, $event);
+        $this->eventDispatcher->dispatch($event, DataSourceEvents::PRE_BIND_PARAMETERS);
         $parameters = $event->getParameters();
 
         if (!is_array($parameters)) {
@@ -218,7 +218,7 @@ class DataSource implements DataSourceInterface
 
         //PostBindParameters event.
         $event = new DataSourceEvent\DataSourceEventArgs($this);
-        $this->eventDispatcher->dispatch(DataSourceEvents::POST_BIND_PARAMETERS, $event);
+        $this->eventDispatcher->dispatch($event, DataSourceEvents::POST_BIND_PARAMETERS);
     }
 
     /**
@@ -238,7 +238,7 @@ class DataSource implements DataSourceInterface
 
         //PreGetResult event.
         $event = new DataSourceEvent\DataSourceEventArgs($this);
-        $this->eventDispatcher->dispatch(DataSourceEvents::PRE_GET_RESULT, $event);
+        $this->eventDispatcher->dispatch($event, DataSourceEvents::PRE_GET_RESULT);
 
         $result = $this->driver->getResult($this->fields, $this->getFirstResult(), $this->getMaxResults());
         if (false === is_object($result)) {
@@ -265,7 +265,7 @@ class DataSource implements DataSourceInterface
 
         // PostGetResult event.
         $event = new DataSourceEvent\ResultEventArgs($this, $result);
-        $this->eventDispatcher->dispatch(DataSourceEvents::POST_GET_RESULT, $event);
+        $this->eventDispatcher->dispatch($event, DataSourceEvents::POST_GET_RESULT);
         $result = $event->getResult();
 
         // Creating cache.
@@ -353,7 +353,7 @@ class DataSource implements DataSourceInterface
 
         //PreBuildView event.
         $event = new DataSourceEvent\ViewEventArgs($this, $view);
-        $this->eventDispatcher->dispatch(DataSourceEvents::PRE_BUILD_VIEW, $event);
+        $this->eventDispatcher->dispatch($event, DataSourceEvents::PRE_BUILD_VIEW);
 
         foreach ($this->fields as $key => $field) {
             $view->addField($field->createView());
@@ -363,7 +363,7 @@ class DataSource implements DataSourceInterface
 
         //PostBuildView event.
         $event = new DataSourceEvent\ViewEventArgs($this, $view);
-        $this->eventDispatcher->dispatch(DataSourceEvents::POST_BUILD_VIEW, $event);
+        $this->eventDispatcher->dispatch($event, DataSourceEvents::POST_BUILD_VIEW);
 
         return $this->view;
     }
@@ -382,7 +382,7 @@ class DataSource implements DataSourceInterface
 
         //PreGetParameters event.
         $event = new DataSourceEvent\ParametersEventArgs($this, $parameters);
-        $this->eventDispatcher->dispatch(DataSourceEvents::PRE_GET_PARAMETERS, $event);
+        $this->eventDispatcher->dispatch($event, DataSourceEvents::PRE_GET_PARAMETERS);
         $parameters = $event->getParameters();
 
         foreach ($this->fields as $field) {
@@ -391,7 +391,7 @@ class DataSource implements DataSourceInterface
 
         //PostGetParameters event.
         $event = new DataSourceEvent\ParametersEventArgs($this, $parameters);
-        $this->eventDispatcher->dispatch(DataSourceEvents::POST_GET_PARAMETERS, $event);
+        $this->eventDispatcher->dispatch($event, DataSourceEvents::POST_GET_PARAMETERS);
         $parameters = $event->getParameters();
 
         $cleanfunc = function (array $array) use (&$cleanfunc) {

@@ -221,13 +221,13 @@ abstract class DriverAbstract implements DriverInterface
 
         //preGetResult event.
         $event = new DriverEvent\DriverEventArgs($this, $fields);
-        $this->getEventDispatcher()->dispatch(DriverEvents::PRE_GET_RESULT, $event);
+        $this->getEventDispatcher()->dispatch($event, DriverEvents::PRE_GET_RESULT);
 
         $result = $this->buildResult($fields, $first, $max);
 
         //postGetResult event.
         $event = new DriverEvent\ResultEventArgs($this, $fields, $result);
-        $this->getEventDispatcher()->dispatch(DriverEvents::POST_GET_RESULT, $event);
+        $this->getEventDispatcher()->dispatch($event, DriverEvents::POST_GET_RESULT);
         $result = $event->getResult();
 
         return $result;

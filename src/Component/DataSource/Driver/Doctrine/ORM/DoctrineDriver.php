@@ -76,7 +76,8 @@ class DoctrineDriver extends DriverAbstract
         if (isset($alias)) {
             $this->alias = (string) $alias;
         } elseif (true === $entity instanceof QueryBuilder) {
-            $this->alias = $entity->getRootAlias();
+            $rootAliases = $entity->getRootAliases();
+            $this->alias = reset($rootAliases);
         } else {
             $this->alias = self::DEFAULT_ENTITY_ALIAS;
         }

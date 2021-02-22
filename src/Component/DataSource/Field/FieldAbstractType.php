@@ -158,7 +158,7 @@ abstract class FieldAbstractType implements FieldTypeInterface
 
         //PreBindParameter event.
         $event = new FieldEvent\ParameterEventArgs($this, $parameter);
-        $this->getEventDispatcher()->dispatch(FieldEvents::PRE_BIND_PARAMETER, $event);
+        $this->getEventDispatcher()->dispatch($event, FieldEvents::PRE_BIND_PARAMETER);
         $parameter = $event->getParameter();
 
         $datasourceName = $this->getDataSource() ? $this->getDataSource()->getName() : null;
@@ -175,7 +175,7 @@ abstract class FieldAbstractType implements FieldTypeInterface
 
         //PreBindParameter event.
         $event = new FieldEvent\FieldEventArgs($this);
-        $this->getEventDispatcher()->dispatch(FieldEvents::POST_BIND_PARAMETER, $event);
+        $this->getEventDispatcher()->dispatch($event, FieldEvents::POST_BIND_PARAMETER);
     }
 
     public function getParameter(&$parameters)
@@ -195,7 +195,7 @@ abstract class FieldAbstractType implements FieldTypeInterface
 
         //PostGetParameter event.
         $event = new FieldEvent\ParameterEventArgs($this, $parameter);
-        $this->getEventDispatcher()->dispatch(FieldEvents::POST_GET_PARAMETER, $event);
+        $this->getEventDispatcher()->dispatch($event, FieldEvents::POST_GET_PARAMETER);
         $parameter = $event->getParameter();
 
         $parameters = array_merge_recursive($parameters, $parameter);
@@ -248,7 +248,7 @@ abstract class FieldAbstractType implements FieldTypeInterface
 
         //PostBuildView event.
         $event = new FieldEvent\ViewEventArgs($this, $view);
-        $this->getEventDispatcher()->dispatch(FieldEvents::POST_BUILD_VIEW, $event);
+        $this->getEventDispatcher()->dispatch($event, FieldEvents::POST_BUILD_VIEW);
 
         return $view;
     }
