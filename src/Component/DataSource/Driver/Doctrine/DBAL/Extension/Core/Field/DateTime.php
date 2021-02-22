@@ -9,7 +9,7 @@
 
 namespace FSi\Component\DataSource\Driver\Doctrine\DBAL\Extension\Core\Field;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use FSi\Component\DataSource\Driver\Doctrine\DBAL\DBALAbstractField;
 
 /**
@@ -26,6 +26,6 @@ class DateTime extends DBALAbstractField
 
     public function getDBALType()
     {
-        return Type::DATETIME;
+        return Types::DATETIME_IMMUTABLE;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This file is part of the FSi Component package.
  *
  * (c) Szczepan Cieslik <szczepan@fsi.pl>
@@ -11,8 +11,8 @@
 
 namespace FSi\Component\DataSource\Event\FieldEvent;
 
-use Symfony\Component\EventDispatcher\Event;
 use FSi\Component\DataSource\Field\FieldTypeInterface;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Event class for Field.
@@ -20,12 +20,12 @@ use FSi\Component\DataSource\Field\FieldTypeInterface;
 class FieldEventArgs extends Event
 {
     /**
-     * @var \FSi\Component\DataSource\Field\FieldTypeInterface
+     * @var FieldTypeInterface
      */
     private $field;
 
     /**
-     * @param \FSi\Component\DataSource\Field\FieldTypeInterface $field
+     * @param FieldTypeInterface $field
      */
     public function __construct(FieldTypeInterface $field)
     {
@@ -33,7 +33,7 @@ class FieldEventArgs extends Event
     }
 
     /**
-     * @return \FSi\Component\DataSource\Field\FieldTypeInterface
+     * @return FieldTypeInterface
      */
     public function getField()
     {

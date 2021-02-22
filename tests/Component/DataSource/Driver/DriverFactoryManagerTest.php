@@ -9,7 +9,7 @@
 
 namespace FSi\Tests\Component\DataSource\Driver;
 
-use DateTime;
+use DateTimeImmutable;
 use FSi\Component\DataSource\Driver\Collection\CollectionFactory;
 use FSi\Component\DataSource\Driver\Doctrine\DBAL\DBALFactory;
 use FSi\Component\DataSource\Driver\Doctrine\ORM;
@@ -48,6 +48,6 @@ class DriverFactoryManagerTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        new DriverFactoryManager([new DateTime()]);
+        new DriverFactoryManager([new DateTimeImmutable()]);
     }
 }

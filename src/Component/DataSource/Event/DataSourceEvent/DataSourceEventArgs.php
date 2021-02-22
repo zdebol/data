@@ -9,8 +9,8 @@
 
 namespace FSi\Component\DataSource\Event\DataSourceEvent;
 
-use Symfony\Component\EventDispatcher\Event;
 use FSi\Component\DataSource\DataSourceInterface;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Event class for DataSource.

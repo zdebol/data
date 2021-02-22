@@ -9,7 +9,7 @@
 
 namespace FSi\Tests\Component\DataSource\Driver\Collection;
 
-use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -140,7 +140,7 @@ class CollectionDriverTest extends TestCase
                     'author' => 'domain1.com',
                     'title' => 'title3',
                     'created' => [
-                        'from' => new DateTime(date('Y:m:d H:i:s', 35 * 24 * 60 * 60)),
+                        'from' => new DateTimeImmutable(date('Y:m:d H:i:s', 35 * 24 * 60 * 60)),
                     ],
                 ],
             ],
@@ -440,8 +440,8 @@ class CollectionDriverTest extends TestCase
             }
 
             // Each entity has different date of creation and one of four hours of creation.
-            $createDate = new DateTime(date('Y:m:d H:i:s', $i * 24 * 60 * 60));
-            $createTime = new DateTime(date('H:i:s', (($i % 4) + 1 ) * 60 * 60));
+            $createDate = new DateTimeImmutable(date('Y:m:d H:i:s', $i * 24 * 60 * 60));
+            $createTime = new DateTimeImmutable(date('H:i:s', (($i % 4) + 1 ) * 60 * 60));
 
             $news->setCreateDate($createDate);
             $news->setCreateTime($createTime);

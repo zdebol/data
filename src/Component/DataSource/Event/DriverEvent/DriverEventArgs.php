@@ -9,8 +9,8 @@
 
 namespace FSi\Component\DataSource\Event\DriverEvent;
 
-use Symfony\Component\EventDispatcher\Event;
 use FSi\Component\DataSource\Driver\DriverInterface;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Event class for Driver.
@@ -18,7 +18,7 @@ use FSi\Component\DataSource\Driver\DriverInterface;
 class DriverEventArgs extends Event
 {
     /**
-     * @var \FSi\Component\DataSource\Driver\DriverInterface
+     * @var DriverInterface
      */
     private $driver;
 
@@ -28,7 +28,7 @@ class DriverEventArgs extends Event
     private $fields;
 
     /**
-     * @param \FSi\Component\DataSource\Driver\DriverInterface $driver
+     * @param DriverInterface $driver
      * @param array $fields
      */
     public function __construct(DriverInterface $driver, array $fields)
@@ -38,7 +38,7 @@ class DriverEventArgs extends Event
     }
 
     /**
-     * @return \FSi\Component\DataSource\Driver\DriverInterface
+     * @return DriverInterface
      */
     public function getDriver()
     {

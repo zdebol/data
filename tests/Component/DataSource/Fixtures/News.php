@@ -9,6 +9,8 @@
 
 namespace FSi\Tests\Component\DataSource\Fixtures;
 
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -45,12 +47,12 @@ class News
     private $content;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime_immutable")
      */
     private $create_date;
 
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="time_immutable")
      */
     private $create_time;
 
@@ -177,7 +179,7 @@ class News
     /**
      * Set create date.
      *
-     * @param \DateTime $createDate
+     * @param DateTimeImmutable $createDate
      */
     public function setCreateDate($createDate)
     {
@@ -187,7 +189,7 @@ class News
     /**
      * Get create date.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreateDate()
     {
@@ -197,7 +199,7 @@ class News
     /**
      * Set create time.
      *
-     * @param \DateTime $createTime
+     * @param DateTimeImmutable $createTime
      */
     public function setCreateTime($createTime)
     {
@@ -207,7 +209,7 @@ class News
     /**
      * Get create time.
      *
-     * @return \DateTime
+     * @return DateTimeImmutable
      */
     public function getCreateTime()
     {

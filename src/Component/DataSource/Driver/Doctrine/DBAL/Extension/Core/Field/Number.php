@@ -9,7 +9,7 @@
 
 namespace FSi\Component\DataSource\Driver\Doctrine\DBAL\Extension\Core\Field;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use FSi\Component\DataSource\Driver\Doctrine\DBAL\DBALAbstractField;
 
 /**
@@ -30,6 +30,6 @@ class Number extends DBALAbstractField
          * If the type is ommited, Doctrine will bind the value as \PDO::PARAM_STR.
          * This will result in incorrect results for some engines (like SQLite).
          */
-        return Type::INTEGER;
+        return Types::INTEGER;
     }
 }

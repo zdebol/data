@@ -9,8 +9,8 @@
 
 namespace FSi\Component\DataSource\Driver\Doctrine\ORM\Extension\Core\Field;
 
+use Doctrine\DBAL\Types\Types;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\DoctrineAbstractField;
-use Doctrine\DBAL\Types\Type;
 
 /**
  * Boolean field.
@@ -35,6 +35,6 @@ class Boolean extends DoctrineAbstractField
      */
     public function getDBALType()
     {
-        return Type::BOOLEAN;
+        return Types::BOOLEAN;
     }
 }
