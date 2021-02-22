@@ -11,7 +11,7 @@ namespace FSi\Bundle\DataSourceBundle\DataSource\Extension\Symfony\Form;
 
 use FSi\Component\DataSource\DataSourceAbstractExtension;
 use Symfony\Component\Form\FormFactory;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Form extension builds Symfony form for given datasource fields.

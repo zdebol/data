@@ -30,9 +30,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormRegistry;
 use Symfony\Component\Form\ResolvedFormTypeFactory;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
-use Symfony\Component\Translation\TranslatorInterface;
-
-use function interface_exists;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FormExtensionEntityTest extends TestCase
 {

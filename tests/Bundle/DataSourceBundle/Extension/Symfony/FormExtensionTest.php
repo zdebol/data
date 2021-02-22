@@ -23,7 +23,6 @@ use FSi\Component\DataSource\Driver\DriverInterface;
 use FSi\Component\DataSource\Event\DataSourceEvent\ViewEventArgs;
 use FSi\Component\DataSource\Event\FieldEvent;
 use FSi\Component\DataSource\Exception\DataSourceException;
-use FSi\Component\DataSource\Field\FieldAbstractExtension;
 use FSi\Component\DataSource\Field\FieldTypeInterface;
 use FSi\Component\DataSource\Field\FieldView;
 use FSi\Component\DataSource\Field\FieldViewInterface;
@@ -35,7 +34,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FormExtensionTest extends TestCase
 {

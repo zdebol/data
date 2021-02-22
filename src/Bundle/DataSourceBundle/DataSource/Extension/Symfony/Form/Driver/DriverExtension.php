@@ -12,7 +12,7 @@ namespace FSi\Bundle\DataSourceBundle\DataSource\Extension\Symfony\Form\Driver;
 use FSi\Bundle\DataSourceBundle\DataSource\Extension\Symfony\Form\Field;
 use FSi\Component\DataSource\Driver\DriverAbstractExtension;
 use Symfony\Component\Form\FormFactory;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Driver extension for form that loads fields extension.
