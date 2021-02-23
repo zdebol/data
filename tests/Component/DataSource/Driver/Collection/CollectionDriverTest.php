@@ -18,6 +18,7 @@ use Doctrine\ORM\Tools\Setup;
 use FSi\Component\DataSource\DataSource;
 use FSi\Component\DataSource\DataSourceFactory;
 use FSi\Component\DataSource\DataSourceInterface;
+use FSi\Component\DataSource\Driver\Collection\CollectionDriver;
 use FSi\Component\DataSource\Driver\Collection\CollectionFactory;
 use FSi\Component\DataSource\Driver\Collection\CollectionResult;
 use FSi\Component\DataSource\Driver\Collection\Exception\CollectionDriverException;
@@ -30,7 +31,6 @@ use FSi\Component\DataSource\Field\FieldTypeInterface;
 use FSi\Tests\Component\DataSource\Fixtures\Category;
 use FSi\Tests\Component\DataSource\Fixtures\Group;
 use FSi\Tests\Component\DataSource\Fixtures\News;
-use IteratorAggregate;
 use PHPUnit\Framework\TestCase;
 
 class CollectionDriverTest extends TestCase
@@ -344,6 +344,7 @@ class CollectionDriverTest extends TestCase
     {
         $driverFactory = $this->getCollectionFactory();
         $driver = $driverFactory->createDriver();
+        self::assertInstanceOf(CollectionDriver::class, $driver);
 
         $this->expectException(CollectionDriverException::class);
         $driver->getCriteria();

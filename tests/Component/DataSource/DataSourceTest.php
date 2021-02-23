@@ -9,6 +9,7 @@
 
 namespace FSi\Tests\Component\DataSource;
 
+use Countable;
 use Doctrine\Common\Collections\ArrayCollection;
 use FSi\Component\DataSource\DataSource;
 use FSi\Component\DataSource\DataSourceExtensionInterface;
@@ -21,6 +22,7 @@ use FSi\Component\DataSource\Exception\DataSourceException;
 use FSi\Component\DataSource\Field\FieldTypeInterface;
 use FSi\Tests\Component\DataSource\Fixtures\TestResult;
 use FSi\Tests\Component\DataSource\Fixtures\DataSourceExtension;
+use IteratorAggregate;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -220,26 +222,13 @@ class DataSourceTest extends TestCase
     /**
      * Tests exception when driver returns scalar.
      */
-    public function testWrongResult1(): void
+    public function testWrongResult(): void
     {
         $driver = $this->createDriverMock();
         $datasource = new DataSource($driver);
+        $result = $this->createMock(IteratorAggregate::class);
 
-        $driver->expects(self::once())->method('getResult')->willReturn('scalar');
-
-        $this->expectException(DataSourceException::class);
-        $datasource->getResult();
-    }
-
-    /**
-     * Tests exception when driver return object, that doesn't implement Countable and IteratorAggregate interfaces.
-     */
-    public function testWrongResult2(): void
-    {
-        $driver = $this->createDriverMock();
-        $datasource = new DataSource($driver);
-
-        $driver->expects(self::once())->method('getResult')->willReturn(new stdClass());
+        $driver->expects(self::once())->method('getResult')->willReturn($result);
 
         $this->expectException(DataSourceException::class);
         $datasource->getResult();

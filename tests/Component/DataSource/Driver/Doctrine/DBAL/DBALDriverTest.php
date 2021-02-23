@@ -42,8 +42,7 @@ class DBALDriverTest extends TestBase
     {
         $qb = $this->connection->createQueryBuilder();
 
-        new DBALDriver([], $this->connection, 'table');
-        new DBALDriver([], $this->connection, $qb);
+        new DBALDriver([], $qb, 'e');
     }
 
     /**
@@ -51,17 +50,9 @@ class DBALDriverTest extends TestBase
      */
     public function testCreationExceptionWhenExtensionIsInvalid(): void
     {
+        $qb = $this->connection->createQueryBuilder();
         $this->expectException(DataSourceException::class);
-        new DBALDriver([new stdClass()], $this->connection, 'table');
-    }
-
-    /**
-     * Checks creation exception.
-     */
-    public function testCreationExceptionWhenNoQueryBuilderAndTable(): void
-    {
-        $this->expectException(DBALDriverException::class);
-        new DBALDriver([], $this->connection, null);
+        new DBALDriver([new stdClass()], $qb, 'e');
     }
 
     /**
@@ -69,7 +60,8 @@ class DBALDriverTest extends TestBase
      */
     public function testGetResultExceptionWhenFieldIsNotDBALField(): void
     {
-        $driver = new DBALDriver([], $this->connection, 'table');
+        $qb = $this->connection->createQueryBuilder();
+        $driver = new DBALDriver([], $qb, 'e');
         $this->expectException(DBALDriverException::class);
 
         $fields = [$this->createMock(FieldTypeInterface::class)];
@@ -90,7 +82,8 @@ class DBALDriverTest extends TestBase
             $fields[] = $field;
         }
 
-        $driver = new DBALDriver([], $this->connection, 'table');
+        $qb = $this->connection->createQueryBuilder();
+        $driver = new DBALDriver([], $qb, 'e');
         $driver->getResult($fields, 0, 20);
     }
 
@@ -99,7 +92,8 @@ class DBALDriverTest extends TestBase
      */
     public function testGetQueryExceptionWhenNotInsideGetResult(): void
     {
-        $driver = new DBALDriver([], $this->connection, 'table');
+        $qb = $this->connection->createQueryBuilder();
+        $driver = new DBALDriver([], $qb, 'e');
         $this->expectException(DBALDriverException::class);
         $driver->getQueryBuilder();
     }
@@ -109,7 +103,8 @@ class DBALDriverTest extends TestBase
      */
     public function testCoreExtension(): void
     {
-        $driver = new DBALDriver([new CoreExtension()], $this->connection, 'table');
+        $qb = $this->connection->createQueryBuilder();
+        $driver = new DBALDriver([new CoreExtension()], $qb, 'e');
 
         self::assertTrue($driver->hasFieldType('text'));
         self::assertTrue($driver->hasFieldType('number'));
@@ -118,7 +113,6 @@ class DBALDriverTest extends TestBase
         self::assertTrue($driver->hasFieldType('datetime'));
         self::assertTrue($driver->hasFieldType('boolean'));
         self::assertFalse($driver->hasFieldType('wrong'));
-        self::assertFalse($driver->hasFieldType(null));
 
         $this->expectException(DataSourceException::class);
         $driver->getFieldType('wrong');
@@ -129,8 +123,9 @@ class DBALDriverTest extends TestBase
      */
     public function testExtensionsCalls(): void
     {
+        $qb = $this->connection->createQueryBuilder();
         $extension = new DBALDriverExtension();
-        $driver = new DBALDriver([], $this->connection, 'table');
+        $driver = new DBALDriver([], $qb, 'e');
         $driver->addExtension($extension);
 
         $driver->getResult([], 0, 20);
@@ -161,7 +156,8 @@ class DBALDriverTest extends TestBase
      */
     public function testCoreFields(string $type): void
     {
-        $driver = new DBALDriver([new CoreExtension()], $this->connection, 'table');
+        $qb = $this->connection->createQueryBuilder();
+        $driver = new DBALDriver([new CoreExtension()], $qb, 'e');
         self::assertTrue($driver->hasFieldType($type));
         $field = $driver->getFieldType($type);
         self::assertInstanceOf(FieldTypeInterface::class, $field);

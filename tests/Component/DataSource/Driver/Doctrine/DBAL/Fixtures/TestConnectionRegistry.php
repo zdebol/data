@@ -31,7 +31,7 @@ class TestConnectionRegistry implements ConnectionRegistry
 
     public function getConnection($name = null): ?Connection
     {
-        if ($name !== $this->getDefaultConnectionName()) {
+        if (null !== $name && $this->getDefaultConnectionName() !== $name) {
             throw new \InvalidArgumentException('invalid connection');
         }
 

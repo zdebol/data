@@ -14,12 +14,13 @@ use FSi\Component\DataSource\DataSourceInterface;
 use FSi\Component\DataSource\Event\DriverEvent;
 use FSi\Component\DataSource\Event\DriverEvents;
 use FSi\Component\DataSource\Exception\DataSourceException;
+use FSi\Component\DataSource\Field\FieldExtensionInterface;
+use FSi\Component\DataSource\Field\FieldTypeInterface;
 use IteratorAggregate;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-/**
- * {@inheritdoc}
- */
+use function array_key_exists;
+
 abstract class DriverAbstract implements DriverInterface
 {
     /**
@@ -30,26 +31,26 @@ abstract class DriverAbstract implements DriverInterface
     /**
      * Extensions.
      *
-     * @var array
+     * @var array<DriverExtensionInterface>
      */
     protected $extensions = [];
 
     /**
      * Field types.
      *
-     * @var array
+     * @var array<FieldTypeInterface>
      */
     protected $fieldTypes = [];
 
     /**
      * Fields extensions.
      *
-     * @var array
+     * @var array<string, array<FieldExtensionInterface>>
      */
     protected $fieldExtensions = [];
 
     /**
-     * @var EventDispatcher
+     * @var EventDispatcher|null
      */
     private $eventDispatcher;
 
@@ -60,7 +61,7 @@ abstract class DriverAbstract implements DriverInterface
     public function __construct(array $extensions = [])
     {
         foreach ($extensions as $extension) {
-            if (!$extension instanceof DriverExtensionInterface) {
+            if (false === $extension instanceof DriverExtensionInterface) {
                 throw new DataSourceException(sprintf(
                     'Instance of %s expected, "%s" given.',
                     DriverExtensionInterface::class,
@@ -71,102 +72,47 @@ abstract class DriverAbstract implements DriverInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setDataSource(DataSourceInterface $datasource)
+    public function setDataSource(DataSourceInterface $datasource): void
     {
         $this->datasource = $datasource;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getDataSource()
+    public function getDataSource(): DataSourceInterface
     {
         return $this->datasource;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hasFieldType($type)
+    public function hasFieldType(string $type): bool
     {
         $this->initFieldType($type);
-        return isset($this->fieldTypes[$type]);
+
+        return array_key_exists($type, $this->fieldTypes);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFieldType($type)
+    public function getFieldType(string $type): FieldTypeInterface
     {
-        if (!$this->hasFieldType($type)) {
+        if (false === $this->hasFieldType($type)) {
             throw new DataSourceException(sprintf('Unsupported field type ("%s").', $type));
         }
 
         $field = clone $this->fieldTypes[$type];
         $field->initOptions();
 
-        if (isset($this->fieldExtensions[$type])) {
+        if (true === array_key_exists($type, $this->fieldExtensions)) {
             $field->setExtensions($this->fieldExtensions[$type]);
         }
 
         return $field;
     }
 
-    /**
-     * Inits field for given type (including extending that type) and saves it as pattern for later cloning.
-     *
-     * @param string $type
-     */
-    private function initFieldType($type)
-    {
-        if (isset($this->fieldTypes[$type])) {
-            return;
-        }
-
-        $typeInstance = false;
-        foreach ($this->extensions as $extension) {
-            if ($extension->hasFieldType($type)) {
-                $typeInstance = $extension->getFieldType($type);
-                break;
-            }
-        }
-
-        if (!$typeInstance) {
-            return;
-        }
-
-        $this->fieldTypes[$type] = $typeInstance;
-
-        $ext = [];
-        foreach ($this->extensions as $extension) {
-            if ($extension->hasFieldTypeExtensions($type)) {
-                $fieldExtensions = $extension->getFieldTypeExtensions($type);
-                foreach ($fieldExtensions as $fieldExtension) {
-                    $ext[] = $fieldExtension;
-                }
-            }
-        }
-
-        $this->fieldExtensions[$type] = $ext;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getExtensions()
+    public function getExtensions(): array
     {
         return $this->extensions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function addExtension(DriverExtensionInterface $extension)
+    public function addExtension(DriverExtensionInterface $extension): void
     {
-        if (false === in_array($this->getType(), $extension->getExtendedDriverTypes())) {
+        if (false === in_array($this->getType(), $extension->getExtendedDriverTypes(), true)) {
             throw new DataSourceException(sprintf(
                 'DataSource driver extension of class %s does not support %s driver',
                 get_class($extension),
@@ -186,14 +132,30 @@ abstract class DriverAbstract implements DriverInterface
         $this->extensions[] = $extension;
     }
 
+    public function getResult(array $fields, ?int $first, ?int $max): IteratorAggregate
+    {
+        $this->initResult();
+
+        // preGetResult event.
+        $event = new DriverEvent\DriverEventArgs($this, $fields);
+        $this->getEventDispatcher()->dispatch($event, DriverEvents::PRE_GET_RESULT);
+
+        $result = $this->buildResult($fields, $first, $max);
+
+        // postGetResult event.
+        $event = new DriverEvent\ResultEventArgs($this, $fields, $result);
+        $this->getEventDispatcher()->dispatch($event, DriverEvents::POST_GET_RESULT);
+        $result = $event->getResult();
+
+        return $result;
+    }
+
     /**
      * Returns reference to EventDispatcher.
-     *
-     * @return EventDispatcher
      */
-    protected function getEventDispatcher()
+    protected function getEventDispatcher(): EventDispatcher
     {
-        if (!isset($this->eventDispatcher)) {
+        if (null === $this->eventDispatcher) {
             $this->eventDispatcher = new EventDispatcher();
         }
 
@@ -203,33 +165,51 @@ abstract class DriverAbstract implements DriverInterface
     /**
      * Initialize building results i.e. prepare DQL query or initial XPath expression object.
      */
-    abstract protected function initResult();
+    abstract protected function initResult(): void;
 
     /**
      * Build result that will be returned by getResult.
      *
-     * @param array $fields
-     * @param int $first
-     * @param int $max
+     * @param array<FieldTypeInterface> $fields
+     * @param int|null $first
+     * @param int|null $max
      * @return Countable&IteratorAggregate
      */
-    abstract protected function buildResult($fields, $first, $max);
+    abstract protected function buildResult(array $fields, ?int $first, ?int $max): IteratorAggregate;
 
-    public function getResult($fields, $first, $max)
+    /**
+     * Inits field for given type (including extending that type) and saves it as pattern for later cloning.
+     */
+    private function initFieldType(string $type): void
     {
-        $this->initResult();
+        if (true === array_key_exists($type, $this->fieldTypes)) {
+            return;
+        }
 
-        //preGetResult event.
-        $event = new DriverEvent\DriverEventArgs($this, $fields);
-        $this->getEventDispatcher()->dispatch($event, DriverEvents::PRE_GET_RESULT);
+        $typeInstance = null;
+        foreach ($this->extensions as $extension) {
+            if ($extension->hasFieldType($type)) {
+                $typeInstance = $extension->getFieldType($type);
+                break;
+            }
+        }
 
-        $result = $this->buildResult($fields, $first, $max);
+        if (null === $typeInstance) {
+            return;
+        }
 
-        //postGetResult event.
-        $event = new DriverEvent\ResultEventArgs($this, $fields, $result);
-        $this->getEventDispatcher()->dispatch($event, DriverEvents::POST_GET_RESULT);
-        $result = $event->getResult();
+        $this->fieldTypes[$type] = $typeInstance;
 
-        return $result;
+        $ext = [];
+        foreach ($this->extensions as $extension) {
+            if ($extension->hasFieldTypeExtensions($type)) {
+                $fieldExtensions = $extension->getFieldTypeExtensions($type);
+                foreach ($fieldExtensions as $fieldExtension) {
+                    $ext[] = $fieldExtension;
+                }
+            }
+        }
+
+        $this->fieldExtensions[$type] = $ext;
     }
 }

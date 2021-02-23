@@ -35,29 +35,8 @@ class CollectionResult implements Countable, IteratorAggregate, ArrayAccess
      */
     private $collection;
 
-    /**
-     * @param array|Traversable|Selectable $collection
-     * @param Criteria $criteria
-     */
-    public function __construct($collection, Criteria $criteria)
+    public function __construct(Selectable $collection, Criteria $criteria)
     {
-        if (false === $collection instanceof Selectable) {
-            if ($collection instanceof Traversable) {
-                $collection = new ArrayCollection(iterator_to_array($collection));
-            } elseif (is_array($collection)) {
-                $collection = new ArrayCollection($collection);
-            } else {
-                throw new InvalidArgumentException(
-                    sprintf(
-                        'Provided collection type "%s" should be %s or %s or array',
-                        get_class($collection),
-                        Selectable::class,
-                        Traversable::class
-                    )
-                );
-            }
-        }
-
         $this->collection = $collection->matching($criteria);
 
         $countCriteria = clone $criteria;
@@ -66,7 +45,7 @@ class CollectionResult implements Countable, IteratorAggregate, ArrayAccess
         $this->count = $collection->matching($countCriteria)->count();
     }
 
-    public function count()
+    public function count(): int
     {
         return $this->count;
     }
