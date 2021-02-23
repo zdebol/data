@@ -9,6 +9,7 @@
 
 namespace FSi\Tests\Component\DataSource\Extension\Core;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use FSi\Component\DataSource\DataSourceFactory;
 use FSi\Component\DataSource\Driver\Collection\CollectionFactory;
 use FSi\Component\DataSource\Driver\Collection\Extension\Core\CoreExtension;
@@ -58,7 +59,7 @@ class PaginationExtensionTest extends TestCase
             $datasource = $this->getMockBuilder(DataSource::class)->setConstructorArgs([$driver])->getMock();
 
             $datasource->method('getName')->willReturn('datasource');
-            $datasource->method('getResult')->willReturn([]);
+            $datasource->method('getResult')->willReturn(new ArrayCollection());
             $datasource->method('getMaxResults')->willReturn($maxResults);
             $datasource->method('getFirstResult')->willReturn($firstResult);
 
