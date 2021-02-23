@@ -38,14 +38,14 @@ class FormExtension extends DataSourceAbstractExtension
         $this->translator = $translator;
     }
 
-    public function loadDriverExtensions()
+    public function loadDriverExtensions(): array
     {
         return [
             new Driver\DriverExtension($this->formFactory, $this->translator),
         ];
     }
 
-    public function loadSubscribers()
+    public function loadSubscribers(): array
     {
         return [
             new EventSubscriber\Events(),

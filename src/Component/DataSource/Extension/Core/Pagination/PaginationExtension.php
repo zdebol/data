@@ -26,10 +26,7 @@ class PaginationExtension extends DataSourceAbstractExtension
      */
     public const PARAMETER_MAX_RESULTS = 'max_results';
 
-    /**
-     * {@inheritdoc}
-     */
-    public function loadSubscribers()
+    public function loadSubscribers(): array
     {
         return [
             new EventSubscriber\Events(),

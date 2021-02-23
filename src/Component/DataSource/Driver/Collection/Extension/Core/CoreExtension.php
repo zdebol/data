@@ -16,18 +16,12 @@ use FSi\Component\DataSource\Driver\DriverAbstractExtension;
  */
 class CoreExtension extends DriverAbstractExtension
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getExtendedDriverTypes()
+    public function getExtendedDriverTypes(): array
     {
         return ['collection'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function loadFieldTypes()
+    protected function loadFieldTypes(): array
     {
         return [
             new Field\Text(),

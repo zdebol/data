@@ -326,13 +326,10 @@ class CollectionDriverTest extends TestCase
     public function testExceptions(): void
     {
         $datasource = $this->prepareArrayDataSource();
-        $field = $this->createMock(FieldTypeInterface::class);
 
-        $field
-            ->expects(self::any())
-            ->method('getName')
-            ->willReturn('example')
-        ;
+        $field = $this->createMock(FieldTypeInterface::class);
+        $field->method('getName')->willReturn('example');
+        $field->method('getExtensions')->willReturn([]);
 
         $datasource->addField($field);
 

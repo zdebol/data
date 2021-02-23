@@ -9,23 +9,14 @@
 
 namespace FSi\Component\DataSource;
 
-/**
- * {@inheritdoc}
- */
 abstract class DataSourceAbstractExtension implements DataSourceExtensionInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function loadSubscribers()
+    public function loadSubscribers(): array
     {
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function loadDriverExtensions()
+    public function loadDriverExtensions(): array
     {
         return [];
     }

@@ -35,10 +35,6 @@ class DriverFactoryManagerTest extends TestCase
 
         $manager = new DriverFactoryManager([$doctrineDbalFactory, $doctrineOrmFactory, $collectionFactory]);
 
-        self::assertTrue($manager->hasFactory('doctrine-dbal'));
-        self::assertTrue($manager->hasFactory('doctrine-orm'));
-        self::assertTrue($manager->hasFactory('collection'));
-
         self::assertSame($doctrineDbalFactory, $manager->getFactory('doctrine-dbal'));
         self::assertSame($doctrineOrmFactory, $manager->getFactory('doctrine-orm'));
         self::assertSame($collectionFactory, $manager->getFactory('collection'));

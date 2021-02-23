@@ -23,10 +23,7 @@ class DataSourceExtension extends DataSourceAbstractExtension implements EventSu
      */
     private $calls = [];
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             DataSourceEvents::PRE_BIND_PARAMETERS => ['preBindParameters', 128],
@@ -40,41 +37,22 @@ class DataSourceExtension extends DataSourceAbstractExtension implements EventSu
         ];
     }
 
-    /**
-     * Returns array of calls.
-     *
-     * @return array
-     */
-    public function getCalls()
+    public function getCalls(): array
     {
         return $this->calls;
     }
 
-    /**
-     * Resets calls.
-     */
-    public function resetCalls()
+    public function resetCalls(): void
     {
         $this->calls = [];
     }
 
-    /**
-     * Catches called method.
-     *
-     * @param string $name
-     * @param array $arguments
-     */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments): void
     {
         $this->calls[] = $name;
     }
 
-    /**
-     * Loads itself as subscriber.
-     *
-     * @return array
-     */
-    public function loadSubscribers()
+    public function loadSubscribers(): array
     {
         return [$this];
     }

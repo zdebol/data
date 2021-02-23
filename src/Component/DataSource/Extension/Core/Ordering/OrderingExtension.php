@@ -27,10 +27,7 @@ class OrderingExtension extends DataSourceAbstractExtension
      */
     public const PARAMETER_SORT = 'sort';
 
-    /**
-     * {@inheritdoc}
-     */
-    public function loadDriverExtensions()
+    public function loadDriverExtensions(): array
     {
         return [
             new Driver\DoctrineExtension(),
@@ -39,10 +36,7 @@ class OrderingExtension extends DataSourceAbstractExtension
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function loadSubscribers()
+    public function loadSubscribers(): array
     {
         return [
             new EventSubscriber\Events(),

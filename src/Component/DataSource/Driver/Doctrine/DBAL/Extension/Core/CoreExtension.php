@@ -16,12 +16,12 @@ use FSi\Component\DataSource\Driver\DriverAbstractExtension;
  */
 class CoreExtension extends DriverAbstractExtension
 {
-    public function getExtendedDriverTypes()
+    public function getExtendedDriverTypes(): array
     {
         return ['doctrine-dbal'];
     }
 
-    protected function loadFieldTypes()
+    protected function loadFieldTypes(): array
     {
         return [
             new Field\Text(),

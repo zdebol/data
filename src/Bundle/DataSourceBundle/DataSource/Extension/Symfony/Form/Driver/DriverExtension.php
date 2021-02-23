@@ -29,21 +29,18 @@ class DriverExtension extends DriverAbstractExtension
      */
     private $translator;
 
-    /**
-     * @param FormFactory $formFactory
-     */
     public function __construct(FormFactory $formFactory, TranslatorInterface $translator)
     {
         $this->formFactory = $formFactory;
         $this->translator = $translator;
     }
 
-    public function getExtendedDriverTypes()
+    public function getExtendedDriverTypes(): array
     {
         return ['doctrine-orm'];
     }
 
-    protected function loadFieldTypesExtensions()
+    protected function loadFieldTypesExtensions(): array
     {
         return [new Field\FormFieldExtension($this->formFactory, $this->translator)];
     }
