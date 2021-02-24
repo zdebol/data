@@ -206,7 +206,6 @@ class DoctrineDriverBasicTest extends TestCase
         $driver = new DoctrineDriver([new CoreExtension()], $qb);
         self::assertTrue($driver->hasFieldType($type));
         $field = $driver->getFieldType($type);
-        self::assertInstanceOf(FieldTypeInterface::class, $field);
         self::assertInstanceOf(DoctrineFieldInterface::class, $field);
 
         self::assertTrue($field->getOptionsResolver()->isDefined('field'));

@@ -160,7 +160,6 @@ class DBALDriverTest extends TestBase
         $driver = new DBALDriver([new CoreExtension()], $qb, 'e');
         self::assertTrue($driver->hasFieldType($type));
         $field = $driver->getFieldType($type);
-        self::assertInstanceOf(FieldTypeInterface::class, $field);
         self::assertInstanceOf(DBALFieldInterface::class, $field);
 
         self::assertTrue($field->getOptionsResolver()->isDefined('field'));

@@ -11,14 +11,11 @@ namespace FSi\Component\DataSource\Driver\Doctrine\DBAL\Extension\Core\Field;
 
 use FSi\Component\DataSource\Driver\Doctrine\DBAL\DBALAbstractField;
 
-/**
- * Text field.
- */
 class Text extends DBALAbstractField
 {
     protected $comparisons = ['eq', 'neq', 'in', 'notIn', 'like', 'contains', 'isNull'];
 
-    public function getType()
+    public function getType(): string
     {
         return 'text';
     }

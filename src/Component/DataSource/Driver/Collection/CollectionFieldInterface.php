@@ -10,23 +10,11 @@
 namespace FSi\Component\DataSource\Driver\Collection;
 
 use Doctrine\Common\Collections\Criteria;
+use FSi\Component\DataSource\Field\FieldTypeInterface;
 
-/**
- * Interface for Doctrine driver's fields.
- */
-interface CollectionFieldInterface
+interface CollectionFieldInterface extends FieldTypeInterface
 {
-    /**
-     * Builds criteria.
-     *
-     * @param \Doctrine\Common\Collections\Criteria $c
-     */
-    public function buildCriteria(Criteria $c);
+    public function buildCriteria(Criteria $c): void;
 
-    /**
-     * Returns PHP type that this field's value will be casted to before comparisons.
-     *
-     * @return null|string
-     */
-    public function getPHPType();
+    public function getPHPType(): ?string;
 }

@@ -10,7 +10,6 @@
 namespace FSi\Component\DataSource\Driver\Doctrine\DBAL;
 
 use Closure;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use FSi\Component\DataSource\Driver\Doctrine\DBAL\Exception\DBALDriverException;
 use FSi\Component\DataSource\Driver\DriverAbstract;
@@ -20,18 +19,6 @@ use IteratorAggregate;
 
 class DBALDriver extends DriverAbstract
 {
-    private const DEFAULT_TABLE_ALIAS = 'e';
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var string
-     */
-    private $table;
-
     /**
      * Alias, that can be used with preconfigured query when fetching one entity and field mappings
      * don't have mappings prefixed with aliases.

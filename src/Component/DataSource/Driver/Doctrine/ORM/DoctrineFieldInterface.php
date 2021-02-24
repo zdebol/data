@@ -10,17 +10,11 @@
 namespace FSi\Component\DataSource\Driver\Doctrine\ORM;
 
 use Doctrine\ORM\QueryBuilder;
+use FSi\Component\DataSource\Field\FieldTypeInterface;
 
-interface DoctrineFieldInterface
+interface DoctrineFieldInterface extends FieldTypeInterface
 {
-    /**
-     * @param \Doctrine\ORM\QueryBuilder $qb
-     * @param string $alias
-     */
-    public function buildQuery(QueryBuilder $qb, $alias);
+    public function buildQuery(QueryBuilder $qb, string $alias): void;
 
-    /**
-     * @return null|string
-     */
-    public function getDBALType();
+    public function getDBALType(): ?string;
 }

@@ -11,9 +11,6 @@ namespace FSi\Component\DataSource\Driver\Doctrine\DBAL\Exception;
 
 use FSi\Component\DataSource\Exception\DataSourceException;
 
-/**
- * Exception for DBAL driver.
- */
 class DBALDriverException extends DataSourceException
 {
 }

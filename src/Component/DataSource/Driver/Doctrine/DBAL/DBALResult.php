@@ -11,7 +11,6 @@ namespace FSi\Component\DataSource\Driver\Doctrine\DBAL;
 
 use Closure;
 use Doctrine\Common\Collections\ArrayCollection;
-use FSi\Component\DataSource\Driver\Doctrine\DBAL\Paginator;
 use InvalidArgumentException;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccessor;

@@ -42,18 +42,9 @@ class DBALExtension extends DriverExtension
         }
     }
 
-    /**
-     * @param FieldTypeInterface&DBALFieldInterface $field
-     * @param string $alias
-     * @return string
-     */
-    private function getFieldName(FieldTypeInterface $field, string $alias): string
+    private function getFieldName(DBALFieldInterface $field, string $alias): string
     {
-        if (false === $field instanceof DBALFieldInterface) {
-            throw new InvalidArgumentException("Field must be an instance of DoctrineField");
-        }
-
-        $name = true === $field->hasOption('field') ? $field->getOption('field') : $field->getName();
+        $name = $field->getOption('field');
 
         if (true === $field->getOption('auto_alias') && false === strpos($name, ".")) {
             $name = "$alias.$name";

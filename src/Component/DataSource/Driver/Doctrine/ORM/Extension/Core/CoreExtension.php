@@ -11,9 +11,6 @@ namespace FSi\Component\DataSource\Driver\Doctrine\ORM\Extension\Core;
 
 use FSi\Component\DataSource\Driver\DriverAbstractExtension;
 
-/**
- * Core extension for Doctrine driver.
- */
 class CoreExtension extends DriverAbstractExtension
 {
     public function getExtendedDriverTypes(): array

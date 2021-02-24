@@ -10,14 +10,9 @@
 namespace FSi\Component\DataSource\Driver\Doctrine\DBAL;
 
 use Doctrine\DBAL\Query\QueryBuilder;
+use FSi\Component\DataSource\Field\FieldTypeInterface;
 
-/**
- * Interface for DBAL driver's fields.
- */
-interface DBALFieldInterface
+interface DBALFieldInterface extends FieldTypeInterface
 {
-    /**
-     * Builds query.
-     */
-    public function buildQuery(QueryBuilder $qb, $alias);
+    public function buildQuery(QueryBuilder $qb, string $alias): void;
 }

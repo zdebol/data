@@ -12,16 +12,10 @@ namespace FSi\Component\DataSource\Driver\Collection;
 use ArrayAccess;
 use ArrayIterator;
 use Countable;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
-use InvalidArgumentException;
 use IteratorAggregate;
-use Traversable;
-
-use function get_class;
-use function is_array;
 
 class CollectionResult implements Countable, IteratorAggregate, ArrayAccess
 {

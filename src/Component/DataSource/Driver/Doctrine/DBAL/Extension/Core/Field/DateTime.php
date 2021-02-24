@@ -12,19 +12,16 @@ namespace FSi\Component\DataSource\Driver\Doctrine\DBAL\Extension\Core\Field;
 use Doctrine\DBAL\Types\Types;
 use FSi\Component\DataSource\Driver\Doctrine\DBAL\DBALAbstractField;
 
-/**
- * Datetime field.
- */
 class DateTime extends DBALAbstractField
 {
     protected $comparisons = ['eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'between', 'isNull'];
 
-    public function getType()
+    public function getType(): string
     {
         return 'datetime';
     }
 
-    public function getDBALType()
+    public function getDBALType(): ?string
     {
         return Types::DATETIME_IMMUTABLE;
     }

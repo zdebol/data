@@ -12,7 +12,6 @@ namespace FSi\Component\DataSource\Extension\Core\Ordering\Driver;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\DoctrineDriver;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\DoctrineFieldInterface as DoctrineORMFieldInterface;
 use FSi\Component\DataSource\Event\DriverEvent;
-use FSi\Component\DataSource\Field\FieldTypeInterface;
 use InvalidArgumentException;
 
 /**
@@ -41,23 +40,9 @@ class DoctrineExtension extends DriverExtension
         }
     }
 
-    /**
-     * @param FieldTypeInterface&DoctrineORMFieldInterface $field
-     * @param string $alias
-     * @return string
-     * @throws InvalidArgumentException
-     */
-    private function getFieldName(FieldTypeInterface $field, string $alias): string
+    private function getFieldName(DoctrineORMFieldInterface $field, string $alias): string
     {
-        if (false === $field instanceof DoctrineORMFieldInterface) {
-            throw new InvalidArgumentException("Field must be an instance of DoctrineField");
-        }
-
-        if (false === $field->hasOption('field')) {
-            $name = $field->getOption('field');
-        } else {
-            $name = $field->getName();
-        }
+        $name = $field->getOption('field');
 
         if (true === $field->getOption('auto_alias') && false === strpos($name, ".")) {
             $name = "$alias.$name";

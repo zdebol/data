@@ -29,22 +29,16 @@ abstract class DriverAbstract implements DriverInterface
     protected $datasource;
 
     /**
-     * Extensions.
-     *
      * @var array<DriverExtensionInterface>
      */
     protected $extensions = [];
 
     /**
-     * Field types.
-     *
      * @var array<FieldTypeInterface>
      */
     protected $fieldTypes = [];
 
     /**
-     * Fields extensions.
-     *
      * @var array<string, array<FieldExtensionInterface>>
      */
     protected $fieldExtensions = [];

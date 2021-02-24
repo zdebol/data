@@ -12,19 +12,16 @@ namespace FSi\Component\DataSource\Driver\Doctrine\DBAL\Extension\Core\Field;
 use Doctrine\DBAL\Types\Types;
 use FSi\Component\DataSource\Driver\Doctrine\DBAL\DBALAbstractField;
 
-/**
- * Boolean field.
- */
 class Boolean extends DBALAbstractField
 {
     protected $comparisons = ['eq'];
 
-    public function getType()
+    public function getType(): string
     {
         return 'boolean';
     }
 
-    public function getDBALType()
+    public function getDBALType(): ?string
     {
         return Types::BOOLEAN;
     }

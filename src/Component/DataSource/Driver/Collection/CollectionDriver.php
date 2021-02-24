@@ -20,7 +20,7 @@ use Traversable;
 class CollectionDriver extends DriverAbstract
 {
     /**
-     * @var array|Traversable|Selectable
+     * @var Selectable
      */
     private $collection;
 
@@ -36,13 +36,7 @@ class CollectionDriver extends DriverAbstract
      */
     private $currentCriteria;
 
-    /**
-     * @param array $extensions
-     * @param array|Traversable|Selectable $collection
-     * @param Criteria|null $criteria
-     * @throws DataSourceException
-     */
-    public function __construct(array $extensions, $collection, ?Criteria $criteria = null)
+    public function __construct(array $extensions, Selectable $collection, ?Criteria $criteria = null)
     {
         parent::__construct($extensions);
 

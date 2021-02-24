@@ -14,36 +14,22 @@ use FSi\Component\DataSource\Driver\Doctrine\ORM\Exception\DoctrineDriverExcepti
 use Doctrine\ORM\QueryBuilder;
 use FSi\Component\DataSource\Exception\FieldException;
 
-/**
- * Entity field.
- */
 class Entity extends DoctrineAbstractField
 {
-    /**
-     * {@inheritdoc}
-     */
     protected $comparisons = ['eq', 'neq', 'memberof', 'notmemberof', 'in', 'isNull'];
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
+    public function getType(): string
     {
         return 'entity';
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @throws DoctrineDriverException|FieldException
-     */
-    public function buildQuery(QueryBuilder $qb, $alias)
+    public function buildQuery(QueryBuilder $qb, string $alias): void
     {
         $data = $this->getCleanParameter();
         $fieldName = $this->getFieldName($alias);
         $name = $this->getName();
 
-        if (empty($data)) {
+        if (true === $this->isEmpty($data)) {
             return;
         }
 
