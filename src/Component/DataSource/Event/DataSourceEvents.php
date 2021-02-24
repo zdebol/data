@@ -11,10 +11,7 @@ declare(strict_types=1);
 
 namespace FSi\Component\DataSource\Event;
 
-/**
- * Enum of available events.
- */
-class DataSourceEvents
+final class DataSourceEvents
 {
     /**
      * PreBindParameters event name.

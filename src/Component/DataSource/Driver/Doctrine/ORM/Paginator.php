@@ -12,10 +12,11 @@ declare(strict_types=1);
 namespace FSi\Component\DataSource\Driver\Doctrine\ORM;
 
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use FSi\Component\DataSource\Result;
 
-class Paginator extends DoctrinePaginator
+class Paginator extends DoctrinePaginator implements Result
 {
-    public function __construct($query, $fetchJoinCollection = true)
+    public function __construct($query)
     {
         // Avoid DDC-2213 bug/mistake
         $em = $query->getEntityManager();

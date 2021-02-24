@@ -13,19 +13,16 @@ namespace FSi\Component\DataSource\Event\DataSourceEvent;
 
 use FSi\Component\DataSource\DataSourceInterface;
 
-/**
- * Event class for DataSource.
- */
 class ParametersEventArgs extends DataSourceEventArgs
 {
     /**
-     * @var array
+     * @var mixed
      */
     private $parameters;
 
     /**
-     * @param \FSi\Component\DataSource\DataSourceInterface $datasource
-     * @param array $parameters
+     * @param DataSourceInterface $datasource
+     * @param mixed $parameters
      */
     public function __construct(DataSourceInterface $datasource, $parameters)
     {
@@ -34,7 +31,7 @@ class ParametersEventArgs extends DataSourceEventArgs
     }
 
     /**
-     * @return array
+     * @return mixed
      */
     public function getParameters()
     {
@@ -42,9 +39,9 @@ class ParametersEventArgs extends DataSourceEventArgs
     }
 
     /**
-     * @param array $parameters
+     * @param mixed $parameters
      */
-    public function setParameters($parameters)
+    public function setParameters($parameters): void
     {
         $this->parameters = $parameters;
     }

@@ -14,6 +14,7 @@ namespace FSi\Component\DataSource\Driver;
 use Countable;
 use FSi\Component\DataSource\DataSourceInterface;
 use FSi\Component\DataSource\Field\FieldTypeInterface;
+use FSi\Component\DataSource\Result;
 use IteratorAggregate;
 
 /**
@@ -56,9 +57,9 @@ interface DriverInterface
      * @param array<FieldTypeInterface> $fields
      * @param int|null $first
      * @param int|null $max
-     * @return Countable&IteratorAggregate
+     * @return Result
      */
-    public function getResult(array $fields, ?int $first, ?int $max): IteratorAggregate;
+    public function getResult(array $fields, ?int $first, ?int $max): Result;
 
     /**
      * Returns loaded extensions.

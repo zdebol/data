@@ -16,9 +16,6 @@ namespace FSi\Component\DataSource\Event\FieldEvent;
 use FSi\Component\DataSource\Field\FieldTypeInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-/**
- * Event class for Field.
- */
 class FieldEventArgs extends Event
 {
     /**
@@ -26,18 +23,12 @@ class FieldEventArgs extends Event
      */
     private $field;
 
-    /**
-     * @param FieldTypeInterface $field
-     */
     public function __construct(FieldTypeInterface $field)
     {
         $this->field = $field;
     }
 
-    /**
-     * @return FieldTypeInterface
-     */
-    public function getField()
+    public function getField(): FieldTypeInterface
     {
         return $this->field;
     }

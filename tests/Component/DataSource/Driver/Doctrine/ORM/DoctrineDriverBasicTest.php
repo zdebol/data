@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace FSi\Tests\Component\DataSource\Driver\Doctrine\ORM;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -46,8 +48,6 @@ class DoctrineDriverBasicTest extends TestCase
     }
 
     /**
-     * Returns mock of EntityManager.
-     *
      * @return MockObject&EntityManagerInterface
      */
     private function getEntityManagerMock(): EntityManagerInterface

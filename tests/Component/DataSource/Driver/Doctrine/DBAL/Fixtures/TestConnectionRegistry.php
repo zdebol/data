@@ -7,10 +7,13 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace FSi\Tests\Component\DataSource\Driver\Doctrine\DBAL\Fixtures;
 
 use Doctrine\Persistence\ConnectionRegistry;
 use Doctrine\DBAL\Driver\Connection;
+use InvalidArgumentException;
 
 class TestConnectionRegistry implements ConnectionRegistry
 {
@@ -32,7 +35,7 @@ class TestConnectionRegistry implements ConnectionRegistry
     public function getConnection($name = null): ?Connection
     {
         if (null !== $name && $this->getDefaultConnectionName() !== $name) {
-            throw new \InvalidArgumentException('invalid connection');
+            throw new InvalidArgumentException('invalid connection');
         }
 
         return $this->connection;

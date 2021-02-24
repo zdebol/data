@@ -14,28 +14,19 @@ namespace FSi\Component\DataSource\Event\DataSourceEvent;
 use FSi\Component\DataSource\DataSourceInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-/**
- * Event class for DataSource.
- */
 class DataSourceEventArgs extends Event
 {
     /**
-     * @var \FSi\Component\DataSource\DataSourceInterface
+     * @var DataSourceInterface
      */
     private $datasource;
 
-    /**
-     * @param \FSi\Component\DataSource\DataSourceInterface $datasource
-     */
     public function __construct(DataSourceInterface $datasource)
     {
         $this->datasource = $datasource;
     }
 
-    /**
-     * @return \FSi\Component\DataSource\DataSourceInterface
-     */
-    public function getDataSource()
+    public function getDataSource(): DataSourceInterface
     {
         return $this->datasource;
     }

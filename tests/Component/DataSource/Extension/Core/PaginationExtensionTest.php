@@ -7,9 +7,10 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace FSi\Tests\Component\DataSource\Extension\Core;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use FSi\Component\DataSource\DataSourceFactory;
 use FSi\Component\DataSource\Driver\Collection\CollectionFactory;
 use FSi\Component\DataSource\Driver\Collection\Extension\Core\CoreExtension;
@@ -17,6 +18,7 @@ use FSi\Component\DataSource\Driver\DriverFactoryManager;
 use FSi\Component\DataSource\Extension\Core\Pagination\EventSubscriber\Events;
 use FSi\Component\DataSource\Extension\Core\Pagination\PaginationExtension;
 use FSi\Component\DataSource\Event\DataSourceEvent;
+use FSi\Tests\Component\DataSource\Fixtures\TestResult;
 use PHPUnit\Framework\TestCase;
 use FSi\Component\DataSource\Driver\DriverInterface;
 use FSi\Component\DataSource\DataSource;
@@ -60,7 +62,7 @@ class PaginationExtensionTest extends TestCase
         $datasource = $this->getMockBuilder(DataSource::class)->setConstructorArgs([$driver])->getMock();
 
         $datasource->method('getName')->willReturn('datasource');
-        $datasource->method('getResult')->willReturn(new ArrayCollection());
+        $datasource->method('getResult')->willReturn(new TestResult());
         $datasource->method('getMaxResults')->willReturn($maxResults);
         $datasource->method('getFirstResult')->willReturn($firstResult);
 

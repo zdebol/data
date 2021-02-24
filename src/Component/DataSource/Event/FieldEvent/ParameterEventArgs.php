@@ -13,9 +13,6 @@ namespace FSi\Component\DataSource\Event\FieldEvent;
 
 use FSi\Component\DataSource\Field\FieldTypeInterface;
 
-/**
- * Event class for Field.
- */
 class ParameterEventArgs extends FieldEventArgs
 {
     /**
@@ -24,18 +21,20 @@ class ParameterEventArgs extends FieldEventArgs
     private $parameter;
 
     /**
-     * @param \FSi\Component\DataSource\Field\FieldTypeInterface $field
+     * @param FieldTypeInterface $field
+     * @param mixed $parameter
      */
     public function __construct(FieldTypeInterface $field, $parameter)
     {
         parent::__construct($field);
+
         $this->setParameter($parameter);
     }
 
     /**
      * @param mixed $parameter
      */
-    public function setParameter($parameter)
+    public function setParameter($parameter): void
     {
         $this->parameter = $parameter;
     }

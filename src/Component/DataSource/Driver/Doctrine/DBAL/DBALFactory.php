@@ -85,7 +85,7 @@ class DBALFactory implements DriverFactoryInterface
         $this->optionsResolver->setAllowedTypes('connection', ['null', 'string', Connection::class]);
         $this->optionsResolver->setAllowedTypes('indexField', ['null', 'string', Closure::class]);
 
-        $this->optionsResolver->setNormalizer('connection', function (Options $options, $connection): ?Connection {
+        $this->optionsResolver->setNormalizer('connection', function (Options $options, $connection): Connection {
             if (true === $connection instanceof Connection) {
                 return $connection;
             }

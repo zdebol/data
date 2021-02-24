@@ -12,7 +12,6 @@ namespace FSi\Tests\Bundle\DataSourceBundle\Extension\Symfony;
 use FSi\Bundle\DataSourceBundle\DataSource\Extension\Symfony\Core\CoreExtension;
 use FSi\Bundle\DataSourceBundle\DataSource\Extension\Symfony\Core\EventSubscriber\BindParameters;
 use FSi\Component\DataSource\DataSourceInterface;
-use FSi\Component\DataSource\Driver\DriverInterface;
 use FSi\Component\DataSource\Event\DataSourceEvent;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;

@@ -87,7 +87,7 @@ class DoctrineFactory implements DriverFactoryInterface
         $this->optionsResolver->setAllowedTypes('em', ['null', 'string', EntityManagerInterface::class]);
         $this->optionsResolver->setAllowedTypes('useOutputWalkers', ['null', 'bool']);
 
-        $this->optionsResolver->setNormalizer('em', function (Options $options, $em): ?EntityManagerInterface {
+        $this->optionsResolver->setNormalizer('em', function (Options $options, $em): EntityManagerInterface {
             if (true === $em instanceof EntityManagerInterface) {
                 return $em;
             }

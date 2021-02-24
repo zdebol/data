@@ -83,10 +83,7 @@ interface DataSourceInterface
      */
     public function bindParameters($parameters = []): void;
 
-    /**
-     * @return Countable&IteratorAggregate
-     */
-    public function getResult(): IteratorAggregate;
+    public function getResult(): Result;
 
     public function addExtension(DataSourceExtensionInterface $extension): void;
 

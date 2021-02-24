@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace FSi\Tests\Component\DataSource\Fixtures;
 
 use Doctrine\ORM\QueryBuilder;
@@ -53,7 +55,7 @@ class DoctrineDriverExtension extends DriverAbstractExtension
 
     public function __call(string $name, array $arguments): void
     {
-        if ($name === 'preGetResult') {
+        if ('preGetResult' === $name) {
             $args = array_shift($arguments);
             $this->queryBuilder = $args->getDriver()->getQueryBuilder();
         }

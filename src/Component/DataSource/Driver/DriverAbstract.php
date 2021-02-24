@@ -18,6 +18,7 @@ use FSi\Component\DataSource\Event\DriverEvents;
 use FSi\Component\DataSource\Exception\DataSourceException;
 use FSi\Component\DataSource\Field\FieldExtensionInterface;
 use FSi\Component\DataSource\Field\FieldTypeInterface;
+use FSi\Component\DataSource\Result;
 use IteratorAggregate;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -128,7 +129,7 @@ abstract class DriverAbstract implements DriverInterface
         $this->extensions[] = $extension;
     }
 
-    public function getResult(array $fields, ?int $first, ?int $max): IteratorAggregate
+    public function getResult(array $fields, ?int $first, ?int $max): Result
     {
         $this->initResult();
 

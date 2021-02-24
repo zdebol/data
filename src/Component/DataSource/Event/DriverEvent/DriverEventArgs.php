@@ -12,11 +12,9 @@ declare(strict_types=1);
 namespace FSi\Component\DataSource\Event\DriverEvent;
 
 use FSi\Component\DataSource\Driver\DriverInterface;
+use FSi\Component\DataSource\Field\FieldTypeInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-/**
- * Event class for Driver.
- */
 class DriverEventArgs extends Event
 {
     /**
@@ -25,13 +23,13 @@ class DriverEventArgs extends Event
     private $driver;
 
     /**
-     * @var array
+     * @var array<FieldTypeInterface>
      */
     private $fields;
 
     /**
      * @param DriverInterface $driver
-     * @param array $fields
+     * @param array<FieldTypeInterface> $fields
      */
     public function __construct(DriverInterface $driver, array $fields)
     {
@@ -39,18 +37,15 @@ class DriverEventArgs extends Event
         $this->fields = $fields;
     }
 
-    /**
-     * @return DriverInterface
-     */
-    public function getDriver()
+    public function getDriver(): DriverInterface
     {
         return $this->driver;
     }
 
     /**
-     * @return array
+     * @return array<FieldTypeInterface>
      */
-    public function getFields()
+    public function getFields(): array
     {
         return $this->fields;
     }

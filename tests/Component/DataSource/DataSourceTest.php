@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace FSi\Tests\Component\DataSource;
 
-use Countable;
-use Doctrine\Common\Collections\ArrayCollection;
 use FSi\Component\DataSource\DataSource;
 use FSi\Component\DataSource\DataSourceExtensionInterface;
 use FSi\Component\DataSource\DataSourceFactoryInterface;
@@ -22,10 +22,8 @@ use FSi\Component\DataSource\Exception\DataSourceException;
 use FSi\Component\DataSource\Field\FieldTypeInterface;
 use FSi\Tests\Component\DataSource\Fixtures\TestResult;
 use FSi\Tests\Component\DataSource\Fixtures\DataSourceExtension;
-use IteratorAggregate;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 class DataSourceTest extends TestCase
 {
@@ -222,21 +220,6 @@ class DataSourceTest extends TestCase
     }
 
     /**
-     * Tests exception when driver returns scalar.
-     */
-    public function testWrongResult(): void
-    {
-        $driver = $this->createDriverMock();
-        $datasource = new DataSource($driver);
-        $result = $this->createMock(IteratorAggregate::class);
-
-        $driver->expects(self::once())->method('getResult')->willReturn($result);
-
-        $this->expectException(DataSourceException::class);
-        $datasource->getResult();
-    }
-
-    /**
      * Checks if parameters for pagination are forwarded to driver.
      */
     public function testPagination(): void
@@ -280,7 +263,7 @@ class DataSourceTest extends TestCase
     public function testViewCreation(): void
     {
         $driver = $this->createDriverMock();
-        $driver->expects(self::once())->method('getResult')->willReturn(new ArrayCollection());
+        $driver->expects(self::once())->method('getResult')->willReturn(new TestResult());
 
         $datasource = new DataSource($driver);
         $view = $datasource->createView();

@@ -14,9 +14,6 @@ use FSi\Component\DataSource\Driver\DriverAbstractExtension;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * Driver extension for form that loads fields extension.
- */
 class DriverExtension extends DriverAbstractExtension
 {
     /**

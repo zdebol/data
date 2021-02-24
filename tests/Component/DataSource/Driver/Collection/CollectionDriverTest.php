@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace FSi\Tests\Component\DataSource\Driver\Collection;
 
 use DateTimeImmutable;
@@ -301,7 +303,7 @@ class CollectionDriverTest extends TestCase
         $datasource->bindParameters($parameters);
         $result = $datasource->getResult();
         self::assertInstanceOf(CollectionResult::class, $result);
-        self::assertFalse(false, $result[0]->isActive());
+        self::assertFalse($result[0]->isActive());
 
 
         // test 'notIn' comparison

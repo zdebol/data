@@ -13,13 +13,12 @@ namespace FSi\Component\DataSource\Driver\Collection;
 
 use ArrayAccess;
 use ArrayIterator;
-use Countable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
-use IteratorAggregate;
+use FSi\Component\DataSource\Result;
 
-class CollectionResult implements Countable, IteratorAggregate, ArrayAccess
+class CollectionResult implements Result, ArrayAccess
 {
     /**
      * @var int
@@ -46,12 +45,12 @@ class CollectionResult implements Countable, IteratorAggregate, ArrayAccess
         return $this->count;
     }
 
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->collection->toArray());
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $this->collection->containsKey($offset);
     }
@@ -61,7 +60,7 @@ class CollectionResult implements Countable, IteratorAggregate, ArrayAccess
         return $this->collection->get($offset);
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if ($offset === null) {
             $this->collection->add($value);
@@ -71,7 +70,7 @@ class CollectionResult implements Countable, IteratorAggregate, ArrayAccess
         $this->collection->set($offset, $value);
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->collection->remove($offset);
     }

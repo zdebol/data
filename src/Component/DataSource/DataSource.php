@@ -22,6 +22,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 use function array_key_exists;
 use function array_reduce;
+use function get_class;
+use function gettype;
 
 class DataSource implements DataSourceInterface
 {
@@ -71,7 +73,7 @@ class DataSource implements DataSourceInterface
      *
      * @var array{
      *   parameters?: array,
-     *   result?: array{maxresults: int|null, firstresult: int|null, result: IteratorAggregate&Countable}
+     *   result?: array{maxresults: int|null, firstresult: int|null, result: Result}
      * }
      */
     private $cache = [];
@@ -186,7 +188,12 @@ class DataSource implements DataSourceInterface
         $parameters = $event->getParameters();
 
         if (false === is_array($parameters)) {
-            throw new DataSourceException('Given parameters must be an array.');
+            throw new DataSourceException(
+                sprintf(
+                    'Parameters after "datasource.pre_bind_parameters" event must be an array but are %s.',
+                    true === is_object($parameters) ? get_class($parameters) : gettype($parameters)
+                )
+            );
         }
 
         foreach ($this->getFields() as $field) {
@@ -198,7 +205,7 @@ class DataSource implements DataSourceInterface
         $this->eventDispatcher->dispatch($event, DataSourceEvents::POST_BIND_PARAMETERS);
     }
 
-    public function getResult(): IteratorAggregate
+    public function getResult(): Result
     {
         $this->checkFieldsClarity();
 
@@ -215,23 +222,6 @@ class DataSource implements DataSourceInterface
         $this->eventDispatcher->dispatch($event, DataSourceEvents::PRE_GET_RESULT);
 
         $result = $this->driver->getResult($this->fields, $this->getFirstResult(), $this->getMaxResults());
-        if (false === is_object($result)) {
-            throw new DataSourceException(sprintf(
-                'Returned result must be object implementing both %s and %s.',
-                Countable::class,
-                IteratorAggregate::class
-            ));
-        }
-
-        if ((false === $result instanceof IteratorAggregate) || (false === $result instanceof Countable)) {
-            throw new DataSourceException(sprintf(
-                'Returned result must be both %s and %s, instance of "%s" given.',
-                Countable::class,
-                IteratorAggregate::class,
-                get_class($result)
-            ));
-        }
-
 
         foreach ($this->getFields() as $field) {
             $field->setDirty(false);

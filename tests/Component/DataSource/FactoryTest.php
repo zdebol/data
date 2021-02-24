@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace FSi\Tests\Component\DataSource;
 
 use FSi\Component\DataSource\DataSourceFactory;
@@ -18,9 +20,6 @@ use FSi\Component\DataSource\Driver\DriverInterface;
 use FSi\Component\DataSource\DataSource;
 use FSi\Component\DataSource\Exception\DataSourceException;
 
-/**
- * Tests for DataSourceFactory.
- */
 class FactoryTest extends TestCase
 {
     /**

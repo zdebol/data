@@ -14,12 +14,7 @@ namespace FSi\Component\DataSource\Extension\Core\Ordering\Driver;
 use FSi\Component\DataSource\Driver\Doctrine\DBAL\DBALDriver;
 use FSi\Component\DataSource\Driver\Doctrine\DBAL\DBALFieldInterface;
 use FSi\Component\DataSource\Event\DriverEvent;
-use FSi\Component\DataSource\Field\FieldTypeInterface;
-use InvalidArgumentException;
 
-/**
- * Driver extension for ordering that loads fields extension.
- */
 class DBALExtension extends DriverExtension
 {
     public function getExtendedDriverTypes(): array
