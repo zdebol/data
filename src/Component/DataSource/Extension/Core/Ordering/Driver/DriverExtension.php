@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace FSi\Component\DataSource\Extension\Core\Ordering\Driver;
 
 use FSi\Component\DataSource\Driver\DriverAbstractExtension;

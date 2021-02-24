@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace FSi\Component\DataSource\Driver;
 
 use FSi\Component\DataSource\Field\FieldExtensionInterface;
@@ -16,7 +18,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 interface DriverExtensionInterface
 {
     /**
-     * return array<string>
+     * @return array<string>
      */
     public function getExtendedDriverTypes(): array;
 

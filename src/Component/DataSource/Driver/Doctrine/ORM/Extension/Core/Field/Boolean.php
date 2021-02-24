@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace FSi\Component\DataSource\Driver\Doctrine\ORM\Extension\Core\Field;
 
 use Doctrine\DBAL\Types\Types;
