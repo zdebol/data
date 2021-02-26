@@ -101,7 +101,7 @@ class DoctrineFactory implements DriverFactoryInterface
             if (null === $objectManager) {
                 throw new DoctrineDriverException(
                     sprintf(
-                        "Option \"em\" should contain an instance of %s or string but %s given",
+                        'Option "em" should contain an instance of %s or string but %s given',
                         EntityManagerInterface::class,
                         is_object($em) ? get_class($em) : gettype($em)
                     )
@@ -127,14 +127,14 @@ class DoctrineFactory implements DriverFactoryInterface
                     return $queryBuilder;
                 }
 
-                if (null !== $options['entity'] && $options['em'] instanceof EntityManagerInterface) {
-                    return $options['em']->createQueryBuilder()
-                        ->select($options['alias'])
-                        ->from($options['entity'], $options['alias'])
-                    ;
+                if (null === $options['entity'] || false === $options['em'] instanceof EntityManagerInterface) {
+                    throw new InvalidOptionsException('You must specify at least one option, "qb" or "entity".');
                 }
 
-                throw new InvalidOptionsException('You must specify at least one option, "qb" or "entity".');
+                return $options['em']->createQueryBuilder()
+                    ->select($options['alias'])
+                    ->from($options['entity'], $options['alias'])
+                ;
             }
         );
     }

@@ -197,16 +197,16 @@ abstract class DriverAbstract implements DriverInterface
 
         $this->fieldTypes[$type] = $typeInstance;
 
-        $ext = [];
+        $extensions = [];
         foreach ($this->extensions as $extension) {
             if ($extension->hasFieldTypeExtensions($type)) {
                 $fieldExtensions = $extension->getFieldTypeExtensions($type);
                 foreach ($fieldExtensions as $fieldExtension) {
-                    $ext[] = $fieldExtension;
+                    $extensions[] = $fieldExtension;
                 }
             }
         }
 
-        $this->fieldExtensions[$type] = $ext;
+        $this->fieldExtensions[$type] = $extensions;
     }
 }

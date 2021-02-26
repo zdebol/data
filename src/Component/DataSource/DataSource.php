@@ -93,7 +93,7 @@ class DataSource implements DataSourceInterface
 
     public function __construct(DriverInterface $driver, string $name = 'datasource')
     {
-        if (0 === preg_match('/^[\w]+$/', $name)) {
+        if (1 !== preg_match('/^[\w]+$/', $name)) {
             throw new DataSourceException('Name of data source may contain only word characters and digits.');
         }
 
@@ -333,23 +333,8 @@ class DataSource implements DataSourceInterface
         $this->eventDispatcher->dispatch($event, DataSourceEvents::POST_GET_PARAMETERS);
         $parameters = $event->getParameters();
 
-        $cleaner = static function (array $array) use (&$cleaner) {
-            $newArray = [];
-            foreach ($array as $key => $value) {
-                if (true === is_array($value)) {
-                    $newValue = $cleaner($value);
-                    if (0 !== count($newValue)) {
-                        $newArray[$key] = $newValue;
-                    }
-                } elseif (is_scalar($value) && '' !== $value) {
-                    $newArray[$key] = $value;
-                }
-            }
-            return $newArray;
-        };
-
         // Clearing parameters from empty values.
-        $parameters = $cleaner($parameters);
+        $parameters = self::cleanData($parameters);
 
         $this->cache['parameters'] = $parameters;
         return $parameters;
@@ -381,6 +366,23 @@ class DataSource implements DataSourceInterface
     public function getFactory(): ?DataSourceFactoryInterface
     {
         return $this->factory;
+    }
+
+    private static function cleanData(array $array): array
+    {
+        $newArray = [];
+        foreach ($array as $key => $value) {
+            if (true === is_array($value)) {
+                $newValue = self::cleanData($value);
+                if (0 !== count($newValue)) {
+                    $newArray[$key] = $newValue;
+                }
+            } elseif (is_scalar($value) && '' !== $value) {
+                $newArray[$key] = $value;
+            }
+        }
+
+        return $newArray;
     }
 
     /**

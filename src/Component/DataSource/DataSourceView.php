@@ -123,7 +123,7 @@ class DataSourceView extends AttributesContainer implements DataSourceViewInterf
         $name = $fieldView->getName();
         if (true === $this->hasField($name)) {
             throw new DataSourceViewException(
-                sprintf("There's already field with name \"%s\" in datasourc \"%s\"", $name, $this->name)
+                "There's already field with name \"{$name}\" in datasourc \"{$this->name}\""
             );
         }
 

@@ -121,14 +121,14 @@ class DBALFactory implements DriverFactoryInterface
                     return $queryBuilder;
                 }
 
-                if (null !== $options['table'] && $options['connection'] instanceof Connection) {
-                    return $options['connection']->createQueryBuilder()
-                        ->select(sprintf('%s.*', $options['alias']))
-                        ->from($options['table'], $options['alias'])
-                    ;
+                if (null === $options['table'] || false === $options['connection'] instanceof Connection) {
+                    throw new InvalidOptionsException('You must specify at least one option, "qb" or "table".');
                 }
 
-                throw new InvalidOptionsException('You must specify at least one option, "qb" or "table".');
+                return $options['connection']->createQueryBuilder()
+                    ->select(sprintf('%s.*', $options['alias']))
+                    ->from($options['table'], $options['alias'])
+                ;
             }
         );
     }
