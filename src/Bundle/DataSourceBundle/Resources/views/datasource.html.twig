@@ -6,10 +6,9 @@
 {% endapply %}
 {% endblock %}
 
-{% block datasource_field %}
-{% apply spaceless %}
+{% block datasource_field %}{% apply spaceless %}
     {% if field.hasAttribute('form') is not empty %}
-        <div>
+        <div{{ block('datasource_container_attributes') }}>
             {% for child in field.getAttribute('form').children %}
                 {% for subchild in child.children %}
                     {{ form_label(subchild) }}
@@ -19,8 +18,7 @@
             {% endfor %}
         </div>
     {% endif %}
-{% endapply %}
-{% endblock %}
+{% endapply %}{% endblock %}
 
 {% block datasource_sort %}
 {% apply spaceless %}
@@ -66,3 +64,15 @@
         <a href="{{ result_url }}"{% if max_results == result_num %} class="{{ active_class }}"{% endif %}>{{ result_num }}</a>
     {% endfor %}
 {% endblock %}
+
+{%- block datasource_attributes -%}
+    {%- for attrname, attrvalue in attr -%}{{- " " -}}{{- attrname }}="{{ attrvalue }}"{%- endfor -%}
+{%- endblock datasource_attributes -%}
+
+{%- block datasource_container_attributes -%}
+    {%- set containerAttr = field.getAttribute('container_attr') ?? [] -%}
+    {%- set attr = containerAttr|merge({ class: (containerAttr['class'] ?? '') ~ ' ' ~ block('datasource_container_class') }) -%}
+    {{ block('datasource_attributes') }}
+{%- endblock datasource_container_attributes -%}
+
+{% block datasource_container_class 'datasource-field-container' %}
