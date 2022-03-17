@@ -32,38 +32,13 @@ use Twig\Loader\FilesystemLoader;
 use Twig\Template;
 use Twig\TemplateWrapper;
 
-class DataGridRuntimeTest extends TestCase
+final class DataGridRuntimeTest extends TestCase
 {
     private Environment $twig;
     private DataGridExtension $extension;
     private DataGridRuntime $runtime;
     private TwigRuntimeLoader $runtimeLoader;
     private TranslatorInterface $translator;
-
-    public function setUp(): void
-    {
-        $loader = new FilesystemLoader([
-            __DIR__ . '/../../../../../vendor/symfony/twig-bridge/Resources/views/Form',
-            __DIR__ . '/../../../../../src/Bundle/DataGridBundle/Resources/views', // datagrid base theme
-            __DIR__ . '/../../Resources/views', // templates used in tests
-        ]);
-
-        $this->translator = new StubTranslator();
-        $twig = new Environment($loader);
-        $twig->addExtension(new TranslationExtension($this->translator));
-        $twig->addGlobal('global_var', 'global_value');
-
-        $twigRendererEngine = new TwigRendererEngine(['form_div_layout.html.twig'], $twig);
-        $renderer = new FormRenderer($twigRendererEngine);
-        $twig->addExtension(new FormExtension());
-
-        $this->twig = $twig;
-        $this->extension = new DataGridExtension();
-        $this->runtime = new DataGridRuntime($this->translator, $twig, ['datagrid.html.twig']);
-
-        $this->runtimeLoader = new TwigRuntimeLoader([$renderer, $this->runtime]);
-        $twig->addRuntimeLoader($this->runtimeLoader);
-    }
 
     public function testInitRuntimeShouldThrowExceptionBecauseNotExistingTheme(): void
     {
@@ -174,7 +149,8 @@ class DataGridRuntimeTest extends TestCase
 
         $template->method('hasBlock')
             ->withConsecutive(['datagrid_grid'], ['datagrid'])
-            ->willReturnOnConsecutiveCalls(false, true);
+            ->willReturnOnConsecutiveCalls(false, true)
+        ;
         $template->method('hasBlock')->with()->willReturn(true);
 
         $dataGridView = $this->getDataGridView('grid');
@@ -280,7 +256,8 @@ class DataGridRuntimeTest extends TestCase
 
         $template->method('hasBlock')
             ->withConsecutive(['datagrid_grid_rowset'], ['datagrid_rowset'])
-            ->willReturnOnConsecutiveCalls(false, true);
+            ->willReturnOnConsecutiveCalls(false, true)
+        ;
 
         $dataGridView = $this->getDataGridView('grid');
         $this->runtime->setTheme($dataGridView, new TemplateWrapper($this->twig, $template));
@@ -319,15 +296,7 @@ class DataGridRuntimeTest extends TestCase
 
         $cellView
             ->method('getAttribute')
-            ->willReturnCallback(
-                static function ($key) {
-                    if ('index' === $key) {
-                        return 0;
-                    }
-
-                    return null;
-                }
-            );
+            ->willReturnCallback(static fn($key): ?int => 'index' === $key ? 0 : null);
 
         $template->expects(self::once())
             ->method('displayBlock')
@@ -415,6 +384,31 @@ class DataGridRuntimeTest extends TestCase
         $this->runtime->dataGridColumnActionCellActionWidget($cellView, 'edit', 'content');
     }
 
+    protected function setUp(): void
+    {
+        $loader = new FilesystemLoader([
+            __DIR__ . '/../../../../../vendor/symfony/twig-bridge/Resources/views/Form',
+            __DIR__ . '/../../../../../src/Bundle/DataGridBundle/Resources/views', // datagrid base theme
+            __DIR__ . '/../../Resources/views', // templates used in tests
+        ]);
+
+        $this->translator = new StubTranslator();
+        $twig = new Environment($loader);
+        $twig->addExtension(new TranslationExtension($this->translator));
+        $twig->addGlobal('global_var', 'global_value');
+
+        $twigRendererEngine = new TwigRendererEngine(['form_div_layout.html.twig'], $twig);
+        $renderer = new FormRenderer($twigRendererEngine);
+        $twig->addExtension(new FormExtension());
+
+        $this->twig = $twig;
+        $this->extension = new DataGridExtension();
+        $this->runtime = new DataGridRuntime($this->translator, $twig, ['datagrid.html.twig']);
+
+        $this->runtimeLoader = new TwigRuntimeLoader([$renderer, $this->runtime]);
+        $twig->addRuntimeLoader($this->runtimeLoader);
+    }
+
     /**
      * @param string $name
      * @return DataGridViewInterface&MockObject
@@ -422,9 +416,11 @@ class DataGridRuntimeTest extends TestCase
     private function getDataGridView(string $name): DataGridViewInterface
     {
         /** @var DataGridViewInterface&MockObject $dataGridView */
-        $dataGridView = $this->getMockBuilder(DataGridViewInterface::class)->disableOriginalConstructor()->getMock();
+        $dataGridView = $this->getMockBuilder(DataGridViewInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
         $dataGridView->method('getName')->willReturn($name);
-
         return $dataGridView;
     }
 

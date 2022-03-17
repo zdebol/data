@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Test</title>
+    </head>
+    <body>
+        <span class="total">Total: 1</span>
+        <form method="GET" action="/test/collection">
+            <div class=" datasource-field-container">
+                <div id="news_fields_createDate">
+                    <div>
+                        <label for="news_fields_createDate_from">Create date from</label>
+                        <input type="date" id="news_fields_createDate_from" name="news[fields][createDate][from]" value="2021-01-01" />
+                    </div>
+                    <div>
+                        <label for="news_fields_createDate_to">Create date to</label>
+                        <input type="date" id="news_fields_createDate_to" name="news[fields][createDate][to]" />
+                    </div>
+                </div>
+            </div>
+            <div class=" datasource-field-container">
+                <div id="news_fields_createDateTime">
+                    <div>
+                        <label for="news_fields_createDateTime_from">Create date time from</label>
+                        <input type="datetime-local" id="news_fields_createDateTime_from" name="news[fields][createDateTime][from]" value="2021-01-01T15:00:00" />
+                    </div>
+                    <div>
+                        <label for="news_fields_createDateTime_to">Create date time to</label>
+                        <input type="datetime-local" id="news_fields_createDateTime_to" name="news[fields][createDateTime][to]" />
+                    </div>
+                </div>
+            </div>
+            <div class=" datasource-field-container">
+                <label>Create time</label>
+                <div id="news_fields_createTime">
+                    <select id="news_fields_createTime_hour" name="news[fields][createTime][hour]">
+                        <option value=""></option>
+                        <option value="0">00</option>
+                        <option value="1">01</option>
+                        <option value="2">02</option>
+                        <option value="3">03</option>
+                        <option value="4">04</option>
+                        <option value="5">05</option>
+                        <option value="6">06</option>
+                        <option value="7">07</option>
+                        <option value="8">08</option>
+                        <option value="9">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16" selected="selected">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                    </select>:<select id="news_fields_createTime_minute" name="news[fields][createTime][minute]">
+                        <option value=""></option>
+                        <option value="0">00</option>
+                        <option value="1">01</option>
+                        <option value="2">02</option>
+                        <option value="3">03</option>
+                        <option value="4">04</option>
+                        <option value="5">05</option>
+                        <option value="6">06</option>
+                        <option value="7">07</option>
+                        <option value="8">08</option>
+                        <option value="9">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>
+                        <option value="29">29</option>
+                        <option value="30">30</option>
+                        <option value="31">31</option>
+                        <option value="32">32</option>
+                        <option value="33">33</option>
+                        <option value="34">34</option>
+                        <option value="35">35</option>
+                        <option value="36">36</option>
+                        <option value="37">37</option>
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
+                        <option value="43">43</option>
+                        <option value="44">44</option>
+                        <option value="45">45</option>
+                        <option value="46">46</option>
+                        <option value="47">47</option>
+                        <option value="48">48</option>
+                        <option value="49">49</option>
+                        <option value="50">50</option>
+                        <option value="51">51</option>
+                        <option value="52">52</option>
+                        <option value="53">53</option>
+                        <option value="54">54</option>
+                        <option value="55">55</option>
+                        <option value="56">56</option>
+                        <option value="57">57</option>
+                        <option value="58">58</option>
+                        <option value="59">59</option>
+                    </select>
+                </div>
+            </div>
+            <div class=" datasource-field-container">
+                <label for="news_fields_title">Title</label>
+                <input type="text" id="news_fields_title" name="news[fields][title]" value="A news" />
+            </div>
+            <div class=" datasource-field-container">
+                <label for="news_fields_active">Active</label>
+                <select id="news_fields_active" name="news[fields][active]">
+                    <option value=""></option>
+                    <option value="1">yes</option>
+                    <option value="0" selected="selected">no</option>
+                </select>
+            </div>
+            <div class=" datasource-field-container">
+                <label for="news_fields_views">Views</label>
+                <input type="number" id="news_fields_views" name="news[fields][views]" value="10" />
+            </div>
+            <button type="submit">Filter</button>
+        </form>
+        <table>
+            <tr>
+                <td>A news</td>
+                <td>An author</td>
+            </tr>
+        </table>
+    </body>
+</html>
