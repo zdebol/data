@@ -29,7 +29,9 @@
 {% endblock %}
 
 {% block datagrid_column_type_action_cell_action %}
-<a {% for attrname, attrvalue in attr %}{% if attrname == 'title' %}{{ attrname }}="{{ attrvalue|trans({}, translation_domain) }}" {% else %}{{ attrname }}="{{ attrvalue }}" {% endif %}{% endfor %}>{{ content|trans({}, translation_domain)|raw }}</a>
+<a {% for attrname, attrvalue in attr %}{% if attrname == 'title' %}{{ attrname }}="{{ attrvalue|trans({}, translation_domain) }}" {% else %}{{ attrname }}="{{ attrvalue }}" {% endif %}{% endfor %}>
+    {{- content|trans({}, translation_domain)|raw -}}
+</a>
 {% endblock %}
 
 {% block datagrid_column_type_action_cell %}
@@ -57,7 +59,7 @@
 {% else %}
     {% set label = header.name|humanize|trans({}, translation_domain)  %}
 {% endif %}
-    <th>
+    <th{{ block('datagrid_header_attributes') }}>
         <span>{{ label }}</span>
     </th>
 {% endapply %}
@@ -87,11 +89,14 @@
 
 {% block datagrid_column_cell %}
 {% apply spaceless %}
-<td>
-    <div>
-        {% endapply %}{{ cell.value|raw }}{{ datagrid_column_cell_form_widget(cell) }}{% apply spaceless %}
-    </div>
-</td>
+    <td{{ block('datagrid_cell_attributes') }}>
+        <div{{ block('datagrid_container_attributes') }}>
+            <span{{ block('datagrid_value_attributes') }}>
+                {{- cell.value|raw -}}
+                {{- datagrid_column_cell_form_widget(cell) -}}
+            </span>
+        </div>
+    </td>
 {% endapply %}
 {% endblock %}
 
@@ -119,3 +124,38 @@
     </table>
 {% endapply %}
 {% endblock %}
+
+{% block datagrid_container_class 'datagrid-cell-container' ~ ('action' == cell.type ? ' text-right actions' : '') %}
+{% block datagrid_header_class 'datagrid-header' %}
+{% block datagrid_value_class 'datagrid-cell-value' %}
+{% block datagrid_cell_class 'datagrid-cell' %}
+
+{%- block datagrid_value_attributes -%}
+    {%- set valueAttr = cell.getAttribute('value_attr')|default([]) -%}
+    {%- set attr = valueAttr|merge({class: (valueAttr['class']|default('') ~ ' ' ~ block('datagrid_value_class'))|trim}) -%}
+    {{ block('datagrid_attributes') }}
+{%- endblock datagrid_value_attributes -%}
+
+{%- block datagrid_cell_attributes -%}
+    {%- set cellAttr = cell.getAttribute('cell_attr')|default([]) -%}
+    {%- set attr = cellAttr|merge({class: (cellAttr['class']|default('') ~ ' ' ~ block('datagrid_cell_class'))|trim}) -%}
+    {{ block('datagrid_attributes') }}
+{%- endblock datagrid_cell_attributes -%}
+
+{%- block datagrid_header_attributes -%}
+    {%- set headerAttr = header.getAttribute('header_attr')|default([]) -%}
+    {%- set attr = headerAttr|merge({class: (headerAttr['class']|default('') ~ ' ' ~ block('datagrid_header_class'))|trim}) -%}
+    {{ block('datagrid_attributes') }}
+{%- endblock datagrid_header_attributes -%}
+
+{%- block datagrid_container_attributes -%}
+    {%- set containerAttr = cell.getAttribute('container_attr')|default([]) -%}
+    {%- set id = datagrid_name ~ '_' ~ row_index ~ '_' ~ cell.name -%}
+    {%- set class = (containerAttr['class']|default('') ~ ' ' ~ block('datagrid_container_class'))|trim -%}
+    {%- set attr = { id: id }|merge(containerAttr)|merge({class: class}) -%}
+    {{ block('datagrid_attributes') }}
+{%- endblock datagrid_container_attributes -%}
+
+{%- block datagrid_attributes -%}
+    {%- for attrname, attrvalue in attr -%}{{- " " -}}{{- attrname }}="{{ attrvalue }}"{%- endfor -%}
+{%- endblock datagrid_attributes -%}

@@ -489,7 +489,7 @@ class DataGridRuntimeTest extends TestCase
     /**
      * @return Template&MockObject
      */
-    private function getTemplateMock(): Template
+    private function getTemplateMock(): MockObject
     {
         /** @var Template&MockObject $template */
         $template = $this->createMock(Template::class);
