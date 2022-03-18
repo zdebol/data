@@ -81,6 +81,13 @@ final class BundleIntegrationTest extends WebTestCase
         self::assertSelectorTextContains('tr:first-child td:last-child', 'An author');
         self::assertSelectorTextNotContains('tr:last-child td:first-child', 'Another news');
         self::assertSelectorTextNotContains('tr:last-child td:last-child', 'Another author');
+
+        /** @var string $responseContent */
+        $responseContent = $this->client->getResponse()->getContent();
+        self::assertXmlStringEqualsXmlFile(
+            __DIR__ . '/Resources/views/expected/datasource_test_collection.html',
+            $responseContent
+        );
     }
 
     public function testDataSourceDoctrineORMRendering(): void

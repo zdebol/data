@@ -18,6 +18,7 @@ use FSi\Component\DataSource\Driver\Collection\CollectionFactory;
 use FSi\Component\DataSource\Driver\DriverFactoryManager;
 use FSi\Component\DataSource\Event;
 use FSi\Component\DataSource\Event\PostBuildView;
+use FSi\Component\DataSource\Exception\DataSourceException;
 use FSi\Component\DataSource\Extension\Pagination\EventSubscriber\PaginationPostBuildView;
 use FSi\Component\DataSource\Extension\Pagination\EventSubscriber\PaginationPostGetParameters;
 use FSi\Component\DataSource\Extension\Pagination\EventSubscriber\PaginationPreBindParameters;
@@ -26,6 +27,7 @@ use FSi\Component\DataSource\Result;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Tests\FSi\Component\DataSource\Fixtures\TestResult;
+use Tests\FSi\Component\DataSource\Fixtures\UncountableTestResult;
 
 use function array_key_exists;
 
@@ -132,7 +134,31 @@ final class PaginationExtensionTest extends TestCase
     {
         $result = $this->createMock(Result::class);
         $dataSource = $this->createMock(DataSourceInterface::class);
+        $dataSource->expects(self::once())->method('getName')->willReturn('datasource');
         $dataSource->expects(self::once())->method('getResult')->willReturn($result);
+        $dataSource->expects(self::once())->method('getMaxResults')->willReturn(null);
+
+        $view = $this->createMock(DataSourceViewInterface::class);
+        $view->expects(self::never())->method('setAttribute');
+
+        $subscriber = new PaginationPostBuildView();
+        ($subscriber)(new PostBuildView($dataSource, $view));
+    }
+
+    public function testExceptionThrownForUncountableResultsAndMaxResultsSet(): void
+    {
+        $this->expectException(DataSourceException::class);
+        $this->expectExceptionMessage(
+            'DataSource\'s "datasource" result of class'
+            . ' "Tests\FSi\Component\DataSource\Fixtures\UncountableTestResult"'
+            . ' is not countable, but has max results set'
+        );
+
+        $result = new UncountableTestResult();
+        $dataSource = $this->createMock(DataSourceInterface::class);
+        $dataSource->expects(self::once())->method('getName')->willReturn('datasource');
+        $dataSource->expects(self::once())->method('getResult')->willReturn($result);
+        $dataSource->expects(self::once())->method('getMaxResults')->willReturn(10);
 
         $view = $this->createMock(DataSourceViewInterface::class);
         $view->expects(self::never())->method('setAttribute');
