@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace FSi\Component\DataGrid\Data;
 
 use InvalidArgumentException;
+use ReturnTypeWillChange;
 use RuntimeException;
 
 use function array_key_exists;
@@ -46,6 +47,7 @@ class DataRowset implements DataRowsetInterface
     /**
      * @return array<string,mixed>|object|false
      */
+    #[ReturnTypeWillChange]
     public function current()
     {
         return current($this->data);
@@ -54,6 +56,7 @@ class DataRowset implements DataRowsetInterface
     /**
      * @return int|string|null
      */
+    #[ReturnTypeWillChange]
     public function key()
     {
         return key($this->data);
@@ -79,6 +82,7 @@ class DataRowset implements DataRowsetInterface
         return array_key_exists($offset, $this->data);
     }
 
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (false === $this->offsetExists($offset)) {

@@ -15,6 +15,7 @@ use FSi\Component\DataGrid\Column\CellViewInterface;
 use FSi\Component\DataGrid\Column\ColumnInterface;
 use FSi\Component\DataGrid\Exception\UnexpectedTypeException;
 use InvalidArgumentException;
+use ReturnTypeWillChange;
 use RuntimeException;
 
 class DataGridRowView implements DataGridRowViewInterface
@@ -71,6 +72,7 @@ class DataGridRowView implements DataGridRowViewInterface
     /**
      * @return CellViewInterface|false
      */
+    #[ReturnTypeWillChange]
     public function current()
     {
         return current($this->cellViews);
@@ -79,7 +81,7 @@ class DataGridRowView implements DataGridRowViewInterface
     /**
      * @return string|null
      */
-    public function key()
+    public function key(): ?string
     {
         return key($this->cellViews);
     }

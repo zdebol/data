@@ -15,6 +15,7 @@ use FSi\Component\DataGrid\Column\ColumnInterface;
 use FSi\Component\DataGrid\Data\DataRowsetInterface;
 use FSi\Component\DataGrid\Column\HeaderViewInterface;
 use InvalidArgumentException;
+use ReturnTypeWillChange;
 use RuntimeException;
 
 class DataGridView implements DataGridViewInterface
@@ -73,6 +74,10 @@ class DataGridView implements DataGridViewInterface
         return new DataGridRowView($this->columns, $index, $this->rowset->current());
     }
 
+    /**
+     * @return int|string|null
+     */
+    #[ReturnTypeWillChange]
     public function key()
     {
         return $this->rowset->key();

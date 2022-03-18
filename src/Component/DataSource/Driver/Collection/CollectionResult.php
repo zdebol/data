@@ -18,6 +18,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
 use FSi\Component\DataSource\Result;
+use ReturnTypeWillChange;
 
 /**
  * @template-implements ArrayAccess<int|string,mixed>
@@ -62,6 +63,7 @@ class CollectionResult implements ArrayAccess, Countable, Result
         return $this->collection->containsKey($offset);
     }
 
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->collection->get($offset);
