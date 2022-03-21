@@ -31,7 +31,7 @@
                  public="true"
         />
 
-        <service id="FSi\Component\DataSource\DataSourceFactory" lazy="true" />
+        <service id="FSi\Component\DataSource\DataSourceFactory" />
 
     </services>
 </container>
