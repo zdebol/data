@@ -36,7 +36,7 @@ trait ColumnTypeTrait
     public function createCellView(ColumnInterface $column, $index, $source): CellViewInterface
     {
         $cellView = new CellView($column, $this->getValue($column, $source));
-        $this->buildCellView($column, $cellView);
+        $this->buildCellView($column, $cellView, $index, $source);
         foreach ($this->columnTypeExtensions as $extension) {
             $extension->buildCellView($column, $cellView, $index, $source);
         }
@@ -120,5 +120,11 @@ trait ColumnTypeTrait
 
     abstract protected function buildHeaderView(ColumnInterface $column, HeaderViewInterface $view): void;
 
-    abstract protected function buildCellView(ColumnInterface $column, CellViewInterface $view): void;
+    /**
+     * @param ColumnInterface $column
+     * @param CellViewInterface $view
+     * @param int|string $index
+     * @param array<string,mixed>|object $source
+     */
+    abstract protected function buildCellView(ColumnInterface $column, CellViewInterface $view, $index, $source): void;
 }

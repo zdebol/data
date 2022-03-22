@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace FSi\Component\DataGrid\ColumnType;
 
+use FSi\Component\DataGrid\Column\CellViewInterface;
 use FSi\Component\DataGrid\Column\ColumnAbstractType;
 use FSi\Component\DataGrid\Column\ColumnInterface;
 
@@ -24,5 +25,16 @@ class Batch extends ColumnAbstractType
     protected function getValue(ColumnInterface $column, $object)
     {
         return null;
+    }
+
+    /**
+     * @param ColumnInterface $column
+     * @param CellViewInterface $view
+     * @param int|string $index
+     * @param array<string,mixed>|object $source
+     */
+    protected function buildCellView(ColumnInterface $column, CellViewInterface $view, $index, $source): void
+    {
+        $view->setAttribute('index', $index);
     }
 }

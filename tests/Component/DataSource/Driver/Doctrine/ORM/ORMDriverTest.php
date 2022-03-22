@@ -29,7 +29,7 @@ use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\Entity;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\Number;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\Text;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\Time;
-use FSi\Component\DataSource\Driver\Doctrine\ORM\ORMPaginator;
+use FSi\Component\DataSource\Driver\Doctrine\ORM\ORMResult;
 use FSi\Component\DataSource\Driver\DriverFactoryManager;
 use FSi\Component\DataSource\Event\PostGetParameters;
 use FSi\Component\DataSource\Event\PreBindParameters;
@@ -260,7 +260,7 @@ final class ORMDriverTest extends TestCase
 
             $datasource->bindParameters($parameters);
             $result = $datasource->getResult();
-            self::assertInstanceOf(ORMPaginator::class, $result);
+            self::assertInstanceOf(ORMResult::class, $result);
             /** @var Iterator<int,News> $iterator */
             $iterator = $result->getIterator();
             self::assertEquals('title0', $iterator->current()->getTitle());
@@ -277,7 +277,7 @@ final class ORMDriverTest extends TestCase
 
             $datasource->bindParameters($parameters);
             $result = $datasource->getResult();
-            self::assertInstanceOf(ORMPaginator::class, $result);
+            self::assertInstanceOf(ORMResult::class, $result);
             /** @var Iterator<int,News> $iterator */
             $iterator = $result->getIterator();
             self::assertEquals('title99', $iterator->current()->getTitle());
@@ -444,7 +444,7 @@ final class ORMDriverTest extends TestCase
 
             $datasource->bindParameters($parameters);
             $result = $datasource->getResult();
-            self::assertInstanceOf(ORMPaginator::class, $result);
+            self::assertInstanceOf(ORMResult::class, $result);
             /** @var Iterator<int,News> $iterator */
             $iterator = $result->getIterator();
             self::assertTrue($iterator->current()->isActive());
@@ -459,7 +459,7 @@ final class ORMDriverTest extends TestCase
 
             $datasource->bindParameters($parameters);
             $result = $datasource->getResult();
-            self::assertInstanceOf(ORMPaginator::class, $result);
+            self::assertInstanceOf(ORMResult::class, $result);
             /** @var Iterator<int,News> $iterator */
             $iterator = $result->getIterator();
             self::assertFalse($iterator->current()->isActive());

@@ -23,7 +23,7 @@
 {% block datagrid_column_type_batch_cell %}
 {% apply spaceless %}
     <td>
-        <input type="checkbox" name="{{ cell.dataGridName }}_{{ cell.type }}[]" value="{{ cell.value }}" class="{{ cell.dataGridName }}_{{ cell.type }}" />
+        <input type="checkbox" name="{{ cell.dataGridName }}_{{ cell.type }}[]" value="{{ cell.getAttribute('index') }}" class="{{ cell.dataGridName }}_{{ cell.type }}" />
     </td>
 {% endapply %}
 {% endblock %}
