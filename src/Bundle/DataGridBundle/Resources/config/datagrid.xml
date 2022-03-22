@@ -10,11 +10,14 @@
 
         <prototype namespace="FSi\Bundle\DataGridBundle\DataGrid\"
                    resource="../../DataGrid/*"
-                   exclude="../../DataGrid/ColumnType"
         />
 
         <prototype namespace="FSi\Component\DataGrid\"
                    resource="../../../../Component/DataGrid/{ColumnType,ColumnTypeExtension,EventSubscriber,Extension}"
+        />
+
+        <service id="FSi\Component\DataGrid\ColumnType\Action"
+                 alias="FSi\Bundle\DataGridBundle\DataGrid\ColumnType\Action"
         />
 
         <service id="FSi\Bundle\DataGridBundle\DataGrid\ColumnTypeExtension\FormExtension">

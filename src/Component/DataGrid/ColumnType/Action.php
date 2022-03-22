@@ -49,25 +49,22 @@ class Action extends ColumnAbstractType
 
     protected function initOptions(OptionsResolver $optionsResolver): void
     {
-        $optionsResolver->setDefaults([
-            'actions' => [],
-        ]);
+        $optionsResolver->setDefault('actions', function (OptionsResolver $actionOptionsResolver): void {
+            $actionOptionsResolver->setPrototype(true);
+            $actionOptionsResolver->setDefaults([
+                'redirect_uri' => null,
+                'domain' => null,
+                'protocol' => 'http://'
+            ]);
 
-        $optionsResolver->setAllowedTypes('actions', 'array');
+            $actionOptionsResolver->setRequired([
+                'uri_scheme'
+            ]);
 
-        $this->actionOptionsResolver->setDefaults([
-            'redirect_uri' => null,
-            'domain' => null,
-            'protocol' => 'http://'
-        ]);
-
-        $this->actionOptionsResolver->setRequired([
-            'uri_scheme'
-        ]);
-
-        $this->actionOptionsResolver->setAllowedTypes('redirect_uri', ['string', 'null']);
-        $this->actionOptionsResolver->setAllowedTypes('uri_scheme', 'string');
-        $this->actionOptionsResolver->setAllowedValues('protocol', ['http://', 'https://']);
+            $actionOptionsResolver->setAllowedTypes('redirect_uri', ['string', 'null']);
+            $actionOptionsResolver->setAllowedTypes('uri_scheme', 'string');
+            $actionOptionsResolver->setAllowedValues('protocol', ['http://', 'https://']);
+        });
     }
 
     protected function filterValue(ColumnInterface $column, $value)
@@ -76,7 +73,6 @@ class Action extends ColumnAbstractType
         $actions = $column->getOption('actions');
 
         foreach ($actions as $name => $options) {
-            $options = $this->actionOptionsResolver->resolve((array) $options);
             $return[$name] = [];
 
             $url = (isset($options['protocol'], $options['domain'])) ? $options['protocol'] . $options['domain'] : '';

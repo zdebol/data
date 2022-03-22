@@ -12,3 +12,11 @@ columns:
         type: date
         options:
             label: Created at
+    actions:
+        type: action
+        options:
+            actions:
+                test:
+                    route_name: test
+                    parameters_field_mapping:
+                        id: id
