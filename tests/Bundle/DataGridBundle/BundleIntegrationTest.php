@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Bundle\DataGridBundle;
 
+use DOMAttr;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Tests\FSi\Bundle\DataGridBundle\Fixtures\TestKernel;
 
@@ -26,18 +27,32 @@ final class BundleIntegrationTest extends WebTestCase
         $client = self::createClient();
         $client->request('GET', '/test');
         $client->getResponse()->getContent();
+        $crawler = $client->getCrawler();
 
         self::assertSelectorTextContains('thead th:nth-child(1) span', 'ID');
         self::assertSelectorTextContains('thead th:nth-child(2) span', 'Name');
         self::assertSelectorTextContains('thead th:nth-child(3) span', 'Author');
         self::assertSelectorTextContains('thead th:nth-child(4) span', 'Category');
+        self::assertSelectorTextContains('thead th:nth-child(5) span', 'Actions');
         self::assertSelectorTextContains('tbody tr:nth-child(1) td:nth-child(1)', '1');
         self::assertSelectorTextContains('tbody tr:nth-child(1) td:nth-child(2)', 'Test 1');
         self::assertSelectorTextContains('tbody tr:nth-child(1) td:nth-child(3)', 'Author 1');
+        $aNode = $crawler->filter('tbody tr:nth-child(1) td:nth-child(5) a')->getNode(0);
+        self::assertNotNull($aNode);
+        self::assertNotNull($aNode->attributes);
+        $href = $aNode->attributes->getNamedItem('href') ?? new DOMAttr('href');
+        self::assertInstanceOf(DOMAttr::class, $href);
+        self::assertEquals('/test/1?redirect_uri=/test', $href->value);
         self::assertSelectorTextContains('tbody tr:nth-child(2) td:nth-child(1)', '2');
         self::assertSelectorTextContains('tbody tr:nth-child(2) td:nth-child(2)', 'Test 2');
         self::assertSelectorTextContains('tbody tr:nth-child(2) td:nth-child(3)', 'Author 2');
         self::assertSelectorTextContains('tbody tr:nth-child(2) td:nth-child(4)', 'Category 2');
+        $aNode = $crawler->filter('tbody tr:nth-child(2) td:nth-child(5) a')->getNode(0);
+        self::assertNotNull($aNode);
+        self::assertNotNull($aNode->attributes);
+        $href = $aNode->attributes->getNamedItem('href') ?? new DOMAttr('href');
+        self::assertInstanceOf(DOMAttr::class, $href);
+        self::assertEquals('/test/2?redirect_uri=/test', $href->value);
 
         $client->submitForm('Save', [
             'datagrid[0][name]' => 'new name 1',

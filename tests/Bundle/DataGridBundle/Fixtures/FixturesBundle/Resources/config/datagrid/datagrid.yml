@@ -26,3 +26,16 @@ columns:
         options:
             editable: true
             label: Author
+
+    actions:
+        type: action
+        options:
+            display_order: 2
+            field_mapping:
+                - id
+            label: Actions
+            actions:
+                test:
+                    route_name: test
+                    parameters_field_mapping:
+                        id: id

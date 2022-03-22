@@ -29,7 +29,6 @@ final class Action extends ColumnAbstractType
 {
     private UrlGeneratorInterface $urlGenerator;
     private RequestStack $requestStack;
-    private OptionsResolver $actionOptionsResolver;
 
     /**
      * @param UrlGeneratorInterface $urlGenerator
@@ -46,7 +45,6 @@ final class Action extends ColumnAbstractType
 
         $this->urlGenerator = $urlGenerator;
         $this->requestStack = $requestStack;
-        $this->actionOptionsResolver = new OptionsResolver();
     }
 
     public function getId(): string
@@ -54,34 +52,26 @@ final class Action extends ColumnAbstractType
         return 'action';
     }
 
-    public function getActionOptionsResolver(): OptionsResolver
-    {
-        return $this->actionOptionsResolver;
-    }
-
     protected function initOptions(OptionsResolver $optionsResolver): void
     {
-        $optionsResolver->setDefaults([
-            'actions' => [],
-        ]);
+        $optionsResolver->setDefault('actions', function (OptionsResolver $actionOptionsResolver): void {
+            $actionOptionsResolver->setPrototype(true);
+            $actionOptionsResolver->setDefaults([
+                'redirect_uri' => true,
+                'absolute' => UrlGeneratorInterface::ABSOLUTE_PATH,
+                'url_attr' => [],
+                'content' => null,
+                'parameters_field_mapping' => [],
+                'additional_parameters' => [],
+            ]);
 
-        $optionsResolver->setAllowedTypes('actions', 'array');
+            $actionOptionsResolver->setAllowedTypes('url_attr', ['array', Closure::class]);
+            $actionOptionsResolver->setAllowedTypes('content', ['null', 'string', Closure::class]);
 
-        $this->actionOptionsResolver->setDefaults([
-            'redirect_uri' => true,
-            'absolute' => UrlGeneratorInterface::ABSOLUTE_PATH,
-            'url_attr' => [],
-            'content' => null,
-            'parameters_field_mapping' => [],
-            'additional_parameters' => [],
-        ]);
-
-        $this->actionOptionsResolver->setAllowedTypes('url_attr', ['array', Closure::class]);
-        $this->actionOptionsResolver->setAllowedTypes('content', ['null', 'string', Closure::class]);
-
-        $this->actionOptionsResolver->setRequired([
-            'route_name',
-        ]);
+            $actionOptionsResolver->setRequired([
+                'route_name',
+            ]);
+        });
     }
 
     protected function filterValue(ColumnInterface $column, $value)
@@ -90,7 +80,6 @@ final class Action extends ColumnAbstractType
         $actions = $column->getOption('actions');
 
         foreach ($actions as $name => $options) {
-            $options = $this->actionOptionsResolver->resolve((array) $options);
             $return[$name] = [];
             $parameters = [];
             $urlAttributes = $options['url_attr'];

@@ -47,7 +47,7 @@ final class TestKernel extends Kernel
 
     protected function configureRoutes(RouteCollectionBuilder $routes): void
     {
-        $routes->add('/test', TestController::class);
+        $routes->add('/test/{id?}', TestController::class, 'test');
     }
 
     protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader): void
