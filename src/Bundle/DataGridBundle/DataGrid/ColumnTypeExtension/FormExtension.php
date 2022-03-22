@@ -94,6 +94,10 @@ final class FormExtension extends ColumnAbstractTypeExtension implements DataGri
 
         $formData = $this->getFormBuilder($column)->prepareFormData($column, $data);
         $form = $this->getForm($column, $index, $source);
+        if ([] === $data) {
+            return;
+        }
+
         $form->submit([$index => $formData]);
         if (true === $form->isSubmitted() && true === $form->isValid()) {
             $data = $form->getData();
@@ -116,7 +120,15 @@ final class FormExtension extends ColumnAbstractTypeExtension implements DataGri
 
     public function isValid(ColumnInterface $column, $index): bool
     {
+        if (false === $column->getOption('editable')) {
+            return true;
+        }
+
         $form = $this->getForm($column, $index, null);
+
+        if (false === $form->isSubmitted()) {
+            return true;
+        }
 
         return true === $form->isSubmitted() && true === $form->isValid();
     }
