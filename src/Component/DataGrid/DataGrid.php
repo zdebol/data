@@ -21,6 +21,7 @@ use FSi\Component\DataGrid\Event\PreSetDataEvent;
 use FSi\Component\DataGrid\Exception\DataGridException;
 use InvalidArgumentException;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use ReturnTypeWillChange;
 use RuntimeException;
 
 use function array_key_exists;
@@ -164,6 +165,7 @@ final class DataGrid implements DataGridInterface
     /**
      * @return array<string,mixed>|object|false
      */
+    #[ReturnTypeWillChange]
     public function current()
     {
         if (null === $this->rowset) {
@@ -176,6 +178,7 @@ final class DataGrid implements DataGridInterface
     /**
      * @return int|string|null
      */
+    #[ReturnTypeWillChange]
     public function key()
     {
         if (null === $this->rowset) {
@@ -208,7 +211,7 @@ final class DataGrid implements DataGridInterface
         return null !== $this->key();
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         if (null === $this->rowset) {
             throw $this->createUninitializedDataException();
@@ -217,6 +220,7 @@ final class DataGrid implements DataGridInterface
         return $this->rowset->offsetExists($offset);
     }
 
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (null === $this->rowset) {
@@ -226,12 +230,13 @@ final class DataGrid implements DataGridInterface
         return $this->rowset->offsetGet($offset);
     }
 
+    #[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         throw new RuntimeException('Method not implemented');
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new RuntimeException('Method not implemented');
     }
