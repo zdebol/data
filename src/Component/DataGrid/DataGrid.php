@@ -159,7 +159,7 @@ final class DataGrid implements DataGridInterface
             throw $this->createUninitializedDataException();
         }
 
-        return count($this->rowset);
+        return $this->rowset->count();
     }
 
     /**
@@ -172,7 +172,7 @@ final class DataGrid implements DataGridInterface
             throw $this->createUninitializedDataException();
         }
 
-        return current($this->rowset);
+        return $this->rowset->current();
     }
 
     /**
@@ -185,7 +185,7 @@ final class DataGrid implements DataGridInterface
             throw $this->createUninitializedDataException();
         }
 
-        return key($this->rowset);
+        return $this->rowset->key();
     }
 
     public function next(): void
@@ -194,7 +194,7 @@ final class DataGrid implements DataGridInterface
             throw $this->createUninitializedDataException();
         }
 
-        next($this->rowset);
+        $this->rowset->next();
     }
 
     public function rewind(): void
@@ -203,12 +203,16 @@ final class DataGrid implements DataGridInterface
             throw $this->createUninitializedDataException();
         }
 
-        reset($this->rowset);
+        $this->rowset->rewind();
     }
 
     public function valid(): bool
     {
-        return null !== $this->key();
+        if (null === $this->rowset) {
+            throw $this->createUninitializedDataException();
+        }
+
+        return $this->rowset->valid();
     }
 
     public function offsetExists($offset): bool

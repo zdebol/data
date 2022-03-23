@@ -107,10 +107,11 @@ final class ORMDriver extends AbstractDriver
             $query->setFirstResult($first);
         }
 
-        $result = new ORMPaginator($query);
-        $result->setUseOutputWalkers($this->useOutputWalkers);
+        $paginator = new ORMPaginator($query);
+        $paginator->setUseOutputWalkers($this->useOutputWalkers);
 
-        $event = new PostGetResult($this, $fields, new ORMResult($this->managerRegistry, $result));
+        $result = new ORMResult($this->managerRegistry, $paginator);
+        $event = new PostGetResult($this, $fields, $result);
         $this->getEventDispatcher()->dispatch($event);
 
         return $result;

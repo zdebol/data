@@ -38,12 +38,8 @@ final class DataGridFormHandler implements DataGridFormHandlerInterface
         $this->eventDispatcher->dispatch($event);
         $data = $event->getData();
 
-        foreach ($data as $index => $values) {
-            if (false === isset($dataGrid[$index])) {
-                continue;
-            }
-
-            $source = $dataGrid[$index];
+        foreach ($dataGrid as $index => $source) {
+            $values = $data[$index] ?? [];
 
             foreach ($dataGrid->getColumns() as $column) {
                 $this->dataGridCellFormHandler->submit($column, $index, $source, $values);

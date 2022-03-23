@@ -38,15 +38,16 @@ final class FieldPreBindParameter implements DataSourceEventSubscriberInterface
             return;
         }
 
-        if (true === $form->isSubmitted()) {
+        $fieldForm = $form->get(DataSourceInterface::PARAMETER_FIELDS)->get($field->getName());
+        if (true === $fieldForm->isSubmitted()) {
             $form = $this->formStorage->getForm($field, true);
             if (null === $form) {
                 return;
             }
+            $fieldForm = $form->get(DataSourceInterface::PARAMETER_FIELDS)->get($field->getName());
         }
 
         $parameter = $event->getParameter();
-        $fieldForm = $form->get(DataSourceInterface::PARAMETER_FIELDS)->get($field->getName());
         $fieldForm->submit($parameter);
         $this->formStorage->setParameter($field, $parameter);
         $event->setParameter($fieldForm->getData());
