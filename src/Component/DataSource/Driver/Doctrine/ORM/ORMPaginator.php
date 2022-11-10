@@ -30,6 +30,7 @@ class ORMPaginator implements Countable, Result
         // Avoid DDC-2213 bug/mistake
         $em = $query->getEntityManager();
         $fetchJoinCollection = true;
+        /** @var class-string<object> $entity */
         foreach ($query->getRootEntities() as $entity) {
             if ($em->getClassMetadata($entity)->isIdentifierComposite) {
                 $fetchJoinCollection = false;
