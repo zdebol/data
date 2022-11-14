@@ -206,7 +206,7 @@ class DateTime extends ColumnAbstractType
                     );
                 }
 
-                $inputData[$field] = false === empty($value)
+                $inputData[$field] = true === is_string($value)
                     ? $this->transformStringToDateTime($value, $mappingFormat)
                     : null
                 ;
