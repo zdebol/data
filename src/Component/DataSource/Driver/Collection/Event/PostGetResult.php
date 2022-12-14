@@ -13,6 +13,10 @@ namespace FSi\Component\DataSource\Driver\Collection\Event;
 
 use FSi\Component\DataSource\Driver\Event\ResultEventArgs;
 
+/**
+ * @template T
+ * @template-extends ResultEventArgs<T>
+ */
 class PostGetResult extends ResultEventArgs
 {
 }

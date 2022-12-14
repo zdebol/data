@@ -15,6 +15,9 @@ use ArrayIterator;
 use Countable;
 use FSi\Component\DataSource\Result;
 
+/**
+ * @template-implements Result<mixed>
+ */
 final class TestResult implements Countable, Result
 {
     public function count(): int

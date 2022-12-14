@@ -19,12 +19,18 @@ use FSi\Component\DataSource\Result;
 use function count;
 
 /**
- * @template-extends ArrayCollection<int|string,mixed>
+ * @template T
+ * @template-implements Result<T>
+ * @template-extends ArrayCollection<int|string,T>
  */
 final class ORMResult extends ArrayCollection implements Result
 {
     private int $count;
 
+    /**
+     * @param ManagerRegistry $registry
+     * @param ORMPaginator<T> $paginator
+     */
     public function __construct(ManagerRegistry $registry, ORMPaginator $paginator)
     {
         $this->count = $paginator->count();

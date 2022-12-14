@@ -14,8 +14,14 @@ namespace FSi\Component\DataSource\Driver\Event;
 use FSi\Component\DataSource\Driver\DriverInterface;
 use FSi\Component\DataSource\Field\FieldInterface;
 
+/**
+ * @template T
+ */
 abstract class DriverEventArgs
 {
+    /**
+     * @var DriverInterface<T>
+     */
     private DriverInterface $driver;
     /**
      * @var array<FieldInterface>
@@ -23,7 +29,7 @@ abstract class DriverEventArgs
     private array $fields;
 
     /**
-     * @param DriverInterface $driver
+     * @param DriverInterface<T> $driver
      * @param array<FieldInterface> $fields
      */
     public function __construct(DriverInterface $driver, array $fields)
@@ -32,6 +38,9 @@ abstract class DriverEventArgs
         $this->fields = $fields;
     }
 
+    /**
+     * @return DriverInterface<T>
+     */
     public function getDriver(): DriverInterface
     {
         return $this->driver;

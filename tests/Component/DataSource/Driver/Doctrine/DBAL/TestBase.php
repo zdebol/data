@@ -49,6 +49,9 @@ abstract class TestBase extends TestCase
     private ?EventDispatcherInterface $eventDispatcher = null;
     private ?Extension\Ordering\Storage $orderingStorage = null;
 
+    /**
+     * @return DriverFactoryInterface<array<string,mixed>>
+     */
     protected function getDriverFactory(): DriverFactoryInterface
     {
         $fieldExtensions = [new FieldExtension($this->getOrderingStorage())];

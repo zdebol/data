@@ -22,6 +22,8 @@ use FSi\Component\DataSource\Field\FieldViewInterface;
  * DataSource maintains communication with driver, manipulating fields (adding,
  * removing, etc.), calling DataSource extensions events, view creation and more.
  * It's first and main interface client will communicate with.
+ *
+ * @template T
  */
 interface DataSourceInterface
 {
@@ -35,7 +37,7 @@ interface DataSourceInterface
      * @param string $name
      * @param string $type
      * @param array<string,mixed> $options
-     * @return DataSourceInterface
+     * @return DataSourceInterface<T>
      * @throws DataSourceExceptionInterface
      */
     public function addField(
@@ -55,8 +57,16 @@ interface DataSourceInterface
 
     public function clearFields(): void;
 
+    /**
+     * @param int|null $max
+     * @return DataSourceInterface<T>
+     */
     public function setMaxResults(?int $max): DataSourceInterface;
 
+    /**
+     * @param int|null $first
+     * @return DataSourceInterface<T>
+     */
     public function setFirstResult(?int $first): DataSourceInterface;
 
     public function getMaxResults(): ?int;
@@ -72,7 +82,7 @@ interface DataSourceInterface
     public function bindParameters($parameters = []): void;
 
     /**
-     * @return Result<int|string,mixed>
+     * @return Result<T>
      */
     public function getResult(): Result;
 

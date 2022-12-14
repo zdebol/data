@@ -14,11 +14,21 @@ namespace FSi\Component\DataSource\Driver\Collection\Event;
 use Doctrine\Common\Collections\Criteria;
 use FSi\Component\DataSource\Driver\DriverInterface;
 use FSi\Component\DataSource\Driver\Event\DriverEventArgs;
+use FSi\Component\DataSource\Field\FieldInterface;
 
+/**
+ * @template T
+ * @template-extends DriverEventArgs<T>
+ */
 class PreGetResult extends DriverEventArgs
 {
     private Criteria $criteria;
 
+    /**
+     * @param DriverInterface<T> $driver
+     * @param array<FieldInterface> $fields
+     * @param Criteria $queryBuilder
+     */
     public function __construct(DriverInterface $driver, array $fields, Criteria $queryBuilder)
     {
         parent::__construct($driver, $fields);

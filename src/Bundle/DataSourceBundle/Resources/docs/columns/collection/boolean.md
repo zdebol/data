@@ -103,13 +103,14 @@
 If you don't know how to use datasource-bundle you should look at [docs](https://github.com/fsi-open/datasource/blob/master/doc/en/drivers/collection.md).
 
 ```php
-$datasource
-    ->addField('active', 'boolean', 'eq',array(
+$dataSource
+    ->addField('active', 'boolean', 'eq', [
+        'comparison' => 'eq',
         'default_sort' => 'desc'
-    ))
+    ])
 ```
 Output:
 ```php
-$citeria->where($criteria->expr()->eq('active',$value))
+$citeria->where($criteria->expr()->eq('active', $value))
 
 ```

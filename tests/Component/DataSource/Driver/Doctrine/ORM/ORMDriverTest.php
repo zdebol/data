@@ -79,30 +79,30 @@ final class ORMDriverTest extends TestCase
 
     public function testNumberFieldComparingWithZero(): void
     {
-        $datasourceFactory = $this->getDataSourceFactory();
+        $dataSourceFactory = $this->getDataSourceFactory();
 
-        $datasource = $datasourceFactory
+        $dataSource = $dataSourceFactory
             ->createDataSource('doctrine-orm', ['entity' => News::class], 'datasource')
             ->addField('id', 'number', ['comparison' => 'eq']);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'id' => '0',
                 ],
             ],
         ];
-        $datasource->bindParameters($parameters);
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $result = $dataSource->getResult();
         self::assertCount(0, $result);
     }
 
     public function testGeneralDoctrineDriverConfiguration(): void
     {
-        $datasourceFactory = $this->getDataSourceFactory();
-        $datasources = [];
+        $dataSourceFactory = $this->getDataSourceFactory();
+        $dataSources = [];
 
-        $datasources[] = $datasourceFactory->createDataSource(
+        $dataSources[] = $dataSourceFactory->createDataSource(
             'doctrine-orm',
             ['entity' => News::class],
             'datasource'
@@ -110,14 +110,14 @@ final class ORMDriverTest extends TestCase
 
         $qb = $this->em->createQueryBuilder()->select('n')->from(News::class, 'n');
 
-        $datasources[] = $datasourceFactory->createDataSource(
+        $dataSources[] = $dataSourceFactory->createDataSource(
             'doctrine-orm',
             ['qb' => $qb, 'alias' => 'n'],
             'datasource2'
         );
 
-        foreach ($datasources as $datasource) {
-            $datasource
+        foreach ($dataSources as $dataSource) {
+            $dataSource
                 ->addField('title', 'text', ['comparison' => 'in'])
                 ->addField('author', 'text', ['comparison' => 'like'])
                 ->addField('created', 'datetime', [
@@ -133,46 +133,46 @@ final class ORMDriverTest extends TestCase
                 ->addField('active', 'boolean', ['comparison' => 'eq'])
             ;
 
-            $result1 = $datasource->getResult();
+            $result1 = $dataSource->getResult();
             self::assertCount(100, $result1);
-            $view1 = $datasource->createView();
+            $view1 = $dataSource->createView();
 
             // Checking if result cache works.
-            self::assertSame($result1, $datasource->getResult());
+            self::assertSame($result1, $dataSource->getResult());
 
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'author' => 'domain1.com',
                     ],
                 ],
             ];
-            $datasource->bindParameters($parameters);
-            $result2 = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result2 = $dataSource->getResult();
 
             // Checking cache.
-            self::assertSame($result2, $datasource->getResult());
+            self::assertSame($result2, $dataSource->getResult());
 
             self::assertCount(50, $result2);
             self::assertNotSame($result1, $result2);
             unset($result1, $result2);
 
-            self::assertEquals($parameters, $datasource->getParameters());
+            self::assertEquals($parameters, $dataSource->getParameters());
 
-            $datasource->setMaxResults(20);
+            $dataSource->setMaxResults(20);
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     PaginationExtension::PARAMETER_PAGE => 1,
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result = $dataSource->getResult();
             self::assertCount(100, $result);
             self::assertCount(20, iterator_to_array($result));
 
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'author' => 'domain1.com',
                         'title' => ['title44', 'title58'],
@@ -181,63 +181,63 @@ final class ORMDriverTest extends TestCase
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $view = $datasource->createView();
-            $result = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $view = $dataSource->createView();
+            $result = $dataSource->getResult();
             self::assertCount(2, $result);
 
             // Checking entity fields. We assume that database has just been created so first category and first group
             // have ids equal to 1.
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'group' => 1,
                     ],
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result = $dataSource->getResult();
             self::assertCount(25, $result);
 
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'not_group' => 1,
                     ],
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result = $dataSource->getResult();
             self::assertCount(75, $result);
 
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'category' => 1,
                     ],
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result = $dataSource->getResult();
             self::assertCount(20, $result);
 
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'not_otherCategory' => 1,
                     ],
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result = $dataSource->getResult();
             self::assertCount(40, $result);
 
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'group' => 1,
                         'category' => 1,
@@ -245,21 +245,21 @@ final class ORMDriverTest extends TestCase
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result = $dataSource->getResult();
             self::assertCount(5, $result);
 
             // Checking sorting.
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     OrderingExtension::PARAMETER_SORT => [
                         'title' => 'asc'
                     ],
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result = $dataSource->getResult();
             self::assertInstanceOf(ORMResult::class, $result);
             /** @var Iterator<int,News> $iterator */
             $iterator = $result->getIterator();
@@ -267,7 +267,7 @@ final class ORMDriverTest extends TestCase
 
             // Checking sorting.
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     OrderingExtension::PARAMETER_SORT => [
                         'title' => 'desc',
                         'author' => 'asc'
@@ -275,8 +275,8 @@ final class ORMDriverTest extends TestCase
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result = $dataSource->getResult();
             self::assertInstanceOf(ORMResult::class, $result);
             /** @var Iterator<int,News> $iterator */
             $iterator = $result->getIterator();
@@ -284,15 +284,15 @@ final class ORMDriverTest extends TestCase
 
             // checking isnull & notnull
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'tags' => 'null'
                     ],
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result1 = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result1 = $dataSource->getResult();
             self::assertCount(50, $result1);
             $ids = [];
 
@@ -301,15 +301,15 @@ final class ORMDriverTest extends TestCase
             }
 
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'tags' => 'notnull'
                     ],
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result2 = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result2 = $dataSource->getResult();
             self::assertCount(50, $result2);
 
             foreach ($result2 as $item) {
@@ -319,7 +319,7 @@ final class ORMDriverTest extends TestCase
             unset($result1, $result2);
 
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'otherCategory' => 'null'
                     ],
@@ -327,8 +327,8 @@ final class ORMDriverTest extends TestCase
             ];
 
             // checking isnull & notnull - field type entity
-            $datasource->bindParameters($parameters);
-            $result1 = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result1 = $dataSource->getResult();
             self::assertCount(50, $result1);
             $ids = [];
 
@@ -337,15 +337,15 @@ final class ORMDriverTest extends TestCase
             }
 
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'otherCategory' => 'notnull'
                     ],
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result2 = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result2 = $dataSource->getResult();
             self::assertCount(50, $result2);
 
             foreach ($result2 as $item) {
@@ -356,27 +356,27 @@ final class ORMDriverTest extends TestCase
 
             // checking - field type boolean
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'active' => null
                     ],
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result1 = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result1 = $dataSource->getResult();
             self::assertCount(100, $result1);
 
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'active' => 1
                     ],
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result2 = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result2 = $dataSource->getResult();
             self::assertCount(50, $result2);
             $ids = [];
 
@@ -385,15 +385,15 @@ final class ORMDriverTest extends TestCase
             }
 
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'active' => 0
                     ],
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result3 = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result3 = $dataSource->getResult();
             self::assertCount(50, $result3);
 
             foreach ($result3 as $item) {
@@ -401,15 +401,15 @@ final class ORMDriverTest extends TestCase
             }
 
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'active' => true
                     ],
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result2 = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result2 = $dataSource->getResult();
             self::assertCount(50, $result2);
 
             foreach ($result2 as $item) {
@@ -417,15 +417,15 @@ final class ORMDriverTest extends TestCase
             }
 
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'active' => false
                     ],
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result3 = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result3 = $dataSource->getResult();
             self::assertCount(50, $result3);
 
             foreach ($result3 as $item) {
@@ -435,39 +435,39 @@ final class ORMDriverTest extends TestCase
             unset($result1, $result2, $result3);
 
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     OrderingExtension::PARAMETER_SORT => [
                         'active' => 'desc'
                     ],
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result = $dataSource->getResult();
             self::assertInstanceOf(ORMResult::class, $result);
             /** @var Iterator<int,News> $iterator */
             $iterator = $result->getIterator();
             self::assertTrue($iterator->current()->isActive());
 
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     OrderingExtension::PARAMETER_SORT => [
                         'active' => 'asc'
                     ],
                 ],
             ];
 
-            $datasource->bindParameters($parameters);
-            $result = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result = $dataSource->getResult();
             self::assertInstanceOf(ORMResult::class, $result);
             /** @var Iterator<int,News> $iterator */
             $iterator = $result->getIterator();
             self::assertFalse($iterator->current()->isActive());
 
             //Test for clearing fields.
-            $datasource->clearFields();
+            $dataSource->clearFields();
             $parameters = [
-                $datasource->getName() => [
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'author' => 'domain1.com',
                     ],
@@ -475,8 +475,8 @@ final class ORMDriverTest extends TestCase
             ];
 
             //Since there are no fields now, we should have all of entities.
-            $datasource->bindParameters($parameters);
-            $result = $datasource->getResult();
+            $dataSource->bindParameters($parameters);
+            $result = $dataSource->getResult();
             self::assertCount(100, $result);
         }
     }
@@ -500,8 +500,8 @@ final class ORMDriverTest extends TestCase
             'alias' => 'n'
         ];
 
-        $datasource = $dataSourceFactory->createDataSource('doctrine-orm', $driverOptions, 'datasource');
-        $datasource->addField('author', 'text', ['comparison' => 'like'])
+        $dataSource = $dataSourceFactory->createDataSource('doctrine-orm', $driverOptions, 'datasource');
+        $dataSource->addField('author', 'text', ['comparison' => 'like'])
             ->addField('category', 'text', [
                 'comparison' => 'like',
                 'field' => 'c.name',
@@ -512,29 +512,29 @@ final class ORMDriverTest extends TestCase
             ]);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'group' => 'group0',
                 ],
             ],
         ];
 
-        $datasource->bindParameters($parameters);
-        self::assertCount(25, $datasource->getResult());
+        $dataSource->bindParameters($parameters);
+        self::assertCount(25, $dataSource->getResult());
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'group' => 'group',
                 ],
             ],
         ];
 
-        $datasource->bindParameters($parameters);
-        self::assertCount(100, $datasource->getResult());
+        $dataSource->bindParameters($parameters);
+        self::assertCount(100, $dataSource->getResult());
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'group' => 'group0',
                     'category' => 'category0',
@@ -542,8 +542,8 @@ final class ORMDriverTest extends TestCase
             ],
         ];
 
-        $datasource->bindParameters($parameters);
-        self::assertCount(5, $datasource->getResult());
+        $dataSource->bindParameters($parameters);
+        self::assertCount(5, $dataSource->getResult());
     }
 
     public function testDoctrineDriverWithQueryWithAggregates(): void
@@ -562,8 +562,8 @@ final class ORMDriverTest extends TestCase
             'alias' => 'c'
         ];
 
-        $datasource = $dataSourceFactory->createDataSource('doctrine-orm', $driverOptions, 'datasource');
-        $datasource
+        $dataSource = $dataSourceFactory->createDataSource('doctrine-orm', $driverOptions, 'datasource');
+        $dataSource
             ->addField('category', 'text', [
                 'comparison' => 'like',
                 'field' => 'c.name',
@@ -576,15 +576,15 @@ final class ORMDriverTest extends TestCase
             ]);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'newscount' => 3,
                 ],
             ],
         ];
 
-        $datasource->bindParameters($parameters);
-        $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $dataSource->getResult();
 
         self::assertEquals(
             $this->queryLogger->getQueryBuilder()->getQuery()->getDQL(),
@@ -596,15 +596,15 @@ final class ORMDriverTest extends TestCase
         );
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'newscount' => 0,
                 ],
             ],
         ];
 
-        $datasource->bindParameters($parameters);
-        $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $dataSource->getResult();
 
         self::assertEquals(
             $this->queryLogger->getQueryBuilder()->getQuery()->getDQL(),
@@ -615,8 +615,8 @@ final class ORMDriverTest extends TestCase
             )
         );
 
-        $datasource = $dataSourceFactory->createDataSource('doctrine-orm', $driverOptions, 'datasource2');
-        $datasource
+        $dataSource = $dataSourceFactory->createDataSource('doctrine-orm', $driverOptions, 'datasource2');
+        $dataSource
             ->addField('category', 'text', [
                 'comparison' => 'like',
                 'field' => 'c.name',
@@ -629,15 +629,15 @@ final class ORMDriverTest extends TestCase
             ]);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'newscount' => [0, 1],
                 ],
             ],
         ];
 
-        $datasource->bindParameters($parameters);
-        $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $dataSource->getResult();
 
         self::assertEquals(
             $this->queryLogger->getQueryBuilder()->getQuery()->getDQL(),
@@ -665,23 +665,23 @@ final class ORMDriverTest extends TestCase
             'alias' => 'n'
         ];
 
-        $datasource = $dataSourceFactory->createDataSource('doctrine-orm', $driverOptions, 'datasource');
-        $datasource
+        $dataSource = $dataSourceFactory->createDataSource('doctrine-orm', $driverOptions, 'datasource');
+        $dataSource
             ->addField('category', 'entity', [
                 'comparison' => 'in',
                 'clause' => 'having',
             ]);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'category' => [2, 3],
                 ],
             ],
         ];
 
-        $datasource->bindParameters($parameters);
-        $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $dataSource->getResult();
 
         self::assertEquals(
             $this->queryLogger->getQueryBuilder()->getQuery()->getDQL(),
@@ -705,6 +705,9 @@ final class ORMDriverTest extends TestCase
         $this->orderingStorage = null;
     }
 
+    /**
+     * @return ORMFactory<object>
+     */
     private function getDoctrineFactory(): ORMFactory
     {
         $managerRegistry = $this->createMock(ManagerRegistry::class);

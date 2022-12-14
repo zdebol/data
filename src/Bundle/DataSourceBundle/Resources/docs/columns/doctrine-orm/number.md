@@ -116,7 +116,7 @@
 ### Usage example
 
 ```php
-$datasource->addField('quantity','number','gt')
+$dataSource->addField('quantity', 'number', ['comparison' => 'gt'])
 ```
 
 Result as DQL:

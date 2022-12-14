@@ -19,6 +19,10 @@ use function array_key_exists;
 use function array_walk;
 use function get_class;
 
+/**
+ * @template T
+ * @template-implements DriverInterface<T>
+ */
 abstract class AbstractDriver implements DriverInterface
 {
     private EventDispatcherInterface $eventDispatcher;

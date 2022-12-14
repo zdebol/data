@@ -143,8 +143,6 @@ final class ORMDriverBasicTest extends TestCase
         $managerRegistry->method('getManager')->willReturn($em);
         $managerRegistry->method('getManagerForClass')->willReturn($em);
 
-        $dataSource = $this->createMock(DataSourceInterface::class);
-
         $driver = new ORMDriver(
             $managerRegistry,
             $this->createMock(EventDispatcherInterface::class),
@@ -164,13 +162,13 @@ final class ORMDriverBasicTest extends TestCase
         $fieldType = $driver->getFieldType($type);
         self::assertInstanceOf(FieldTypeInterface::class, $fieldType);
 
-        $field = $fieldType->createField($dataSource, 'test', ['comparison' => 'eq']);
+        $field = $fieldType->createField('datasource', 'test', ['comparison' => 'eq']);
 
         self::assertEquals($field->getOption('field'), $field->getName());
 
         $this->expectException(InvalidOptionsException::class);
         $fieldType = $driver->getFieldType($type);
-        $fieldType->createField($dataSource, 'test', ['comparison' => 'wrong']);
+        $fieldType->createField('datasource', 'test', ['comparison' => 'wrong']);
     }
 
     public function testExtensionsCalls(): void

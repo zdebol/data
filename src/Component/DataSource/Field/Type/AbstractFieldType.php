@@ -62,7 +62,7 @@ abstract class AbstractFieldType implements FieldTypeInterface
         $optionsResolver->setAllowedTypes('comparison', 'string');
     }
 
-    public function createField(DataSourceInterface $dataSource, string $name, array $options): FieldInterface
+    public function createField(string $dataSourceName, string $name, array $options): FieldInterface
     {
         $optionsResolver = new OptionsResolver();
 
@@ -72,7 +72,7 @@ abstract class AbstractFieldType implements FieldTypeInterface
             $extension->initOptions($optionsResolver, $this);
         }
 
-        return new Field($dataSource, $this, $name, $optionsResolver->resolve($options));
+        return new Field($dataSourceName, $this, $name, $optionsResolver->resolve($options));
     }
 
     public function createView(FieldInterface $field): FieldViewInterface

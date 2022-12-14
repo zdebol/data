@@ -31,6 +31,9 @@ final class CollectionPreGetResult implements DataSourceEventSubscriberInterface
         $this->storage = $storage;
     }
 
+    /**
+     * @param PreGetResult<mixed> $event
+     */
     public function __invoke(PreGetResult $event): void
     {
         $fields = $event->getFields();

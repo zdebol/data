@@ -28,25 +28,25 @@ final class OrderingExtensionTest extends TestCase
 {
     public function testStoringParameters(): void
     {
-        $datasource = $this->createMock(DataSourceInterface::class);
+        $dataSource = $this->createMock(DataSourceInterface::class);
         $orderingStorage = new Storage();
         $field = $this->createMock(FieldInterface::class);
 
-        $datasource->method('getFields')->willReturn(['test' => $field]);
-        $datasource->method('getField')->with('test')->willReturn($field);
-        $datasource->method('getName')->willReturn('ds');
+        $dataSource->method('getFields')->willReturn(['test' => $field]);
+        $dataSource->method('getField')->with('test')->willReturn($field);
+        $dataSource->method('getName')->willReturn('ds');
 
         $preBindParametersSubscriber = new OrderingPreBindParameters($orderingStorage);
         $postGetParametersSubscriber = new OrderingPostGetParameters($orderingStorage);
 
         $parameters = ['ds' => [OrderingExtension::PARAMETER_SORT => ['test' => 'asc']]];
-        ($preBindParametersSubscriber)(new Event\PreBindParameters($datasource, $parameters));
+        ($preBindParametersSubscriber)(new Event\PreBindParameters($dataSource, $parameters));
 
         // Assert that request parameters are properly stored in FieldExtension.
         self::assertEquals(0, $orderingStorage->getFieldSortingPriority($field));
         self::assertEquals(true, $orderingStorage->isFieldSortingAscending($field));
 
-        $event = new Event\PostGetParameters($datasource, []);
+        $event = new Event\PostGetParameters($dataSource, []);
         ($postGetParametersSubscriber)($event);
 
         self::assertEquals($parameters, $event->getParameters());
@@ -292,7 +292,7 @@ final class OrderingExtensionTest extends TestCase
             // because we need functionality from AbstractFieldType.
             $fieldType = new FakeFieldType([$fieldExtension]);
             $field = $fieldType->createField(
-                $dataSource,
+                'ds',
                 $fieldData['name'],
                 array_merge($fieldData['options'] ?? [], ['comparison' => 'eq'])
             );
@@ -307,17 +307,18 @@ final class OrderingExtensionTest extends TestCase
             ->willReturnCallback(fn() => $dataSourceFields[func_get_arg(0)])
         ;
 
+        $allParameters = ['ds' => [OrderingExtension::PARAMETER_SORT => $parameters]];
         $dataSource
             ->method('getParameters')
-            ->willReturn(['ds' => [OrderingExtension::PARAMETER_SORT => $parameters]])
+            ->willReturn($allParameters)
         ;
 
         $preBindParametersSubscriber = new OrderingPreBindParameters($storage);
 
-        ($preBindParametersSubscriber)(new Event\PreBindParameters(
-            $dataSource,
-            ['ds' => [OrderingExtension::PARAMETER_SORT => $parameters]]
-        ));
+        ($preBindParametersSubscriber)(new Event\PreBindParameters($dataSource, $allParameters));
+        foreach ($dataSourceFields as $field) {
+            $field->bindParameters($allParameters);
+        }
 
         $result = $storage->sortFields($dataSourceFields);
         self::assertSame($expectedOrdering, $result);

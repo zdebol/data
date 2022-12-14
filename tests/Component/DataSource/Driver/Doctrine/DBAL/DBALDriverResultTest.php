@@ -25,50 +25,50 @@ class DBALDriverResultTest extends TestBase
 
     public function testTableResultCount(): void
     {
-        $datasource = $this->getNewsDataSource();
-        self::assertCount(100, $datasource->getResult());
+        $dataSource = $this->getNewsDataSource();
+        self::assertCount(100, $dataSource->getResult());
     }
 
     public function testDoubleCallToGetResultReturnSameResultSet(): void
     {
-        $datasource = $this->getNewsDataSource();
-        self::assertSame($datasource->getResult(), $datasource->getResult());
+        $dataSource = $this->getNewsDataSource();
+        self::assertSame($dataSource->getResult(), $dataSource->getResult());
     }
 
     public function testParametersFiltering(): void
     {
-        $datasource = $this->getNewsDataSource()->addField('title', 'text', ['comparison' => 'like']);
+        $dataSource = $this->getNewsDataSource()->addField('title', 'text', ['comparison' => 'like']);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'title' => 'title-1',
                 ],
             ],
         ];
-        $datasource->bindParameters($parameters);
+        $dataSource->bindParameters($parameters);
 
         // title-1, title-10-19, title-100
-        self::assertCount(12, $datasource->getResult());
+        self::assertCount(12, $dataSource->getResult());
     }
 
     public function testPaginatedResult(): void
     {
-        $datasource = $this->getNewsDataSource();
-        $datasource->addField('title', 'text', ['comparison' => 'like']);
-        $datasource->setMaxResults(10);
+        $dataSource = $this->getNewsDataSource();
+        $dataSource->addField('title', 'text', ['comparison' => 'like']);
+        $dataSource->setMaxResults(10);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 PaginationExtension::PARAMETER_PAGE => 2,
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'title' => 'title-1',
                 ],
             ],
         ];
-        $datasource->bindParameters($parameters);
+        $dataSource->bindParameters($parameters);
 
-        $result = $datasource->getResult();
+        $result = $dataSource->getResult();
 
         // all result count
         self::assertCount(12, $result);
@@ -76,13 +76,13 @@ class DBALDriverResultTest extends TestBase
 
     public function testSortingField(): void
     {
-        $datasource = $this->getNewsDataSource();
-        $datasource->addField('title', 'text', ['comparison' => 'like']);
-        $datasource->addField('content', 'text', ['comparison' => 'like']);
-        $datasource->setMaxResults(10);
+        $dataSource = $this->getNewsDataSource();
+        $dataSource->addField('title', 'text', ['comparison' => 'like']);
+        $dataSource->addField('content', 'text', ['comparison' => 'like']);
+        $dataSource->setMaxResults(10);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 OrderingExtension::PARAMETER_SORT => [
                     'content' => 'asc',
                     'title' => 'desc',
@@ -92,9 +92,9 @@ class DBALDriverResultTest extends TestBase
                 ],
             ],
         ];
-        $datasource->bindParameters($parameters);
+        $dataSource->bindParameters($parameters);
 
-        $result = $datasource->getResult();
+        $result = $dataSource->getResult();
         self::assertEquals(
             'SELECT e.* FROM news e WHERE e.title LIKE :title ORDER BY e.content asc, e.title desc LIMIT 10',
             $this->queryLogger->getQueryBuilder()->getSQL()
@@ -124,21 +124,21 @@ class DBALDriverResultTest extends TestBase
             'alias' => 'n',
         ];
 
-        $datasource = $dataSourceFactory
+        $dataSource = $dataSourceFactory
             ->createDataSource('doctrine-dbal', $driverOptions, 'name')
             ->addField('category', 'text', ['comparison' => 'eq', 'field' => 'c.name'])
             ->setMaxResults(8);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'category' => 'name-10',
                 ],
             ],
         ];
 
-        $datasource->bindParameters($parameters);
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $result = $dataSource->getResult();
 
         self::assertCount(37, $result);
         self::assertCount(8, iterator_to_array($result));
@@ -164,9 +164,9 @@ class DBALDriverResultTest extends TestBase
             'alias' => 'c',
         ];
 
-        $datasource = $dataSourceFactory->createDataSource('doctrine-dbal', $driverOptions, 'name');
+        $dataSource = $dataSourceFactory->createDataSource('doctrine-dbal', $driverOptions, 'name');
 
-        $datasource
+        $dataSource
             ->addField('category', 'text', [
                 'comparison' => 'like',
                 'field' => 'c.name',
@@ -180,15 +180,15 @@ class DBALDriverResultTest extends TestBase
             ->setMaxResults(3)
         ;
 
-        $datasource->bindParameters([
-            $datasource->getName() => [
+        $dataSource->bindParameters([
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'newscount' => 3,
                 ],
             ],
         ]);
 
-        $result = $datasource->getResult();
+        $result = $dataSource->getResult();
         self::assertCount(6, $result);
         self::assertCount(3, iterator_to_array($result));
 
@@ -200,13 +200,13 @@ class DBALDriverResultTest extends TestBase
             $this->queryLogger->getQueryBuilder()->getSQL()
         );
 
-        $datasource->bindParameters([
-            $datasource->getName() => [
+        $dataSource->bindParameters([
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => ['newscount' => 0,],
             ],
         ]);
 
-        $result = $datasource->getResult();
+        $result = $dataSource->getResult();
         self::assertCount(10, $result);
         self::assertCount(3, iterator_to_array($result));
 
@@ -218,8 +218,8 @@ class DBALDriverResultTest extends TestBase
             $this->queryLogger->getQueryBuilder()->getSQL()
         );
 
-        $datasource = $dataSourceFactory->createDataSource('doctrine-dbal', $driverOptions, 'name2');
-        $datasource
+        $dataSource = $dataSourceFactory->createDataSource('doctrine-dbal', $driverOptions, 'name2');
+        $dataSource
             ->addField('category', 'text', [
                 'comparison' => 'like',
                 'field' => 'c.name',
@@ -234,15 +234,15 @@ class DBALDriverResultTest extends TestBase
         ;
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'newscount' => [0, 1],
                 ],
             ],
         ];
 
-        $datasource->bindParameters($parameters);
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $result = $dataSource->getResult();
         self::assertCount(3, $result);
         self::assertCount(2, iterator_to_array($result));
 
@@ -273,23 +273,23 @@ class DBALDriverResultTest extends TestBase
             'alias' => 'n'
         ];
 
-        $datasource = $dataSourceFactory->createDataSource('doctrine-dbal', $driverOptions, 'name');
-        $datasource
+        $dataSource = $dataSourceFactory->createDataSource('doctrine-dbal', $driverOptions, 'name');
+        $dataSource
             ->addField('category', 'number', [
                 'comparison' => 'in',
                 'clause' => 'having',
             ]);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'category' => [2, 3],
                 ],
             ],
         ];
 
-        $datasource->bindParameters($parameters);
-        $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $dataSource->getResult();
 
         self::assertEquals(
             preg_replace('/\s+/', ' ', 'SELECT n
@@ -306,6 +306,9 @@ class DBALDriverResultTest extends TestBase
         $this->loadTestData($this->connection);
     }
 
+    /**
+     * @return DataSourceInterface<array<string,mixed>>
+     */
     private function getNewsDataSource(): DataSourceInterface
     {
         return $this->getDataSourceFactory()->createDataSource('doctrine-dbal', ['table' => 'news'], 'name');

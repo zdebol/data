@@ -28,6 +28,10 @@ use function gettype;
 use function is_object;
 use function sprintf;
 
+/**
+ * @template T
+ * @template-implements DriverFactoryInterface<T>
+ */
 final class ORMFactory implements DriverFactoryInterface
 {
     private ManagerRegistry $registry;

@@ -19,6 +19,9 @@ final class DBALQueryLogger
 {
     private ?QueryBuilder $queryBuilder = null;
 
+    /**
+     * @param PreGetResult<mixed> $event
+     */
     public function __invoke(PreGetResult $event): void
     {
         $this->queryBuilder = $event->getQueryBuilder();

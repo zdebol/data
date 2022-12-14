@@ -15,14 +15,21 @@ use FSi\Component\DataSource\Driver\DriverInterface;
 use FSi\Component\DataSource\Field\FieldInterface;
 use FSi\Component\DataSource\Result;
 
+/**
+ * @template T
+ * @template-extends DriverEventArgs<T>
+ */
 abstract class ResultEventArgs extends DriverEventArgs
 {
+    /**
+     * @var Result<T>
+     */
     private Result $result;
 
     /**
-     * @param DriverInterface $driver
+     * @param DriverInterface<T> $driver
      * @param array<FieldInterface> $fields
-     * @param Result $result
+     * @param Result<T> $result
      */
     public function __construct(DriverInterface $driver, array $fields, Result $result)
     {
@@ -31,11 +38,17 @@ abstract class ResultEventArgs extends DriverEventArgs
         $this->setResult($result);
     }
 
+    /**
+     * @param Result<T> $result
+     */
     public function setResult(Result $result): void
     {
         $this->result = $result;
     }
 
+    /**
+     * @return Result<T>
+     */
     public function getResult(): Result
     {
         return $this->result;

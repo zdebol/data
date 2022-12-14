@@ -18,7 +18,7 @@ use function array_key_exists;
 
 final class Field implements FieldInterface
 {
-    private DataSourceInterface $dataSource;
+    private string $dataSourceName;
     private FieldTypeInterface $type;
     private string $name;
     /**
@@ -26,24 +26,24 @@ final class Field implements FieldInterface
      */
     private array $options;
     /**
-     * @var mixed
+     * @var array<string, array<string, array<string, mixed>>>
      */
-    private $parameter;
+    private array $parameters = [];
     private bool $dirty = true;
 
     /**
-     * @param DataSourceInterface $dataSource
+     * @param string $dataSourceName
      * @param FieldTypeInterface $type
      * @param string $name
      * @param array<string,mixed> $options
      */
     public function __construct(
-        DataSourceInterface $dataSource,
+        string $dataSourceName,
         FieldTypeInterface $type,
         string $name,
         array $options
     ) {
-        $this->dataSource = $dataSource;
+        $this->dataSourceName = $dataSourceName;
         $this->type = $type;
         $this->name = $name;
         $this->options = $options;
@@ -59,9 +59,9 @@ final class Field implements FieldInterface
         return $this->name;
     }
 
-    public function getDataSource(): DataSourceInterface
+    public function getDataSourceName(): string
     {
-        return $this->dataSource;
+        return $this->dataSourceName;
     }
 
     public function getOption(string $name)
@@ -74,16 +74,22 @@ final class Field implements FieldInterface
         return array_key_exists($name, $this->options);
     }
 
-    public function bindParameter($parameter): void
+    public function bindParameters(array $parameters): void
     {
         $this->setDirty();
 
-        $this->parameter = $parameter;
+        $this->parameters = $parameters;
     }
 
     public function getParameter()
     {
-        return $this->parameter;
+        return $this->parameters[$this->getDataSourceName()][DataSourceInterface::PARAMETER_FIELDS][$this->name]
+            ?? null;
+    }
+
+    public function getParameters(): array
+    {
+        return $this->parameters;
     }
 
     public function isDirty(): bool

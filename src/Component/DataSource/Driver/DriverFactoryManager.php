@@ -17,21 +17,25 @@ use InvalidArgumentException;
 use function array_key_exists;
 use function array_reduce;
 
+/**
+ * @template T
+ * @template-implements DriverFactoryManagerInterface<T>
+ */
 final class DriverFactoryManager implements DriverFactoryManagerInterface
 {
     /**
-     * @var array<DriverFactoryInterface>
+     * @var array<DriverFactoryInterface<T>>
      */
     private array $factories;
 
     /**
-     * @param array<DriverFactoryInterface> $factories
+     * @param array<DriverFactoryInterface<T>> $factories
      */
     public function __construct(array $factories)
     {
         $this->factories = array_reduce(
             $factories,
-            function (array $accumulator, DriverFactoryInterface $factory): array {
+            static function (array $accumulator, DriverFactoryInterface $factory): array {
                 $accumulator[$factory::getDriverType()] = $factory;
                 return $accumulator;
             },
@@ -39,6 +43,10 @@ final class DriverFactoryManager implements DriverFactoryManagerInterface
         );
     }
 
+    /**
+     * @param string $driverType
+     * @return DriverFactoryInterface<T>
+     */
     public function getFactory(string $driverType): DriverFactoryInterface
     {
         if (false === array_key_exists($driverType, $this->factories)) {

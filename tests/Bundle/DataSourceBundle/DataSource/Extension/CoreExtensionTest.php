@@ -21,19 +21,19 @@ final class CoreExtensionTest extends TestCase
 {
     public function testBindParameters(): void
     {
-        $datasource = $this->createMock(DataSourceInterface::class);
+        $dataSource = $this->createMock(DataSourceInterface::class);
         $data1 = ['key1' => 'value1', 'key2' => 'value2'];
         $data2 = $data1;
 
         $subscriber = new BindParameters();
 
-        $args = new PreBindParameters($datasource, $data2);
+        $args = new PreBindParameters($dataSource, $data2);
         ($subscriber)($args);
         $data2 = $args->getParameters();
         self::assertEquals($data1, $data2);
 
         $request = new Request($data2);
-        $args = new PreBindParameters($datasource, $request);
+        $args = new PreBindParameters($dataSource, $request);
         ($subscriber)($args);
         $request = $args->getParameters();
         self::assertIsArray($request);

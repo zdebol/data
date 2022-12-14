@@ -11,12 +11,15 @@ declare(strict_types=1);
 
 namespace FSi\Component\DataSource\Driver;
 
+/**
+ * @template T
+ */
 interface DriverFactoryInterface
 {
     public static function getDriverType(): string;
     /**
      * @param array<string,mixed> $options
-     * @return DriverInterface
+     * @return DriverInterface<T>
      */
     public function createDriver(array $options = []): DriverInterface;
 }

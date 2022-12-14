@@ -32,12 +32,12 @@ final class PaginationPostBuildView implements DataSourceEventSubscriberInterfac
 
     public function __invoke(PostBuildView $event): void
     {
-        $datasource = $event->getDataSource();
-        $datasourceName = $datasource->getName();
-        $maxResults = $datasource->getMaxResults();
-        $result = $datasource->getResult();
+        $dataSource = $event->getDataSource();
+        $dataSourceName = $dataSource->getName();
+        $maxResults = $dataSource->getMaxResults();
+        $result = $dataSource->getResult();
         if (false === $result instanceof Countable) {
-            $this->throwExceptionIfMaxResultsSetForUncountable($maxResults, $datasourceName, $result);
+            $this->throwExceptionIfMaxResultsSetForUncountable($maxResults, $dataSourceName, $result);
             return;
         }
 
@@ -46,18 +46,18 @@ final class PaginationPostBuildView implements DataSourceEventSubscriberInterfac
 
         if (true === $this->hasMaxResultsParameter($maxResults)) {
             $all = (int) ceil(count($result) / $maxResults);
-            $page = (int) floor($datasource->getFirstResult() / $maxResults) + 1;
+            $page = (int) floor($dataSource->getFirstResult() / $maxResults) + 1;
         } else {
             $all = 1;
             $page = 1;
         }
 
-        unset($parameters[$datasourceName][PaginationExtension::PARAMETER_PAGE]);
+        unset($parameters[$dataSourceName][PaginationExtension::PARAMETER_PAGE]);
         $pages = [];
 
         for ($i = 1; $i <= $all; $i++) {
             if ($i > 1) {
-                $parameters[$datasourceName][PaginationExtension::PARAMETER_PAGE] = $i;
+                $parameters[$dataSourceName][PaginationExtension::PARAMETER_PAGE] = $i;
             }
 
             $pages[$i] = $parameters;
@@ -68,15 +68,20 @@ final class PaginationPostBuildView implements DataSourceEventSubscriberInterfac
         $view->setAttribute('parameters_pages', $pages);
     }
 
+    /**
+     * @param int|null $maxResults
+     * @param string $dataSourceName
+     * @param Result<mixed> $result
+     */
     private function throwExceptionIfMaxResultsSetForUncountable(
         ?int $maxResults,
-        string $datasourceName,
+        string $dataSourceName,
         Result $result
     ): void {
         if (true === $this->hasMaxResultsParameter($maxResults)) {
             throw new DataSourceException(sprintf(
                 'DataSource\'s "%s" result of class "%s" is not countable, but has max results set',
-                $datasourceName,
+                $dataSourceName,
                 get_class($result)
             ));
         }

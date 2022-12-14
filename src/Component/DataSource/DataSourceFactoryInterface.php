@@ -17,7 +17,7 @@ interface DataSourceFactoryInterface
      * @param string $driverName
      * @param array<string,mixed> $driverOptions
      * @param string $name
-     * @return DataSourceInterface
+     * @return DataSourceInterface<mixed>
      */
     public function createDataSource(
         string $driverName,
@@ -26,17 +26,17 @@ interface DataSourceFactoryInterface
     ): DataSourceInterface;
 
     /**
-     * Return array of all parameters from all datasources.
+     * Return array of all parameters from all dataSources.
      *
      * @return array<string, array<string, array<string, mixed>>>
      */
     public function getAllParameters(): array;
 
     /**
-     * Return array of all parameters form all datasources except given.
+     * Return array of all parameters form all dataSources except given.
      *
-     * @param DataSourceInterface $datasource
+     * @param DataSourceInterface<mixed> $except
      * @return array<string, array<string, array<string, mixed>>>
      */
-    public function getOtherParameters(DataSourceInterface $datasource): array;
+    public function getOtherParameters(DataSourceInterface $except): array;
 }

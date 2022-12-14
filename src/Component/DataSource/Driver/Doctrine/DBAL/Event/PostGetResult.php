@@ -13,6 +13,10 @@ namespace FSi\Component\DataSource\Driver\Doctrine\DBAL\Event;
 
 use FSi\Component\DataSource\Driver\Event\ResultEventArgs;
 
+/**
+ * @template T
+ * @template-extends ResultEventArgs<T>
+ */
 class PostGetResult extends ResultEventArgs
 {
 }

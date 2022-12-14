@@ -21,12 +21,13 @@ abstract class ParametersEventArgs extends DataSourceEventArgs
     private $parameters;
 
     /**
-     * @param DataSourceInterface $datasource
+     * @param DataSourceInterface<mixed> $dataSource
      * @param mixed $parameters
      */
-    public function __construct(DataSourceInterface $datasource, $parameters)
+    public function __construct(DataSourceInterface $dataSource, $parameters)
     {
-        parent::__construct($datasource);
+        parent::__construct($dataSource);
+
         $this->setParameters($parameters);
     }
 

@@ -15,13 +15,16 @@ use FSi\Component\DataSource\Field\FieldInterface;
 use FSi\Component\DataSource\Field\Type\FieldTypeInterface;
 use FSi\Component\DataSource\Result;
 
+/**
+ * @template T
+ */
 interface DriverInterface
 {
     /**
      * @param array<FieldInterface> $fields
      * @param int|null $first
      * @param int|null $max
-     * @return Result
+     * @return Result<T>
      */
     public function getResult(array $fields, ?int $first, ?int $max): Result;
     public function hasFieldType(string $type): bool;

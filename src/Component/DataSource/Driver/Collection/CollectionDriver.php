@@ -19,14 +19,17 @@ use FSi\Component\DataSource\Driver\Collection\Exception\CollectionDriverExcepti
 use FSi\Component\DataSource\Driver\Collection\FieldType\FieldTypeInterface;
 use FSi\Component\DataSource\Driver\AbstractDriver;
 use FSi\Component\DataSource\Field\FieldInterface;
-use FSi\Component\DataSource\Field\Type\FieldFieldInterface;
 use FSi\Component\DataSource\Result;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * @template T
+ * @template-extends AbstractDriver<T>
+ */
 class CollectionDriver extends AbstractDriver
 {
     /**
-     * @var Selectable<int|string,mixed>
+     * @var Selectable<int|string,T>
      */
     private Selectable $collection;
     private Criteria $baseCriteria;
@@ -49,13 +52,6 @@ class CollectionDriver extends AbstractDriver
         $this->baseCriteria = $criteria ?? Criteria::create();
     }
 
-    /**
-     * @param array<FieldInterface> $fields
-     * @param int|null $first
-     * @param int|null $max
-     * @return Result
-     * @throws CollectionDriverException
-     */
     public function getResult(array $fields, ?int $first, ?int $max): Result
     {
         $criteria = clone $this->baseCriteria;

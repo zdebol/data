@@ -26,8 +26,15 @@ use function gettype;
 use function is_array;
 use function sprintf;
 
+/**
+ * @template T
+ * @template-implements DataSourceInterface<T>
+ */
 class DataSource implements DataSourceInterface
 {
+    /**
+     * @var DriverInterface<T>
+     */
     private DriverInterface $driver;
     private EventDispatcherInterface $eventDispatcher;
     private ?DataSourceFactoryInterface $factory;
@@ -44,7 +51,7 @@ class DataSource implements DataSourceInterface
      *
      * @var array{
      *   parameters?: array<string, array<string, array<string, mixed>>>,
-     *   result?: array{max_results: int|null, first_result: int|null, result: Result}
+     *   result?: array{max_results: int|null, first_result: int|null, result: Result<T>}
      * }
      */
     private array $cache;
@@ -55,6 +62,12 @@ class DataSource implements DataSourceInterface
      */
     private bool $dirty;
 
+    /**
+     * @param string $name
+     * @param DataSourceFactoryInterface $factory
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param DriverInterface<T> $driver
+     */
     public function __construct(
         string $name,
         DataSourceFactoryInterface $factory,
@@ -88,7 +101,7 @@ class DataSource implements DataSourceInterface
         string $type,
         array $options = []
     ): DataSourceInterface {
-        $field = $this->driver->getFieldType($type)->createField($this, $name, $options);
+        $field = $this->driver->getFieldType($type)->createField($this->name, $name, $options);
 
         $this->dirty = true;
         $this->fields[$field->getName()] = $field;
@@ -159,9 +172,13 @@ class DataSource implements DataSourceInterface
                     $dataSourceFieldParameters[$field->getName()] ?? null
                 );
                 $this->eventDispatcher->dispatch($event);
-                $parameter = $event->getParameter();
+                $dataSourceFieldParameters[$field->getName()] = $event->getParameter();
+            }
 
-                $field->bindParameter($parameter);
+            $parameters[$this->name][DataSourceInterface::PARAMETER_FIELDS] = $dataSourceFieldParameters;
+
+            foreach ($this->fields as $field) {
+                $field->bindParameters($parameters);
 
                 $event = new FieldEvent\PostBindParameter($field);
                 $this->eventDispatcher->dispatch($event);

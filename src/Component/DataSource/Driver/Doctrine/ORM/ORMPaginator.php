@@ -18,10 +18,14 @@ use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use FSi\Component\DataSource\Result;
 use Iterator;
 
+/**
+ * @template T
+ * @template-implements Result<T>
+ */
 class ORMPaginator implements Countable, Result
 {
     /**
-     * @var DoctrinePaginator<mixed>
+     * @var DoctrinePaginator<T>
      */
     private DoctrinePaginator $paginator;
 
@@ -42,7 +46,7 @@ class ORMPaginator implements Countable, Result
     }
 
     /**
-     * @return ArrayIterator<int|string,mixed>
+     * @return ArrayIterator<int|string,T>
      */
     public function getIterator(): Iterator
     {

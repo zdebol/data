@@ -51,17 +51,17 @@ class CollectionDriverTest extends TestCase
 
     public function testComparingWithZero(): void
     {
-        $datasource = $this->prepareArrayDataSource()->addField('id', 'number', ['comparison' => 'eq']);
+        $dataSource = $this->prepareArrayDataSource()->addField('id', 'number', ['comparison' => 'eq']);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'id' => '0',
                 ],
             ],
         ];
-        $datasource->bindParameters($parameters);
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $result = $dataSource->getResult();
         self::assertCount(0, $result);
     }
 
@@ -75,54 +75,57 @@ class CollectionDriverTest extends TestCase
         $this->driverTests($this->prepareArrayDataSource());
     }
 
-    private function driverTests(DataSourceInterface $datasource): void
+    /**
+     * @param DataSourceInterface<News> $dataSource
+     */
+    private function driverTests(DataSourceInterface $dataSource): void
     {
-        $datasource
+        $dataSource
             ->addField('title', 'text', ['comparison' => 'contains'])
             ->addField('author', 'text', ['comparison' => 'contains'])
             ->addField('created', 'datetime', ['comparison' => 'between', 'field' => 'createDate'])
         ;
 
-        $result1 = $datasource->getResult();
+        $result1 = $dataSource->getResult();
         self::assertCount(100, $result1);
-        $datasource->createView();
+        $dataSource->createView();
 
         // Checking if result cache works.
-        self::assertSame($result1, $datasource->getResult());
+        self::assertSame($result1, $dataSource->getResult());
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'author' => 'domain1.com',
                 ],
             ],
         ];
-        $datasource->bindParameters($parameters);
-        $result2 = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $result2 = $dataSource->getResult();
 
         //Checking cache.
-        self::assertSame($result2, $datasource->getResult());
+        self::assertSame($result2, $dataSource->getResult());
 
         self::assertCount(50, $result2);
         self::assertNotSame($result1, $result2);
         unset($result1, $result2);
 
-        self::assertEquals($parameters, $datasource->getParameters());
+        self::assertEquals($parameters, $dataSource->getParameters());
 
-        $datasource->setMaxResults(20);
+        $dataSource->setMaxResults(20);
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 PaginationExtension::PARAMETER_PAGE => 1,
             ],
         ];
 
-        $datasource->bindParameters($parameters);
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $result = $dataSource->getResult();
         self::assertCount(100, $result);
         self::assertCount(20, iterator_to_array($result));
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'author' => 'domain1.com',
                     'title' => 'title3',
@@ -132,40 +135,40 @@ class CollectionDriverTest extends TestCase
                 ],
             ],
         ];
-        $datasource->bindParameters($parameters);
-        $datasource->createView();
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $dataSource->createView();
+        $result = $dataSource->getResult();
         self::assertCount(2, $result);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'author' => 'author3@domain2.com',
                 ],
             ]
         ];
-        $datasource->bindParameters($parameters);
-        $datasource->createView();
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $dataSource->createView();
+        $result = $dataSource->getResult();
         self::assertCount(1, $result);
 
         // Checking sorting.
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 OrderingExtension::PARAMETER_SORT => [
                     'title' => 'desc'
                 ],
             ],
         ];
 
-        $datasource->bindParameters($parameters);
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $result = $dataSource->getResult();
         self::assertInstanceOf(CollectionResult::class, $result);
         self::assertEquals('title99', $result[0]->getTitle());
 
         // Checking sorting.
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 OrderingExtension::PARAMETER_SORT => [
                     'author' => 'asc',
                     'title' => 'desc',
@@ -173,16 +176,16 @@ class CollectionDriverTest extends TestCase
             ],
         ];
 
-        $datasource->bindParameters($parameters);
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $result = $dataSource->getResult();
         self::assertInstanceOf(CollectionResult::class, $result);
         self::assertEquals('author99@domain2.com', $result[0]->getAuthor());
 
         //Test for clearing fields.
-        $datasource->clearFields();
-        $datasource->setMaxResults(null);
+        $dataSource->clearFields();
+        $dataSource->setMaxResults(null);
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'author' => 'domain1.com',
                 ],
@@ -190,123 +193,123 @@ class CollectionDriverTest extends TestCase
         ];
 
         // Since there are no fields now, we should have all of entities.
-        $datasource->bindParameters($parameters);
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $result = $dataSource->getResult();
         self::assertCount(100, $result);
 
         // Test boolean field
-        $datasource
+        $dataSource
             ->addField('active', 'boolean', ['comparison' => 'eq'])
         ;
-        $datasource->setMaxResults(null);
+        $dataSource->setMaxResults(null);
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'active' => 1,
                 ],
             ]
         ];
 
-        $datasource->bindParameters($parameters);
-        $datasource->createView();
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $dataSource->createView();
+        $result = $dataSource->getResult();
         self::assertCount(50, $result);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'active' => 0,
                 ],
             ]
         ];
 
-        $datasource->bindParameters($parameters);
-        $datasource->createView();
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $dataSource->createView();
+        $result = $dataSource->getResult();
         self::assertCount(50, $result);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'active' => true,
                 ],
             ]
         ];
 
-        $datasource->bindParameters($parameters);
-        $datasource->createView();
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $dataSource->createView();
+        $result = $dataSource->getResult();
         self::assertCount(50, $result);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'active' => false,
                 ],
             ]
         ];
 
-        $datasource->bindParameters($parameters);
-        $datasource->createView();
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $dataSource->createView();
+        $result = $dataSource->getResult();
         self::assertCount(50, $result);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'active' => null,
                 ],
             ]
         ];
 
-        $datasource->bindParameters($parameters);
-        $datasource->createView();
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $dataSource->createView();
+        $result = $dataSource->getResult();
         self::assertCount(100, $result);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 OrderingExtension::PARAMETER_SORT => [
                     'active' => 'desc'
                 ],
             ],
         ];
 
-        $datasource->bindParameters($parameters);
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $result = $dataSource->getResult();
         self::assertInstanceOf(CollectionResult::class, $result);
         self::assertFalse($result[0]->isActive());
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 OrderingExtension::PARAMETER_SORT => [
                     'active' => 'asc'
                 ],
             ],
         ];
 
-        $datasource->bindParameters($parameters);
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $result = $dataSource->getResult();
         self::assertInstanceOf(CollectionResult::class, $result);
         self::assertFalse($result[0]->isActive());
 
         // test 'notIn' comparison
-        $datasource->addField('title_is_not', 'text', [
+        $dataSource->addField('title_is_not', 'text', [
             'comparison' => 'notIn',
             'field' => 'title',
         ]);
 
         $parameters = [
-            $datasource->getName() => [
+            $dataSource->getName() => [
                 DataSourceInterface::PARAMETER_FIELDS => [
                     'title_is_not' => ['title1', 'title2', 'title3']
                 ],
             ],
         ];
 
-        $datasource->bindParameters($parameters);
-        $datasource->createView();
-        $result = $datasource->getResult();
+        $dataSource->bindParameters($parameters);
+        $dataSource->createView();
+        $result = $dataSource->getResult();
         self::assertCount(97, $result);
     }
 
@@ -338,6 +341,9 @@ class CollectionDriverTest extends TestCase
         unset($this->em);
     }
 
+    /**
+     * @return CollectionFactory<News>
+     */
     private function getCollectionFactory(): CollectionFactory
     {
         return new CollectionFactory(
@@ -362,6 +368,9 @@ class CollectionDriverTest extends TestCase
         return new DataSourceFactory($this->getEventDispatcher(), $driverFactoryManager);
     }
 
+    /**
+     * @return DataSourceInterface<News>
+     */
     private function prepareSelectableDataSource(): DataSourceInterface
     {
         $driverOptions = [
@@ -372,6 +381,9 @@ class CollectionDriverTest extends TestCase
         return $this->getDataSourceFactory()->createDataSource('collection', $driverOptions, 'datasource1');
     }
 
+    /**
+     * @return DataSourceInterface<News>
+     */
     private function prepareArrayDataSource(): DataSourceInterface
     {
         $driverOptions = [
