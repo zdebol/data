@@ -15,6 +15,9 @@ use ArrayIterator;
 use FSi\Component\DataSource\Result;
 use Traversable;
 
+/**
+ * @template-implements Result<mixed>
+ */
 final class UncountableTestResult implements Result
 {
     /**

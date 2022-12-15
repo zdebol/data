@@ -14,11 +14,21 @@ namespace FSi\Component\DataSource\Driver\Doctrine\ORM\Event;
 use Doctrine\ORM\QueryBuilder;
 use FSi\Component\DataSource\Driver\DriverInterface;
 use FSi\Component\DataSource\Driver\Event\DriverEventArgs;
+use FSi\Component\DataSource\Field\FieldInterface;
 
+/**
+ * @template T
+ * @template-extends DriverEventArgs<T>
+ */
 class PreGetResult extends DriverEventArgs
 {
     private QueryBuilder $queryBuilder;
 
+    /**
+     * @param DriverInterface<T> $driver
+     * @param array<FieldInterface> $fields
+     * @param QueryBuilder $queryBuilder
+     */
     public function __construct(DriverInterface $driver, array $fields, QueryBuilder $queryBuilder)
     {
         parent::__construct($driver, $fields);

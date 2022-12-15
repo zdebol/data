@@ -21,18 +21,20 @@ use FSi\Component\DataSource\Result;
 use ReturnTypeWillChange;
 
 /**
- * @template-implements ArrayAccess<int|string,mixed>
+ * @template T
+ * @template-implements Result<T>
+ * @template-implements ArrayAccess<int|string,T>
  */
 class CollectionResult implements ArrayAccess, Countable, Result
 {
     /**
-     * @var Collection<int|string,mixed>
+     * @var Collection<int|string,T>
      */
     private Collection $collection;
     private int $count;
 
     /**
-     * @param Selectable<int|string,mixed> $collection
+     * @param Selectable<int|string,T> $collection
      * @param Criteria $criteria
      */
     public function __construct(Selectable $collection, Criteria $criteria)
@@ -51,7 +53,7 @@ class CollectionResult implements ArrayAccess, Countable, Result
     }
 
     /**
-     * @return ArrayIterator<int|string,mixed>
+     * @return ArrayIterator<int|string,T>
      */
     public function getIterator(): ArrayIterator
     {

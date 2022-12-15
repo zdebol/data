@@ -17,24 +17,19 @@ use FSi\Component\DataSource\Field\FieldViewInterface;
 
 abstract class ViewEventArgs extends DataSourceEventArgs
 {
-    /**
-     * @var DataSourceViewInterface<FieldViewInterface>
-     */
     private DataSourceViewInterface $view;
 
     /**
-     * @param DataSourceInterface $datasource
-     * @param DataSourceViewInterface<FieldViewInterface> $view
+     * @param DataSourceInterface<mixed> $dataSource
+     * @param DataSourceViewInterface $view
      */
-    public function __construct(DataSourceInterface $datasource, DataSourceViewInterface $view)
+    public function __construct(DataSourceInterface $dataSource, DataSourceViewInterface $view)
     {
-        parent::__construct($datasource);
+        parent::__construct($dataSource);
+
         $this->view = $view;
     }
 
-    /**
-     * @return DataSourceViewInterface<FieldViewInterface>
-     */
     public function getView(): DataSourceViewInterface
     {
         return $this->view;

@@ -19,6 +19,10 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use FSi\Component\DataIndexer\Exception\InvalidArgumentException;
 use FSi\Component\DataIndexer\Exception\RuntimeException;
 
+/**
+ * @template T of object
+ * @template-implements DataIndexerInterface<T>
+ */
 class DoctrineDataIndexer implements DataIndexerInterface
 {
     private const SEPARATOR = "|";
@@ -26,13 +30,13 @@ class DoctrineDataIndexer implements DataIndexerInterface
     private ObjectManager $manager;
 
     /**
-     * @var class-string
+     * @var class-string<T>
      */
     private string $class;
 
     /**
      * @param ManagerRegistry $registry
-     * @param class-string $class
+     * @param class-string<T> $class
      * @throws Exception\InvalidArgumentException
      * @throws Exception\RuntimeException
      */
@@ -68,8 +72,8 @@ class DoctrineDataIndexer implements DataIndexerInterface
     }
 
     /**
-     * @param array<string,mixed>|object $data
-     * @return object
+     * @param T $data
+     * @return T
      */
     public function validateData($data): object
     {
@@ -126,8 +130,8 @@ class DoctrineDataIndexer implements DataIndexerInterface
     }
 
     /**
-     * @param class-string $class
-     * @return class-string
+     * @param class-string<T> $class
+     * @return class-string<T>
      */
     private function tryToGetRootClass(string $class): string
     {
@@ -141,11 +145,14 @@ class DoctrineDataIndexer implements DataIndexerInterface
             throw new RuntimeException('DoctrineDataIndexer can\'t be created for mapped super class.');
         }
 
-        return $classMetadata->rootEntityName;
+        /** @var class-string<T> $rootClass */
+        $rootClass = $classMetadata->rootEntityName;
+
+        return $rootClass;
     }
 
     /**
-     * @param object $object
+     * @param T $object
      * @return array<int,string>
      */
     private function getIndexParts(object $object): array
@@ -193,11 +200,11 @@ class DoctrineDataIndexer implements DataIndexerInterface
      */
     private function buildMultipleSearchCriteria(array $indexes): array
     {
-        $multipleSearchCriteria = array();
+        $multipleSearchCriteria = [];
         foreach ($indexes as $index) {
             foreach ($this->buildSearchCriteria((string) $index) as $identifier => $indexPart) {
                 if (false === array_key_exists($identifier, $multipleSearchCriteria)) {
-                    $multipleSearchCriteria[$identifier] = array();
+                    $multipleSearchCriteria[$identifier] = [];
                 }
 
                 $multipleSearchCriteria[$identifier][] = $indexPart;
@@ -243,7 +250,7 @@ class DoctrineDataIndexer implements DataIndexerInterface
     }
 
     /**
-     * @return ObjectRepository<object>
+     * @return ObjectRepository<T>
      */
     private function getRepository(): ObjectRepository
     {

@@ -75,8 +75,8 @@ final class FieldExtension extends FieldAbstractExtension
             return;
         }
 
-        $parameters = $field->getDataSource()->getParameters();
-        $dataSourceName = $field->getDataSource()->getName();
+        $parameters = $field->getParameters();
+        $dataSourceName = $field->getDataSourceName();
 
         if (
             null !== $this->storage->getFieldSortingPriority($field)

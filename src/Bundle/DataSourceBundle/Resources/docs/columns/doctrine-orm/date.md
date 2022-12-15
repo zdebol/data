@@ -115,9 +115,10 @@
 ### Usage example
 
 ```php
-$datasource->addField('createdAt','date','lte',array(
-                       'field' => 'updatedAt'
-                   ))
+$dataSource->addField('createdAt', 'date', [
+    'comparison' => 'lte',
+    'field' => 'updatedAt',
+])
 ```
 
 Result as DQL:

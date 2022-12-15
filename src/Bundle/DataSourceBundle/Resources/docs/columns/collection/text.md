@@ -109,11 +109,11 @@
 If you don't know how to use datasource-bundle you should look at [docs](https://github.com/fsi-open/datasource/blob/master/doc/en/drivers/collection.md).
 
 ```php
-$datasource->addField('title','text','contains');
+$dataSource->addField('title', 'text', ['comparison' => 'contains']);
 ```
 
 Output:
 ```php
-$citeria->where($criteria->expr()->contains('title',$title));
+$citeria->where($criteria->expr()->contains('title', $title));
 
 ```

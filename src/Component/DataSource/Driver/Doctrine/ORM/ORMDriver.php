@@ -25,6 +25,10 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use function sprintf;
 use function strpos;
 
+/**
+ * @template T
+ * @template-extends AbstractDriver<T>
+ */
 final class ORMDriver extends AbstractDriver
 {
     private ManagerRegistry $managerRegistry;
@@ -74,12 +78,6 @@ final class ORMDriver extends AbstractDriver
         return $name;
     }
 
-    /**
-     * @param array<FieldInterface> $fields
-     * @param int|null $first
-     * @param int|null $max
-     * @return Result
-     */
     public function getResult(array $fields, ?int $first, ?int $max): Result
     {
         $query = clone $this->query;

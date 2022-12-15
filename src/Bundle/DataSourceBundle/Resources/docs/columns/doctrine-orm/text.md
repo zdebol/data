@@ -112,7 +112,7 @@
 ### Usage example
 
 ```php
-$datasource->addField('title','text','contains')
+$dataSource->addField('title', 'text', ['comparison' => 'contains'])
 ```
 
 Result as DQL:

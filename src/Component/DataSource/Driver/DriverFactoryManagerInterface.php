@@ -11,7 +11,14 @@ declare(strict_types=1);
 
 namespace FSi\Component\DataSource\Driver;
 
+/**
+ * @template T
+ */
 interface DriverFactoryManagerInterface
 {
+    /**
+     * @param string $driverType
+     * @return DriverFactoryInterface<T>
+     */
     public function getFactory(string $driverType): DriverFactoryInterface;
 }

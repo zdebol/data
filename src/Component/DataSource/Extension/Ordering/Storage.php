@@ -30,7 +30,7 @@ final class Storage
     private array $fieldsSorting = [];
 
     /**
-     * @param DataSourceInterface $dataSource
+     * @param DataSourceInterface<mixed> $dataSource
      * @param array<string, string> $orderingParameters
      */
     public function setDataSourceSortingParameters(DataSourceInterface $dataSource, array $orderingParameters): void
@@ -39,7 +39,7 @@ final class Storage
     }
 
     /**
-     * @param DataSourceInterface $dataSource
+     * @param DataSourceInterface<mixed> $dataSource
      * @return array<string,string>
      */
     public function getDataSourceSortingParameters(DataSourceInterface $dataSource): ?array
@@ -142,6 +142,6 @@ final class Storage
 
     private function getFieldKey(FieldInterface $field): string
     {
-        return "{$field->getDataSource()->getName()}-{$field->getName()}";
+        return "{$field->getDataSourceName()}-{$field->getName()}";
     }
 }

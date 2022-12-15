@@ -117,7 +117,7 @@
 ### Usage example
 
 ```php
-$datasource->addField('expirationTime','time','gt')
+$dataSource->addField('expirationTime', 'time', ['comparison' => 'gt'])
 ```
 
 Result as DQL:

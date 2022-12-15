@@ -15,15 +15,24 @@ use FSi\Component\DataSource\DataSourceInterface;
 
 abstract class DataSourceEventArgs
 {
-    private DataSourceInterface $datasource;
+    /**
+     * @var DataSourceInterface<mixed>
+     */
+    private DataSourceInterface $dataSource;
 
-    public function __construct(DataSourceInterface $datasource)
+    /**
+     * @param DataSourceInterface<mixed> $dataSource
+     */
+    public function __construct(DataSourceInterface $dataSource)
     {
-        $this->datasource = $datasource;
+        $this->dataSource = $dataSource;
     }
 
+    /**
+     * @return DataSourceInterface<mixed>
+     */
     public function getDataSource(): DataSourceInterface
     {
-        return $this->datasource;
+        return $this->dataSource;
     }
 }

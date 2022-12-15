@@ -112,14 +112,15 @@
 If you don't know how to use datasource-bundle you should look at [docs](https://github.com/fsi-open/datasource/blob/master/doc/en/drivers/collection.md).
 
 ```php
-$datasource->addField('created','date','between',array(
-           'field' => 'createdAt'
-       ));
+$dataSource->addField('created', 'date', [
+    'comparison' => 'between',
+    'field' => 'createdAt'
+]);
 ```
 
 Output:
 ```php
 $citeria->where($criteria->expr()->gte('createdAt',$from))
-        ->andWhere($criteria->expr()->lte('createdAt',$to));
+    ->andWhere($criteria->expr()->lte('createdAt',$to));
 
 ```

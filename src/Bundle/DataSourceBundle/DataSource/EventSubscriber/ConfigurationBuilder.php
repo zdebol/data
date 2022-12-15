@@ -87,6 +87,9 @@ final class ConfigurationBuilder implements DataSourceEventSubscriberInterface
         return $this->parseYamlFile($configurationFile);
     }
 
+    /**
+     * @param DataSourceInterface<mixed> $dataSource
+     */
     private function buildConfigurationFromRegisteredBundles(DataSourceInterface $dataSource): void
     {
         $dataSourceName = $dataSource->getName();
@@ -154,7 +157,7 @@ final class ConfigurationBuilder implements DataSourceEventSubscriberInterface
     }
 
     /**
-     * @param DataSourceInterface $dataSource
+     * @param DataSourceInterface<mixed> $dataSource
      * @param array{fields: array<string, array{type?: string, options?: array<string, mixed>}>} $configuration
      */
     private function buildConfiguration(DataSourceInterface $dataSource, array $configuration): void

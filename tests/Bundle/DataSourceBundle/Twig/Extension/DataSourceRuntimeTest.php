@@ -90,14 +90,6 @@ final class DataSourceRuntimeTest extends TestCase
         $field3 = $this->createMock(FieldInterface::class);
 
         $fieldType = $this->createMock(FieldTypeInterface::class);
-        $fieldType->method('createField')
-            ->withConsecutive(
-                [self::isInstanceOf(DataSourceInterface::class), 'field1', []],
-                [self::isInstanceOf(DataSourceInterface::class), 'field2', []],
-                [self::isInstanceOf(DataSourceInterface::class), 'field3', []]
-            )
-            ->willReturnOnConsecutiveCalls($field1, $field2, $field3)
-        ;
         $fieldType->method('createView')
             ->withConsecutive([$field1], [$field2], [$field3])
             ->willReturnOnConsecutiveCalls($fieldView1, $fieldView2, $fieldView3)
@@ -106,9 +98,9 @@ final class DataSourceRuntimeTest extends TestCase
         $field2->method('getType')->willReturn($fieldType);
         $field3->method('getType')->willReturn($fieldType);
 
-        $datasourceView = new DataSourceView('datasource', [$field1, $field2, $field3], [], []);
+        $dataSourceView = new DataSourceView('datasource', [$field1, $field2, $field3], [], []);
 
-        self::assertEquals(2, $this->runtime->dataSourceFilterCount($datasourceView));
+        self::assertEquals(2, $this->runtime->dataSourceFilterCount($dataSourceView));
     }
 
     public function testDataSourceRenderBlock(): void
@@ -121,20 +113,20 @@ final class DataSourceRuntimeTest extends TestCase
             ->willReturnOnConsecutiveCalls(false, true)
         ;
 
-        $datasourceView = $this->getDataSourceView('datasource');
-        $this->runtime->setTheme($datasourceView, new TemplateWrapper($this->twig, $template));
+        $dataSourceView = $this->getDataSourceView('datasource');
+        $this->runtime->setTheme($dataSourceView, new TemplateWrapper($this->twig, $template));
 
         $template->expects(self::once())
             ->method('displayBlock')
             ->with('datasource_filter', [
-                'datasource' => $datasourceView,
+                'datasource' => $dataSourceView,
                 'vars' => [],
                 'global_var' => 'global_value'
             ])
             ->willReturn(true)
         ;
 
-        $this->runtime->dataSourceFilter($datasourceView);
+        $this->runtime->dataSourceFilter($dataSourceView);
     }
 
     protected function setUp(): void
@@ -179,10 +171,10 @@ final class DataSourceRuntimeTest extends TestCase
      */
     private function getDataSourceView(string $name): MockObject
     {
-        $datasourceView = $this->createMock(DataSourceViewInterface::class);
-        $datasourceView->method('getName')->willReturn($name);
+        $dataSourceView = $this->createMock(DataSourceViewInterface::class);
+        $dataSourceView->method('getName')->willReturn($name);
 
-        return $datasourceView;
+        return $dataSourceView;
     }
 
     /**

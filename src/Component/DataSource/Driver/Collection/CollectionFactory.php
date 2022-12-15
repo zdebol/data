@@ -29,6 +29,10 @@ use function is_array;
 use function is_object;
 use function iterator_to_array;
 
+/**
+ * @template T
+ * @template-implements DriverFactoryInterface<T>
+ */
 class CollectionFactory implements DriverFactoryInterface
 {
     private EventDispatcherInterface $eventDispatcher;
@@ -56,6 +60,10 @@ class CollectionFactory implements DriverFactoryInterface
         $this->initOptions();
     }
 
+    /**
+     * @param array<string, mixed> $options
+     * @return DriverInterface<T>
+     */
     public function createDriver(array $options = []): DriverInterface
     {
         $options = $this->optionsResolver->resolve($options);

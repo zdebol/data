@@ -11,23 +11,26 @@ declare(strict_types=1);
 
 namespace FSi\Component\DataIndexer;
 
+/**
+ * @template T of array<string,mixed>|object
+ */
 interface DataIndexerInterface
 {
     /**
-     * @param array<string,mixed>|object $data
+     * @param T $data
      * @return string
      */
     public function getIndex($data): string;
 
     /**
      * @param string $index
-     * @return array<string,mixed>|object
+     * @return T
      */
     public function getData(string $index);
 
     /**
      * @param array<int,int|string> $indexes
-     * @return array<int|string,array<string,mixed>|object>
+     * @return array<int|string,T>
      */
     public function getDataSlice(array $indexes): array;
 }

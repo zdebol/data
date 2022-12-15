@@ -61,7 +61,7 @@ final class FormExtensionEntityTest extends TestCase
         $optionsResolver->setAllowedTypes('comparison', 'string');
         $fieldExtension->initOptions($optionsResolver, $fieldType);
         $options = $optionsResolver->resolve(['comparison' => 'eq', 'form_options' => ['class' => News::class]]);
-        $field = new Field($dataSource, $fieldType, 'name', $options);
+        $field = new Field('datasource', $fieldType, 'name', $options);
 
         $event = new Event\PreBindParameter($field, $parameters);
         ($fieldPreBindParameterSubscriber)($event);

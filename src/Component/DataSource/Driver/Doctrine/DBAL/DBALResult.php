@@ -26,6 +26,8 @@ use function is_object;
 use function is_string;
 
 /**
+ * @template T
+ * @template-implements Result<T>
  * @template-extends ArrayCollection<int|string,mixed>
  */
 final class DBALResult extends ArrayCollection implements Result

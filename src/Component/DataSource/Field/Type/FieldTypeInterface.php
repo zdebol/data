@@ -21,11 +21,11 @@ interface FieldTypeInterface
     public function getId(): string;
     public function initOptions(OptionsResolver $optionsResolver): void;
     /**
-     * @param DataSourceInterface $dataSource
+     * @param string $dataSourceName
      * @param string $name
      * @param array<string,mixed> $options
      * @return FieldInterface
      */
-    public function createField(DataSourceInterface $dataSource, string $name, array $options): FieldInterface;
+    public function createField(string $dataSourceName, string $name, array $options): FieldInterface;
     public function createView(FieldInterface $field): FieldViewInterface;
 }

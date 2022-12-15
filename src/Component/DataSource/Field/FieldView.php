@@ -27,7 +27,7 @@ final class FieldView implements FieldViewInterface
 
     public function __construct(FieldInterface $field)
     {
-        $this->dataSourceName = $field->getDataSource()->getName();
+        $this->dataSourceName = $field->getDataSourceName();
         $this->name = $field->getName();
         $this->type = $field->getType()->getId();
         $this->parameter = $field->getParameter();

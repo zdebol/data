@@ -18,7 +18,7 @@ interface FieldInterface
 {
     public function getType(): FieldTypeInterface;
     public function getName(): string;
-    public function getDataSource(): DataSourceInterface;
+    public function getDataSourceName(): string;
     /**
      * @param string $name
      * @return mixed
@@ -26,13 +26,18 @@ interface FieldInterface
     public function getOption(string $name);
     public function hasOption(string $name): bool;
     /**
-     * @param mixed $parameter
+     * @param array<string, array<string, array<string, mixed>>> $parameters
+     * @return void
      */
-    public function bindParameter($parameter): void;
+    public function bindParameters(array $parameters): void;
     /**
      * @return mixed
      */
     public function getParameter();
+    /**
+     * @return array<string, array<string, array<string, mixed>>>
+     */
+    public function getParameters(): array;
     public function isDirty(): bool;
     public function setDirty(bool $dirty = true): void;
 }

@@ -41,10 +41,8 @@ class FieldViewTest extends TestCase
 
     public function testCorrectReferenceToDataSourceView(): void
     {
-        $dataSource = $this->createMock(DataSourceInterface::class);
-        $dataSource->method('getName')->willReturn('datasource');
         $field = $this->createMock(FieldInterface::class);
-        $field->method('getDataSource')->willReturn($dataSource);
+        $field->method('getDataSourceName')->willReturn('datasource');
         $fieldView = new FieldView($field);
 
         self::assertEquals($fieldView->getDataSourceName(), 'datasource');

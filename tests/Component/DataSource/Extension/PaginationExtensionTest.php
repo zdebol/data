@@ -69,16 +69,16 @@ final class PaginationExtensionTest extends TestCase
         ?int $page,
         int $currentPage
     ): void {
-        $datasource = $this->createMock(DataSourceInterface::class);
-        $datasource->method('getName')->willReturn('datasource');
-        $datasource->method('getResult')->willReturn(new TestResult());
-        $datasource->method('getMaxResults')->willReturn($maxResults);
-        $datasource->method('getFirstResult')->willReturn($firstResult);
+        $dataSource = $this->createMock(DataSourceInterface::class);
+        $dataSource->method('getName')->willReturn('datasource');
+        $dataSource->method('getResult')->willReturn(new TestResult());
+        $dataSource->method('getMaxResults')->willReturn($maxResults);
+        $dataSource->method('getFirstResult')->willReturn($firstResult);
 
         $postGetParametersSubscriber = new PaginationPostGetParameters();
         $paginationPostBuildViewSubscriber = new PaginationPostBuildView();
 
-        $event = new Event\PostGetParameters($datasource, []);
+        $event = new Event\PostGetParameters($dataSource, []);
         ($postGetParametersSubscriber)($event);
 
         if (null !== $page) {
@@ -109,7 +109,7 @@ final class PaginationExtensionTest extends TestCase
             )
         ;
 
-        ($paginationPostBuildViewSubscriber)(new Event\PostBuildView($datasource, $view));
+        ($paginationPostBuildViewSubscriber)(new Event\PostBuildView($dataSource, $view));
     }
 
     public function testSetMaxResultsByBindRequest(): void

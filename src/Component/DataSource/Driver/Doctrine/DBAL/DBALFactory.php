@@ -29,6 +29,10 @@ use function is_object;
 use function is_string;
 use function sprintf;
 
+/**
+ * @template T
+ * @template-implements DriverFactoryInterface<T>
+ */
 final class DBALFactory implements DriverFactoryInterface
 {
     private ConnectionRegistry $registry;

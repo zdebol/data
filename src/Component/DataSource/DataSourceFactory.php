@@ -20,12 +20,19 @@ use function array_key_exists;
 final class DataSourceFactory implements DataSourceFactoryInterface
 {
     private EventDispatcherInterface $eventDispatcher;
+    /**
+     * @var DriverFactoryManagerInterface<mixed>
+     */
     private DriverFactoryManagerInterface $driverFactoryManager;
     /**
-     * @var array<DataSourceInterface>
+     * @var array<DataSourceInterface<mixed>>
      */
     private array $dataSources;
 
+    /**
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param DriverFactoryManagerInterface<mixed> $driverFactoryManager
+     */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         DriverFactoryManagerInterface $driverFactoryManager
@@ -35,6 +42,12 @@ final class DataSourceFactory implements DataSourceFactoryInterface
         $this->dataSources = [];
     }
 
+    /**
+     * @param string $driverName
+     * @param array<string,mixed> $driverOptions
+     * @param string $name
+     * @return DataSourceInterface<mixed>
+     */
     public function createDataSource(
         string $driverName,
         array $driverOptions = [],
@@ -43,17 +56,17 @@ final class DataSourceFactory implements DataSourceFactoryInterface
         $this->checkDataSourceName($name);
 
         $driver = $this->driverFactoryManager->getFactory($driverName)->createDriver($driverOptions);
-        $datasource = new DataSource($name, $this, $this->eventDispatcher, $driver);
-        $this->dataSources[$name] = $datasource;
+        $dataSource = new DataSource($name, $this, $this->eventDispatcher, $driver);
+        $this->dataSources[$name] = $dataSource;
 
-        return $datasource;
+        return $dataSource;
     }
 
     public function getAllParameters(): array
     {
         $result = [];
-        foreach ($this->dataSources as $datasource) {
-            $result[] = $datasource->getParameters();
+        foreach ($this->dataSources as $dataSource) {
+            $result[] = $dataSource->getParameters();
         }
 
         if (0 !== count($result)) {
@@ -63,12 +76,16 @@ final class DataSourceFactory implements DataSourceFactoryInterface
         return $result;
     }
 
+    /**
+     * @param DataSourceInterface<object> $except
+     * @return array<string, array<string, array<string, mixed>>>
+     */
     public function getOtherParameters(DataSourceInterface $except): array
     {
         $result = [];
-        foreach ($this->dataSources as $datasource) {
-            if ($datasource !== $except) {
-                $result[] = $datasource->getParameters();
+        foreach ($this->dataSources as $dataSource) {
+            if ($dataSource !== $except) {
+                $result[] = $dataSource->getParameters();
             }
         }
 
@@ -79,13 +96,13 @@ final class DataSourceFactory implements DataSourceFactoryInterface
         return $result;
     }
 
-    private function checkDataSourceName(string $name, ?DataSourceInterface $datasource = null): void
+    private function checkDataSourceName(string $name): void
     {
         if ('' === $name) {
             throw new DataSourceException('Name of data source cannot be empty.');
         }
 
-        if (true === array_key_exists($name, $this->dataSources) && ($this->dataSources[$name] !== $datasource)) {
+        if (true === array_key_exists($name, $this->dataSources)) {
             throw new DataSourceException("Name of data source \"{$name}\" must be unique.");
         }
 

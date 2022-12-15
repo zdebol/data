@@ -107,7 +107,7 @@
 ### Usage example
 
 ```php
-$datasource->addField('visible', 'boolean', 'eq')
+$dataSource->addField('visible', 'boolean', ['comparison' => 'eq'])
 ```
 
 Result as DQL:

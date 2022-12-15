@@ -20,6 +20,9 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 class DBALFactoryTest extends TestBase
 {
+    /**
+     * @var DriverFactoryInterface<array<string,mixed>>
+     */
     private DriverFactoryInterface $factory;
 
     protected function setUp(): void

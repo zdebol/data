@@ -114,11 +114,11 @@
 If you don't know how to use datasource-bundle you should look at [docs](https://github.com/fsi-open/datasource/blob/master/doc/en/drivers/collection.md).
 
 ```php
-$datasource->addField('expiration','time','eq');
+$dataSource->addField('expiration', 'time', ['comparison' => 'eq']);
 ```
 
 Output:
 ```php
-$citeria->where($criteria->expr()->gte('expiration',$expiration));
+$citeria->where($criteria->expr()->gte('expiration', $expiration));
 
 ```

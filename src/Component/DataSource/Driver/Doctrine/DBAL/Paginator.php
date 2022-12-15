@@ -16,6 +16,9 @@ use Countable;
 use Doctrine\DBAL\Query\QueryBuilder;
 use FSi\Component\DataSource\Result;
 
+/**
+ * @template-implements Result<array<string,mixed>>
+ */
 final class Paginator implements Countable, Result
 {
     private QueryBuilder $query;

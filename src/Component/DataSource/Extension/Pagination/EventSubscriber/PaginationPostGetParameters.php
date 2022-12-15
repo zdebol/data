@@ -26,23 +26,23 @@ final class PaginationPostGetParameters implements DataSourceEventSubscriberInte
 
     public function __invoke(PostGetParameters $event): void
     {
-        $datasource = $event->getDataSource();
-        $datasourceName = $datasource->getName();
+        $dataSource = $event->getDataSource();
+        $dataSourceName = $dataSource->getName();
 
         $parameters = $event->getParameters();
-        $maxResults = $datasource->getMaxResults();
+        $maxResults = $dataSource->getMaxResults();
 
         if (null !== $maxResults && 0 !== $maxResults) {
-            $parameters[$datasourceName][PaginationExtension::PARAMETER_MAX_RESULTS] = $maxResults;
-            $current = $datasource->getFirstResult();
+            $parameters[$dataSourceName][PaginationExtension::PARAMETER_MAX_RESULTS] = $maxResults;
+            $current = $dataSource->getFirstResult();
             $page = (int) floor($current / $maxResults) + 1;
         } else {
             $page = 1;
         }
 
-        unset($parameters[$datasourceName][PaginationExtension::PARAMETER_PAGE]);
+        unset($parameters[$dataSourceName][PaginationExtension::PARAMETER_PAGE]);
         if ($page > 1) {
-            $parameters[$datasourceName][PaginationExtension::PARAMETER_PAGE] = $page;
+            $parameters[$dataSourceName][PaginationExtension::PARAMETER_PAGE] = $page;
         }
 
         $event->setParameters($parameters);

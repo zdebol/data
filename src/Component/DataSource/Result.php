@@ -14,7 +14,8 @@ namespace FSi\Component\DataSource;
 use IteratorAggregate;
 
 /**
- * @template-extends IteratorAggregate<int|string,mixed>
+ * @template T
+ * @template-extends IteratorAggregate<int|string,T>
  */
 interface Result extends IteratorAggregate
 {

@@ -121,11 +121,11 @@ final class DBALDriverTest extends TestBase
         $fieldType = $driver->getFieldType($type);
         self::assertInstanceOf(FieldTypeInterface::class, $fieldType);
 
-        $field = $fieldType->createField($this->createMock(DataSourceInterface::class), 'test', ['comparison' => 'eq']);
+        $field = $fieldType->createField('datasource', 'test', ['comparison' => 'eq']);
         self::assertEquals($field->getOption('field'), $field->getName());
 
         $this->expectException(InvalidOptionsException::class);
-        $fieldType->createField($this->createMock(DataSourceInterface::class), 'test', ['comparison' => 'X']);
+        $fieldType->createField('datasource', 'test', ['comparison' => 'X']);
     }
 
     protected function setUp(): void

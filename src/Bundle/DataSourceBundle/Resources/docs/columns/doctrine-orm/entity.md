@@ -111,7 +111,7 @@
 ### Usage example
 
 ```php
-$datasource->addField('user','entity','in')
+$dataSource->addField('user', 'entity', ['comparison' => 'in'])
 ```
 
 Result as DQL:

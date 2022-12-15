@@ -116,7 +116,7 @@
 ### Usage example
 
 ```php
-$datasource->addField('deletedAt','datetime','lte')
+$dataSource->addField('deletedAt', 'datetime', ['comparison' => 'lte'])
 ```
 
 Result as DQL:

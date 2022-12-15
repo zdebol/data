@@ -24,19 +24,19 @@ final class PaginationPreBindParameters implements DataSourceEventSubscriberInte
 
     public function __invoke(PreBindParameters $event): void
     {
-        $datasource = $event->getDataSource();
+        $dataSource = $event->getDataSource();
         $parameters = $event->getParameters();
 
-        $resultsPerPage = $parameters[$datasource->getName()][PaginationExtension::PARAMETER_MAX_RESULTS]
-            ?? $datasource->getMaxResults();
+        $resultsPerPage = $parameters[$dataSource->getName()][PaginationExtension::PARAMETER_MAX_RESULTS]
+            ?? $dataSource->getMaxResults();
         if (null !== $resultsPerPage) {
             $resultsPerPage = (int) $resultsPerPage;
         }
 
-        $datasource->setMaxResults($resultsPerPage);
+        $dataSource->setMaxResults($resultsPerPage);
 
-        $page = (int) ($parameters[$datasource->getName()][PaginationExtension::PARAMETER_PAGE] ?? 1);
+        $page = (int) ($parameters[$dataSource->getName()][PaginationExtension::PARAMETER_PAGE] ?? 1);
 
-        $datasource->setFirstResult(($page - 1) * $datasource->getMaxResults());
+        $dataSource->setFirstResult(($page - 1) * $dataSource->getMaxResults());
     }
 }

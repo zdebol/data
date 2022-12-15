@@ -54,6 +54,10 @@ final class TestController
         );
     }
 
+    /**
+     * @param string $driver
+     * @return DataSourceInterface<News>
+     */
     private function createDataSource(string $driver): DataSourceInterface
     {
         switch ($driver) {

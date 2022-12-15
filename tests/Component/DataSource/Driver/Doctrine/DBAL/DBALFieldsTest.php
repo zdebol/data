@@ -185,27 +185,30 @@ class DBALFieldsTest extends TestBase
     /**
      * @dataProvider fieldsProvider
      * @param string $fieldName
-     * @param string $datasourceType
+     * @param string $dataSourceType
      * @param array<int,array{string,mixed,mixed}> $typeParams
      */
-    public function testFieldResult(string $fieldName, string $datasourceType, array $typeParams): void
+    public function testFieldResult(string $fieldName, string $dataSourceType, array $typeParams): void
     {
         foreach ($typeParams as [$comparison, $parameter, $expectedCount]) {
-            $datasource = $this->getNewsDataSource();
-            $datasource->addField($fieldName, $datasourceType, ['comparison' => $comparison]);
+            $dataSource = $this->getNewsDataSource();
+            $dataSource->addField($fieldName, $dataSourceType, ['comparison' => $comparison]);
 
-            $datasource->bindParameters([
-                $datasource->getName() => [
+            $dataSource->bindParameters([
+                $dataSource->getName() => [
                     DataSourceInterface::PARAMETER_FIELDS => [
                         $fieldName => $parameter,
                     ],
                 ],
             ]);
 
-            self::assertCount($expectedCount, $datasource->getResult());
+            self::assertCount($expectedCount, $dataSource->getResult());
         }
     }
 
+    /**
+     * @return DataSourceInterface<array<string,mixed>>
+     */
     private function getNewsDataSource(): DataSourceInterface
     {
         return $this->getDataSourceFactory()->createDataSource('doctrine-dbal', ['table' => 'news'], 'name');

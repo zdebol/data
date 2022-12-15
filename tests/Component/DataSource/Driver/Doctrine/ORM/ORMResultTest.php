@@ -25,7 +25,7 @@ final class ORMResultTest extends TestCase
         /** @var MockObject&ManagerRegistry $registry */
         $registry = $this->createMock(ManagerRegistry::class);
 
-        /** @var MockObject&ORMPaginator $paginator */
+        /** @var MockObject&ORMPaginator<array<int,string>> $paginator */
         $paginator = $this->createMock(ORMPaginator::class);
         $paginator->method('getIterator')->willReturn(new ArrayIterator([]));
         $paginator->method('count')->willReturn(0);
@@ -38,7 +38,7 @@ final class ORMResultTest extends TestCase
     {
         /** @var MockObject&ManagerRegistry $registry */
         $registry = $this->createMock(ManagerRegistry::class);
-        /** @var MockObject&ORMPaginator $paginator */
+        /** @var MockObject&ORMPaginator<array<int,string>> $paginator */
         $paginator = $this->createMock(ORMPaginator::class);
 
         $paginator->method('getIterator')->willReturn(

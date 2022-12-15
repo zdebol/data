@@ -66,7 +66,6 @@ final class FormStorage
      */
     public function getForm(FieldInterface $field, bool $force = false): ?FormInterface
     {
-        $datasource = $field->getDataSource();
         if (false === $field->getOption('form_filter')) {
             return null;
         }
@@ -98,7 +97,7 @@ final class FormStorage
         }
 
         $form = $this->formFactory->createNamed(
-            $datasource->getName(),
+            $field->getDataSourceName(),
             CollectionType::class,
             null,
             ['csrf_protection' => false]
@@ -135,8 +134,12 @@ final class FormStorage
         $form->add($betweenBuilder->getForm());
     }
 
+    /**
+     * @param FieldInterface $field
+     * @return string
+     */
     private function getFieldKey(FieldInterface $field): string
     {
-        return "{$field->getDataSource()->getName()}-{$field->getName()}";
+        return "{$field->getDataSourceName()}-{$field->getName()}";
     }
 }
