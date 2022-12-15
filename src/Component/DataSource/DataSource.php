@@ -172,13 +172,9 @@ class DataSource implements DataSourceInterface
                     $dataSourceFieldParameters[$field->getName()] ?? null
                 );
                 $this->eventDispatcher->dispatch($event);
-                $dataSourceFieldParameters[$field->getName()] = $event->getParameter();
-            }
+                $parameter = $event->getParameter();
 
-            $parameters[$this->name][DataSourceInterface::PARAMETER_FIELDS] = $dataSourceFieldParameters;
-
-            foreach ($this->fields as $field) {
-                $field->bindParameters($parameters);
+                $field->bindParameter($parameter);
 
                 $event = new FieldEvent\PostBindParameter($field);
                 $this->eventDispatcher->dispatch($event);

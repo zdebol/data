@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace FSi\Component\DataSource\Field;
 
-use FSi\Component\DataSource\DataSourceInterface;
 use FSi\Component\DataSource\Field\Type\FieldTypeInterface;
 
 interface FieldInterface
@@ -26,18 +25,13 @@ interface FieldInterface
     public function getOption(string $name);
     public function hasOption(string $name): bool;
     /**
-     * @param array<string, array<string, array<string, mixed>>> $parameters
-     * @return void
+     * @param mixed $parameter
      */
-    public function bindParameters(array $parameters): void;
+    public function bindParameter($parameter): void;
     /**
      * @return mixed
      */
     public function getParameter();
-    /**
-     * @return array<string, array<string, array<string, mixed>>>
-     */
-    public function getParameters(): array;
     public function isDirty(): bool;
     public function setDirty(bool $dirty = true): void;
 }

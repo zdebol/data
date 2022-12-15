@@ -36,9 +36,10 @@ final class OrderingPostGetParameters implements DataSourceEventSubscriberInterf
         $dataSourceName = $dataSource->getName();
         $parameters = $event->getParameters();
 
-        $sortingParameters = $this->storage->getDataSourceSortingParameters($dataSource);
-        if (null !== $sortingParameters) {
-            $parameters[$dataSourceName][OrderingExtension::PARAMETER_SORT] = $sortingParameters;
+        $sortingParameters = $this->storage->getDataSourceParameters($dataSource->getName());
+        if ([] !== $sortingParameters) {
+            $parameters[$dataSourceName][OrderingExtension::PARAMETER_SORT]
+                = $sortingParameters[OrderingExtension::PARAMETER_SORT];
         }
 
         $event->setParameters($parameters);

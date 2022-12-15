@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace FSi\Component\DataSource\Field;
 
-use FSi\Component\DataSource\DataSourceInterface;
 use FSi\Component\DataSource\Field\Type\FieldTypeInterface;
 
 use function array_key_exists;
@@ -26,9 +25,9 @@ final class Field implements FieldInterface
      */
     private array $options;
     /**
-     * @var array<string, array<string, array<string, mixed>>>
+     * @var mixed
      */
-    private array $parameters = [];
+    private $parameter;
     private bool $dirty = true;
 
     /**
@@ -74,22 +73,16 @@ final class Field implements FieldInterface
         return array_key_exists($name, $this->options);
     }
 
-    public function bindParameters(array $parameters): void
+    public function bindParameter($parameter): void
     {
         $this->setDirty();
 
-        $this->parameters = $parameters;
+        $this->parameter = $parameter;
     }
 
     public function getParameter()
     {
-        return $this->parameters[$this->getDataSourceName()][DataSourceInterface::PARAMETER_FIELDS][$this->name]
-            ?? null;
-    }
-
-    public function getParameters(): array
-    {
-        return $this->parameters;
+        return $this->parameter;
     }
 
     public function isDirty(): bool

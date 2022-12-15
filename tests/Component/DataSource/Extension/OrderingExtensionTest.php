@@ -314,11 +314,7 @@ final class OrderingExtensionTest extends TestCase
         ;
 
         $preBindParametersSubscriber = new OrderingPreBindParameters($storage);
-
         ($preBindParametersSubscriber)(new Event\PreBindParameters($dataSource, $allParameters));
-        foreach ($dataSourceFields as $field) {
-            $field->bindParameters($allParameters);
-        }
 
         $result = $storage->sortFields($dataSourceFields);
         self::assertSame($expectedOrdering, $result);
