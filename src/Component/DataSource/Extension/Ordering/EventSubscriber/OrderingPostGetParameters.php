@@ -16,6 +16,8 @@ use FSi\Component\DataSource\DataSourceEventSubscriberInterface;
 use FSi\Component\DataSource\Extension\Ordering\OrderingExtension;
 use FSi\Component\DataSource\Extension\Ordering\Storage;
 
+use function array_key_exists;
+
 final class OrderingPostGetParameters implements DataSourceEventSubscriberInterface
 {
     private Storage $storage;
@@ -36,9 +38,10 @@ final class OrderingPostGetParameters implements DataSourceEventSubscriberInterf
         $dataSourceName = $dataSource->getName();
         $parameters = $event->getParameters();
 
-        $sortingParameters = $this->storage->getDataSourceSortingParameters($dataSource);
-        if (null !== $sortingParameters) {
-            $parameters[$dataSourceName][OrderingExtension::PARAMETER_SORT] = $sortingParameters;
+        $sortingParameters = $this->storage->getDataSourceParameters($dataSource->getName());
+        if (true === array_key_exists(OrderingExtension::PARAMETER_SORT, $sortingParameters)) {
+            $parameters[$dataSourceName][OrderingExtension::PARAMETER_SORT]
+                = $sortingParameters[OrderingExtension::PARAMETER_SORT];
         }
 
         $event->setParameters($parameters);

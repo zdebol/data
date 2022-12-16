@@ -141,7 +141,7 @@ final class DataSourceTest extends TestCase
     {
         $field = $this->createMock(FieldInterface::class);
         $field->method('getName')->willReturn('field');
-        $field->expects(self::exactly(2))->method('bindParameters');
+        $field->expects(self::exactly(2))->method('bindParameter');
 
         $fieldType = $this->createMock(FieldTypeInterface::class);
         $fieldType->method('createField')->willReturn($field);

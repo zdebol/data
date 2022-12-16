@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace FSi\Component\DataSource\Extension\Ordering;
 
-use FSi\Component\DataSource\DataSourceInterface;
 use FSi\Component\DataSource\Field\FieldInterface;
 
 use function array_key_exists;
@@ -21,30 +20,30 @@ use function usort;
 final class Storage
 {
     /**
-     * @var array<string, array<string, string>>
+     * @var array<string, array<string, array<string, array<string, mixed>>>>
      */
-    private array $dataSourceSortingParameters = [];
+    private array $dataSourceParameters = [];
     /**
      * @var array<string, array{priority: int, ascending: bool}>
      */
     private array $fieldsSorting = [];
 
     /**
-     * @param DataSourceInterface<mixed> $dataSource
-     * @param array<string, string> $orderingParameters
+     * @param string $dataSourceName
+     * @param array<string, array<string, array<string, mixed>>> $parameters
      */
-    public function setDataSourceSortingParameters(DataSourceInterface $dataSource, array $orderingParameters): void
+    public function setDataSourceParameters(string $dataSourceName, array $parameters): void
     {
-        $this->dataSourceSortingParameters[$dataSource->getName()] = $orderingParameters;
+        $this->dataSourceParameters[$dataSourceName] = $parameters;
     }
 
     /**
-     * @param DataSourceInterface<mixed> $dataSource
-     * @return array<string,string>
+     * @param string $dataSourceName
+     * @return array<string, array<string, array<string, mixed>>>
      */
-    public function getDataSourceSortingParameters(DataSourceInterface $dataSource): ?array
+    public function getDataSourceParameters(string $dataSourceName): array
     {
-        return $this->dataSourceSortingParameters[$dataSource->getName()] ?? null;
+        return $this->dataSourceParameters[$dataSourceName] ?? [];
     }
 
     public function setFieldSorting(FieldInterface $field, int $priority, bool $ascending): void

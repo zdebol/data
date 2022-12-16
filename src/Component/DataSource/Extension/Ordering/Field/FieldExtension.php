@@ -31,7 +31,6 @@ use function array_key_exists;
 use function array_keys;
 use function array_unshift;
 use function array_values;
-use function key;
 
 final class FieldExtension extends FieldAbstractExtension
 {
@@ -75,13 +74,10 @@ final class FieldExtension extends FieldAbstractExtension
             return;
         }
 
-        $parameters = $field->getParameters();
         $dataSourceName = $field->getDataSourceName();
+        $parameters = [$dataSourceName => $this->storage->getDataSourceParameters($dataSourceName)];
 
-        if (
-            null !== $this->storage->getFieldSortingPriority($field)
-            && key($parameters[$dataSourceName][OrderingExtension::PARAMETER_SORT]) === $field->getName()
-        ) {
+        if (0 === $this->storage->getFieldSortingPriority($field)) {
             $view->setAttribute('sorted_ascending', true === $this->storage->isFieldSortingAscending($field));
             $view->setAttribute('sorted_descending', false === $this->storage->isFieldSortingAscending($field));
         } else {
