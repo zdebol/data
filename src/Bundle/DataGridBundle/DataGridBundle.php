@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace FSi\Bundle\DataGridBundle;
 
 use FSi\Bundle\DataGridBundle\DependencyInjection\Compiler\DataGridPass;
+use FSi\Bundle\DataGridBundle\DependencyInjection\Compiler\GedmoDataGridPass;
 use FSi\Bundle\DataGridBundle\DependencyInjection\FSIDataGridExtension;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -22,6 +23,7 @@ class DataGridBundle extends Bundle
 {
     public function build(ContainerBuilder $container): void
     {
+        $container->addCompilerPass(new GedmoDataGridPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 200);
         $container->addCompilerPass(new DataGridPass());
     }
 
