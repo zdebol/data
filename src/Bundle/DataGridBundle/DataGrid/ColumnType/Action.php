@@ -23,7 +23,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 use function array_key_exists;
-use function is_callable;
 
 final class Action extends ColumnAbstractType
 {
@@ -87,7 +86,7 @@ final class Action extends ColumnAbstractType
 
             if (true === array_key_exists('parameters_field_mapping', $options)) {
                 foreach ($options['parameters_field_mapping'] as $parameterName => $mappingField) {
-                    if (true === is_callable($mappingField)) {
+                    if (true === $mappingField instanceof Closure) {
                         $parameters[$parameterName] = $mappingField($value);
                     } else {
                         $parameters[$parameterName] = $value[$mappingField];
@@ -115,7 +114,7 @@ final class Action extends ColumnAbstractType
                 }
             }
 
-            if (true === is_callable($urlAttributes)) {
+            if (true === $urlAttributes instanceof Closure) {
                 $urlAttributes = $urlAttributes($value);
 
                 if (false === is_array($urlAttributes)) {
@@ -131,7 +130,7 @@ final class Action extends ColumnAbstractType
                 $urlAttributes['href'] = $url;
             }
 
-            if (null !== $content && true === is_callable($content)) {
+            if (true === $content instanceof Closure) {
                 $content = (string) $content($value);
             }
 
