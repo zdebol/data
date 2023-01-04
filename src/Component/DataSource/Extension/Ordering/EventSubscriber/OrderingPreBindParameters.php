@@ -60,7 +60,10 @@ final class OrderingPreBindParameters implements DataSourceEventSubscriberInterf
                 $priority++;
             }
 
-            $this->storage->setDataSourceParameters($dataSource->getName(), $parameters[$dataSourceName]);
+            $this->storage->setDataSourceParameters(
+                $dataSource->getName(),
+                [OrderingExtension::PARAMETER_SORT => $sortingParameters]
+            );
         }
     }
 }
