@@ -25,13 +25,16 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Service\ResetInterface;
 
 use function array_key_exists;
 use function array_keys;
 use function get_class;
 use function implode;
 
-final class FormExtension extends ColumnAbstractTypeExtension implements DataGridCellFormHandlerInterface
+final class FormExtension extends ColumnAbstractTypeExtension implements
+    DataGridCellFormHandlerInterface,
+    ResetInterface
 {
     private FormFactoryInterface $formFactory;
     private DataMapperInterface $dataMapper;
@@ -131,6 +134,11 @@ final class FormExtension extends ColumnAbstractTypeExtension implements DataGri
         }
 
         return true === $form->isSubmitted() && true === $form->isValid();
+    }
+
+    public function reset(): void
+    {
+        $this->forms = [];
     }
 
     /**

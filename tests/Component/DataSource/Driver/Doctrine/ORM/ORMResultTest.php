@@ -47,6 +47,7 @@ final class ORMResultTest extends TestCase
                 '1' => ['foo1', 'bar1']
             ])
         );
+        $paginator->method('count')->willReturn(2);
 
         $result = new ORMResult($registry, $paginator);
         self::assertSame($result[0], ['foo', 'bar']);

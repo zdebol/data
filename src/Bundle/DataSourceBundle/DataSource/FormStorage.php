@@ -18,11 +18,12 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 use function array_key_exists;
 use function array_merge;
 
-final class FormStorage
+final class FormStorage implements ResetInterface
 {
     private FormFactoryInterface $formFactory;
     /**
@@ -106,6 +107,12 @@ final class FormStorage
         $this->forms[$fieldKey] = $form;
 
         return $this->forms[$fieldKey];
+    }
+
+    public function reset(): void
+    {
+        $this->forms = [];
+        $this->parameters = [];
     }
 
     /**

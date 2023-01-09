@@ -16,12 +16,15 @@ use Doctrine\Persistence\ManagerRegistry;
 use FSi\Component\DataIndexer\DoctrineDataIndexer;
 use FSi\Component\DataSource\Result;
 
+use function array_key_exists;
 use function count;
+use function get_class;
+use function is_object;
 
 /**
  * @template T
  * @template-implements Result<T>
- * @template-extends ArrayCollection<int|string,T>
+ * @template-extends ArrayCollection<int|string, T>
  */
 final class ORMResult extends ArrayCollection implements Result
 {
@@ -35,22 +38,20 @@ final class ORMResult extends ArrayCollection implements Result
     {
         $this->count = $paginator->count();
         $data = $paginator->getIterator();
-        $data->rewind();
 
+        $indexers = [];
         $result = [];
-        if (0 !== count($data)) {
-            $firstElement = $data->current();
-            $dataIndexer = is_object($firstElement)
-                ? new DoctrineDataIndexer($registry, get_class($firstElement))
-                : null;
-
+        if (0 !== $paginator->count()) {
             foreach ($data as $key => $element) {
-                $index = true === $dataIndexer instanceof DoctrineDataIndexer
-                    ? $dataIndexer->getIndex($element)
-                    : $key
-                ;
+                if (true === is_object($element)) {
+                    $class = get_class($element);
+                    if (false === array_key_exists($class, $indexers)) {
+                        $indexers[$class] = new DoctrineDataIndexer($registry, $class);
+                    }
+                    $index = $indexers[$class]->getIndex($element);
+                }
 
-                $result[$index] = $element;
+                $result[$index ?? $key] = $element;
             }
         }
 

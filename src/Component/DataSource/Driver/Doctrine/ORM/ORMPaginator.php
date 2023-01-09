@@ -17,6 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use FSi\Component\DataSource\Result;
 use Iterator;
+use Traversable;
 
 /**
  * @template T
@@ -46,9 +47,9 @@ class ORMPaginator implements Countable, Result
     }
 
     /**
-     * @return ArrayIterator<int|string,T>
+     * @return Traversable<int|string,T>
      */
-    public function getIterator(): Iterator
+    public function getIterator(): Traversable
     {
         return $this->paginator->getIterator();
     }

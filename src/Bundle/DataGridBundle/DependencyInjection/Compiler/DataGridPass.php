@@ -16,10 +16,8 @@ use FSi\Component\DataGrid\DataGridFactory;
 use FSi\Component\DataGrid\Exception\DataGridException;
 use ReflectionNamedType;
 use RuntimeException;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 
 use function is_a;
@@ -29,11 +27,6 @@ final class DataGridPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        if (true === $container->hasExtension('stof_doctrine_extensions')) {
-            $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../../Resources/config'));
-            $loader->load('datagrid_gedmo.xml');
-        }
-
         $this->registerColumns($container);
         $this->registerEventSubscribers($container);
     }
