@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace FSi\Component\DataGrid\Data;
 
+use Countable;
 use InvalidArgumentException;
 use ReturnTypeWillChange;
 use RuntimeException;
@@ -27,7 +28,8 @@ class DataRowset implements DataRowsetInterface
     /**
      * @var array<int|string,array<string,mixed>|object>
      */
-    protected array $data = [];
+    private array $data = [];
+    private int $count;
 
     /**
      * @param iterable<int|string,array<string,mixed>|object> $data
@@ -37,11 +39,17 @@ class DataRowset implements DataRowsetInterface
         foreach ($data as $id => $element) {
             $this->data[$id] = $element;
         }
+
+        if (true === $data instanceof Countable) {
+            $this->count = $data->count();
+        } else {
+            $this->count = count($this->data);
+        }
     }
 
     public function count(): int
     {
-        return count($this->data);
+        return $this->count;
     }
 
     /**
