@@ -26,14 +26,12 @@ use Gedmo\Tree\TreeListener;
 use InvalidArgumentException;
 use RuntimeException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Throwable;
 
 use function array_key_exists;
 use function array_merge;
 use function class_parents;
 use function get_class;
-use function is_array;
 use function is_object;
 use function sprintf;
 
@@ -50,8 +48,6 @@ final class Tree extends ColumnAbstractType
     private array $classStrategies;
 
     /**
-     * @param ManagerRegistry $registry
-     * @param DataMapperInterface $dataMapper
      * @param array<ColumnTypeExtensionInterface> $columnTypeExtensions
      */
     public function __construct(
@@ -74,32 +70,34 @@ final class Tree extends ColumnAbstractType
     public function getValue(ColumnInterface $column, $object)
     {
         if (false === is_object($object)) {
-            throw new InvalidArgumentException('Column "gedmo_tree" must read value from object.');
+            throw new InvalidArgumentException(
+                "Column \"{$this->getId()}\" must read value from object."
+            );
         }
 
-        $value = parent::getValue($column, $object);
-
         $objectManager = $this->registry->getManager($column->getOption('em'));
-
         $treeListener = $this->getTreeListener($objectManager);
 
-        $strategy = $this->getClassStrategy($objectManager, $treeListener, get_class($object));
+        $objectClass = get_class($object);
+        $strategy = $this->getClassStrategy($objectManager, $treeListener, $objectClass);
         $this->validateStrategy($strategy);
 
-        $config = $treeListener->getConfiguration($objectManager, get_class($object));
-        $doctrineDataIndexer = new DoctrineDataIndexer($this->registry, get_class($object));
-        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+        $config = $treeListener->getConfiguration($objectManager, $objectClass);
+        $doctrineDataIndexer = new DoctrineDataIndexer($this->registry, $objectClass);
 
-        $value = array_merge($value, [
-            'id' => $doctrineDataIndexer->getIndex($object),
-            'root' => isset($config['root']) ? $propertyAccessor->getValue($object, $config['root']) : null,
-            'left' => isset($config['left']) ? $propertyAccessor->getValue($object, $config['left']) : null,
-            'right' => isset($config['right']) ? $propertyAccessor->getValue($object, $config['right']) : null,
-            'level' => isset($config['level']) ? $propertyAccessor->getValue($object, $config['level']) : null,
-            'children' => $this->getTreeRepository(get_class($object), $objectManager)->childCount($object),
-        ]);
+        $value = array_merge(
+            parent::getValue($column, $object),
+            [
+                'id' => $doctrineDataIndexer->getIndex($object),
+                'root' => $this->getPropertyFromConfig($object, $config, 'root'),
+                'left' => $this->getPropertyFromConfig($object, $config, 'left'),
+                'right' => $this->getPropertyFromConfig($object, $config, 'right'),
+                'level' => $this->getPropertyFromConfig($object, $config, 'level'),
+                'children' => $this->getTreeRepository($objectClass, $objectManager)->childCount($object)
+            ]
+        );
 
-        $parent = isset($config['parent']) ? $propertyAccessor->getValue($object, $config['parent']) : null;
+        $parent = $this->getPropertyFromConfig($object, $config, 'parent');
         if (null !== $parent) {
             $value['parent'] = $doctrineDataIndexer->getIndex($parent);
         }
@@ -109,9 +107,7 @@ final class Tree extends ColumnAbstractType
 
     protected function initOptions(OptionsResolver $optionsResolver): void
     {
-        $optionsResolver->setDefaults([
-            'em' => null,
-        ]);
+        $optionsResolver->setDefault('em', null);
         $optionsResolver->setAllowedTypes('em', ['string', 'null']);
     }
 
@@ -127,12 +123,7 @@ final class Tree extends ColumnAbstractType
             return $this->classStrategies[$class];
         }
 
-        $classParents = class_parents($class);
-        if (false === is_array($classParents)) {
-            throw new DataGridColumnException("Unable to determine parent classes of class {$class}");
-        }
-
-        $classParents = array_merge([$class], $classParents);
+        $classParents = array_merge([$class], class_parents($class));
         foreach ($classParents as $parent) {
             try {
                 $this->classStrategies[$class] = $listener->getStrategy($om, $parent);
@@ -163,8 +154,6 @@ final class Tree extends ColumnAbstractType
 
     /**
      * @param class-string $class
-     * @param ObjectManager $em
-     * @return TreeRepositoryInterface
      */
     private function getTreeRepository(string $class, ObjectManager $em): TreeRepositoryInterface
     {
@@ -185,7 +174,19 @@ final class Tree extends ColumnAbstractType
         }
 
         throw new DataGridColumnException(
-            sprintf('Strategy "%s" is not supported by "%s" column.', $strategy->getName(), $this->getId())
+            "Strategy \"{$strategy->getName()}\" is not supported by \"{$this->getId()}\" column."
         );
+    }
+
+    /**
+     * @param array<string, mixed> $config
+     * @return mixed
+     */
+    private function getPropertyFromConfig(object $object, array $config, string $key)
+    {
+        return array_key_exists($key, $config)
+            ? $this->dataMapper->getData($config[$key], $object)
+            : null
+        ;
     }
 }

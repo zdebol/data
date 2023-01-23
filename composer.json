@@ -25,7 +25,7 @@
         "doctrine/orm": "^2.11",
         "doctrine/persistence": "^2.3",
         "gedmo/doctrine-extensions": "^3.5",
-        "phpstan/phpstan": "^1.9",
+        "phpstan/phpstan": "^1.9.14",
         "phpstan/phpstan-doctrine": "^1.2,>=1.2.7",
         "phpstan/phpstan-phpunit": "^1.0",
         "phpunit/phpunit": "^9.5",
