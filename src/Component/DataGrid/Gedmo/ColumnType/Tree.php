@@ -26,8 +26,6 @@ use Gedmo\Tree\TreeListener;
 use InvalidArgumentException;
 use RuntimeException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Throwable;
 
 use function array_key_exists;
@@ -40,7 +38,6 @@ use function sprintf;
 final class Tree extends ColumnAbstractType
 {
     private ManagerRegistry $registry;
-    private ?PropertyAccessorInterface $propertyAccessor;
     /**
      * @var array<string>
      */
@@ -61,7 +58,6 @@ final class Tree extends ColumnAbstractType
         parent::__construct($columnTypeExtensions, $dataMapper);
 
         $this->registry = $registry;
-        $this->propertyAccessor = null;
         $this->allowedStrategies = ['nested'];
         $this->classStrategies = [];
     }
@@ -189,17 +185,8 @@ final class Tree extends ColumnAbstractType
     private function getPropertyFromConfig(object $object, array $config, string $key)
     {
         return array_key_exists($key, $config)
-            ? $this->getPropertyAccessor()->getValue($object, $config[$key])
+            ? $this->dataMapper->getData($config[$key], $object)
             : null
         ;
-    }
-
-    private function getPropertyAccessor(): PropertyAccessorInterface
-    {
-        if (null === $this->propertyAccessor) {
-            $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
-        }
-
-        return $this->propertyAccessor;
     }
 }
