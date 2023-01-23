@@ -93,18 +93,15 @@ final class Tree extends ColumnAbstractType
             parent::getValue($column, $object),
             [
                 'id' => $doctrineDataIndexer->getIndex($object),
-                'root' => $this->getPropertyFromConfig($config, 'root'),
-                'left' => $this->getPropertyFromConfig($config, 'left'),
-                'right' => $this->getPropertyFromConfig($config, 'right'),
-                'level' => $this->getPropertyFromConfig($config, 'level'),
-                'children' => $this->getTreeRepository(
-                    $objectClass,
-                    $objectManager
-                )->childCount($object),
+                'root' => $this->getPropertyFromConfig($object, $config, 'root'),
+                'left' => $this->getPropertyFromConfig($object, $config, 'left'),
+                'right' => $this->getPropertyFromConfig($object, $config, 'right'),
+                'level' => $this->getPropertyFromConfig($object, $config, 'level'),
+                'children' => $this->getTreeRepository($objectClass, $objectManager)->childCount($object)
             ]
         );
 
-        $parent = $this->getPropertyFromConfig($config, 'parent');
+        $parent = $this->getPropertyFromConfig($object, $config, 'parent');
         if (null !== $parent) {
             $value['parent'] = $doctrineDataIndexer->getIndex($parent);
         }
@@ -187,13 +184,12 @@ final class Tree extends ColumnAbstractType
 
     /**
      * @param array<string, mixed> $config
-     * @param string $key
      * @return mixed
      */
-    private function getPropertyFromConfig(array $config, string $key)
+    private function getPropertyFromConfig(object $object, array $config, string $key)
     {
         return array_key_exists($key, $config)
-            ? $this->getPropertyAccessor()->getValue($config, $key)
+            ? $this->getPropertyAccessor()->getValue($object, $config[$key])
             : null
         ;
     }
