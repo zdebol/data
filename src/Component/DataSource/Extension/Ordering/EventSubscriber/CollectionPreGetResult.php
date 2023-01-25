@@ -43,7 +43,10 @@ final class CollectionPreGetResult implements DataSourceEventSubscriberInterface
         $orderings = $criteria->getOrderings();
         foreach ($sortedFields as $fieldName => $direction) {
             $field = $fields[$fieldName];
-            $fieldName = true === $field->hasOption('field') ? $field->getOption('field') : $field->getName();
+            $fieldName = true === $field->hasOption('field')
+                ? $field->getOption('field')
+                : $field->getName()
+            ;
             $orderings[$fieldName] = strtoupper($direction);
         }
         $criteria->orderBy($orderings);
