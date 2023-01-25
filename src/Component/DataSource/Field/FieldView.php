@@ -20,17 +20,12 @@ final class FieldView implements FieldViewInterface
     private string $dataSourceName;
     private string $name;
     private string $type;
-    /**
-     * @var string|int|array<mixed>|null
-     */
-    private $parameter;
 
     public function __construct(FieldInterface $field)
     {
         $this->dataSourceName = $field->getDataSourceName();
         $this->name = $field->getName();
         $this->type = $field->getType()->getId();
-        $this->parameter = $field->getParameter();
         $this->attributes = [];
     }
 
@@ -42,11 +37,6 @@ final class FieldView implements FieldViewInterface
     public function getType(): string
     {
         return $this->type;
-    }
-
-    public function getParameter()
-    {
-        return $this->parameter;
     }
 
     public function getDataSourceName(): string
