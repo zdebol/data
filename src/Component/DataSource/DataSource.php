@@ -184,9 +184,6 @@ class DataSource implements DataSourceInterface
                 $field->bindParameter($event->getParameter());
             }
         }
-
-        $event = new DataSourceEvent\PostBindParameters($this);
-        $this->eventDispatcher->dispatch($event);
     }
 
     public function getResult(): Result

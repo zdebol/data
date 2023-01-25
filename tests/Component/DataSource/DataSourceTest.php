@@ -13,17 +13,12 @@ namespace Tests\FSi\Component\DataSource;
 
 use FSi\Component\DataSource\DataSource;
 use FSi\Component\DataSource\DataSourceFactoryInterface;
-use FSi\Component\DataSource\DataSourceInterface;
 use FSi\Component\DataSource\Driver\DriverInterface;
-use FSi\Component\DataSource\Event\PostBindParameters;
 use FSi\Component\DataSource\Event\PostBuildView;
 use FSi\Component\DataSource\Event\PostGetParameters;
 use FSi\Component\DataSource\Event\PreBindParameters;
 use FSi\Component\DataSource\Event\PreBuildView;
-use FSi\Component\DataSource\Event\PreGetParameters;
 use FSi\Component\DataSource\Exception\DataSourceException;
-use FSi\Component\DataSource\Field\Event\PostBindParameter;
-use FSi\Component\DataSource\Field\Event\PostGetParameter;
 use FSi\Component\DataSource\Field\Event\PreBindParameter;
 use FSi\Component\DataSource\Field\FieldInterface;
 use FSi\Component\DataSource\Field\Type\FieldTypeInterface;
@@ -217,9 +212,11 @@ final class DataSourceTest extends TestCase
 
         $field = $this->createMock(FieldInterface::class);
         $field->method('getName')->willReturn('key');
+        $field->expects(self::never())->method('getParameter');
 
         $field2 = $this->createMock(FieldInterface::class);
         $field2->method('getName')->willReturn('key2');
+        $field2->expects(self::never())->method('getParameter');
 
         $fieldType->method('createField')
             ->withConsecutive(
@@ -229,13 +226,12 @@ final class DataSourceTest extends TestCase
             ->willReturnOnConsecutiveCalls($field, $field2)
         ;
 
-        $eventDispatcher->expects(self::exactly(5))
+        $eventDispatcher->expects(self::exactly(4))
             ->method('dispatch')
             ->withConsecutive(
                 [self::isInstanceOf(PreBindParameters::class)],
                 [self::isInstanceOf(PreBindParameter::class)],
                 [self::isInstanceOf(PreBindParameter::class)],
-                [self::isInstanceOf(PostBindParameters::class)],
                 [self::isInstanceOf(PostGetParameters::class)]
             )
         ;
@@ -313,12 +309,11 @@ final class DataSourceTest extends TestCase
 
         $dataSource->addField('field', 'text', ['comparison' => 'eq']);
 
-        $eventDispatcher->expects(self::exactly(3))
+        $eventDispatcher->expects(self::exactly(2))
             ->method('dispatch')
             ->withConsecutive(
                 [self::isInstanceOf(PreBindParameters::class)],
-                [self::isInstanceOf(PreBindParameter::class)],
-                [self::isInstanceOf(PostBindParameters::class)]
+                [self::isInstanceOf(PreBindParameter::class)]
             )
         ;
 
