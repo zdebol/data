@@ -66,7 +66,7 @@ final class DataSourceFactory implements DataSourceFactoryInterface
     {
         $result = [];
         foreach ($this->dataSources as $dataSource) {
-            $result[] = $dataSource->getParameters();
+            $result[] = $dataSource->getBoundParameters();
         }
 
         if (0 !== count($result)) {
@@ -85,7 +85,7 @@ final class DataSourceFactory implements DataSourceFactoryInterface
         $result = [];
         foreach ($this->dataSources as $dataSource) {
             if ($dataSource !== $except) {
-                $result[] = $dataSource->getParameters();
+                $result[] = $dataSource->getBoundParameters();
             }
         }
 

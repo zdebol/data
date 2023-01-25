@@ -30,9 +30,7 @@ interface DataSourceInterface
     public const PARAMETER_FIELDS = 'fields';
 
     public function getName(): string;
-
     public function hasField(string $name): bool;
-
     /**
      * @param string $name
      * @param string $type
@@ -45,34 +43,25 @@ interface DataSourceInterface
         string $type,
         array $options = []
     ): DataSourceInterface;
-
     public function removeField(string $name): void;
-
     public function getField(string $name): FieldInterface;
-
     /**
      * @return array<FieldInterface>
      */
     public function getFields(): array;
-
     public function clearFields(): void;
-
     /**
      * @param int|null $max
      * @return DataSourceInterface<T>
      */
     public function setMaxResults(?int $max): DataSourceInterface;
-
     /**
      * @param int|null $first
      * @return DataSourceInterface<T>
      */
     public function setFirstResult(?int $first): DataSourceInterface;
-
     public function getMaxResults(): ?int;
-
     public function getFirstResult(): ?int;
-
     /**
      * Binds parameters to datasource. These could be any type of data that will be converted to array i.e by some
      * event subscriber
@@ -80,22 +69,18 @@ interface DataSourceInterface
      * @param mixed $parameters
      */
     public function bindParameters($parameters = []): void;
-
     /**
      * @return Result<T>
      */
     public function getResult(): Result;
-
     /**
      * @return DataSourceViewInterface<FieldViewInterface>
      */
     public function createView(): DataSourceViewInterface;
-
     /**
      * @return array<string, array<string, array<string, mixed>>>
      */
-    public function getParameters(): array;
-
+    public function getBoundParameters(): array;
     /**
      * Returns all parameters from all datasources on page.
      *
@@ -107,7 +92,6 @@ interface DataSourceInterface
      * @return array<string, array<string, array<string, mixed>>>
      */
     public function getAllParameters(): array;
-
     /**
      * Returns all parameters from all datasources on page except this one.
      *
@@ -117,6 +101,5 @@ interface DataSourceInterface
      * @return array<string, array<string, array<string, mixed>>>
      */
     public function getOtherParameters(): array;
-
     public function getFactory(): ?DataSourceFactoryInterface;
 }

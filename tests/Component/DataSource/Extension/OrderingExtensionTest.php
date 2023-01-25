@@ -309,7 +309,7 @@ final class OrderingExtensionTest extends TestCase
 
         $allParameters = ['ds' => [OrderingExtension::PARAMETER_SORT => $parameters]];
         $dataSource
-            ->method('getParameters')
+            ->method('getBoundParameters')
             ->willReturn($allParameters)
         ;
 

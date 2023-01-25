@@ -201,9 +201,6 @@ final class DataSourceTest extends TestCase
 
     public function testPreAndPostGetParametersCalls(): void
     {
-        $field = $this->createMock(FieldInterface::class);
-        $field2 = $this->createMock(FieldInterface::class);
-
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
 
         $fieldType = $this->createMock(FieldTypeInterface::class);
@@ -218,15 +215,11 @@ final class DataSourceTest extends TestCase
             $driver
         );
 
-        $field->method('getType')->willReturn($fieldType);
+        $field = $this->createMock(FieldInterface::class);
         $field->method('getName')->willReturn('key');
-        $field->method('getParameter')->willReturn('a');
-        $field->method('getDataSourceName')->willReturn('datasource');
 
-        $field2->method('getType')->willReturn($fieldType);
+        $field2 = $this->createMock(FieldInterface::class);
         $field2->method('getName')->willReturn('key2');
-        $field2->method('getParameter')->willReturn('b');
-        $field2->method('getDataSourceName')->willReturn('datasource');
 
         $fieldType->method('createField')
             ->withConsecutive(
@@ -236,19 +229,30 @@ final class DataSourceTest extends TestCase
             ->willReturnOnConsecutiveCalls($field, $field2)
         ;
 
-        $eventDispatcher->expects(self::exactly(4))
+        $eventDispatcher->expects(self::exactly(5))
             ->method('dispatch')
             ->withConsecutive(
-                [self::isInstanceOf(PreGetParameters::class)],
-                [self::isInstanceOf(PostGetParameter::class)],
-                [self::isInstanceOf(PostGetParameter::class)],
-                [self::isInstanceOf(PostGetParameters::class)],
+                [self::isInstanceOf(PreBindParameters::class)],
+                [self::isInstanceOf(PreBindParameter::class)],
+                [self::isInstanceOf(PreBindParameter::class)],
+                [self::isInstanceOf(PostBindParameters::class)],
+                [self::isInstanceOf(PostGetParameters::class)]
             )
         ;
 
         $dataSource->addField('field', 'type', []);
         $dataSource->addField('field2', 'type', []);
-        self::assertEquals(['datasource' => ['fields' => ['key' => 'a', 'key2' => 'b']]], $dataSource->getParameters());
+
+        $dataSource->bindParameters([
+            'datasource' => [
+                'fields' => ['key' => 'a', 'key2' => 'b', 'ignoredKey' => 'c']
+            ]
+        ]);
+
+        self::assertEquals(
+            ['datasource' => ['fields' => ['key' => 'a', 'key2' => 'b']]],
+            $dataSource->getBoundParameters()
+        );
     }
 
     public function testViewCreation(): void
@@ -256,11 +260,10 @@ final class DataSourceTest extends TestCase
         $driver = $this->createDriverMock();
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        $eventDispatcher->expects(self::exactly(4))
+        $eventDispatcher->expects(self::exactly(3))
             ->method('dispatch')
             ->withConsecutive(
                 [self::isInstanceOf(PreBuildView::class)],
-                [self::isInstanceOf(PreGetParameters::class)],
                 [self::isInstanceOf(PostGetParameters::class)],
                 [self::isInstanceOf(PostBuildView::class)]
             );
@@ -310,14 +313,15 @@ final class DataSourceTest extends TestCase
 
         $dataSource->addField('field', 'text', ['comparison' => 'eq']);
 
-        $eventDispatcher->expects(self::exactly(4))
+        $eventDispatcher->expects(self::exactly(3))
             ->method('dispatch')
             ->withConsecutive(
                 [self::isInstanceOf(PreBindParameters::class)],
                 [self::isInstanceOf(PreBindParameter::class)],
-                [self::isInstanceOf(PostBindParameter::class)],
-                [self::isInstanceOf(PostBindParameters::class)],
-            );
+                [self::isInstanceOf(PostBindParameters::class)]
+            )
+        ;
+
         $dataSource->bindParameters(['datasource' => []]);
     }
 

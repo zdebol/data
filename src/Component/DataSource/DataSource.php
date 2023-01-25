@@ -43,6 +43,10 @@ class DataSource implements DataSourceInterface
      * @var array<FieldInterface>
      */
     private array $fields;
+    /**
+     * @var array<string, mixed>
+     */
+    private array $boundParameters;
     private ?int $maxResults;
     private ?int $firstResult;
     /**
@@ -84,6 +88,7 @@ class DataSource implements DataSourceInterface
         $this->factory = $factory;
         $this->eventDispatcher = $eventDispatcher;
         $this->driver = $driver;
+        $this->boundParameters = [];
         $this->fields = [];
         $this->maxResults = null;
         $this->firstResult = null;
@@ -146,13 +151,13 @@ class DataSource implements DataSourceInterface
         $this->dirty = true;
     }
 
-    public function bindParameters($parameters = []): void
+    public function bindParameters($boundParameters = []): void
     {
         $this->dirty = true;
 
-        $event = new DataSourceEvent\PreBindParameters($this, $parameters);
-        $this->eventDispatcher->dispatch($event);
-        $parameters = $event->getParameters();
+        $preBindEvent = new DataSourceEvent\PreBindParameters($this, $boundParameters);
+        $this->eventDispatcher->dispatch($preBindEvent);
+        $parameters = $preBindEvent->getParameters();
 
         if (false === is_array($parameters)) {
             throw new DataSourceException(
@@ -163,21 +168,20 @@ class DataSource implements DataSourceInterface
             );
         }
 
-        if (true === array_key_exists($this->name, $parameters) && true === is_array($parameters[$this->name])) {
-            $dataSourceFieldParameters = $parameters[$this->name][DataSourceInterface::PARAMETER_FIELDS] ?? [];
-
+        if (
+            true === array_key_exists($this->name, $parameters)
+            && true === is_array($parameters[$this->name])
+        ) {
+            $fieldsParameters = $parameters[$this->name][DataSourceInterface::PARAMETER_FIELDS] ?? [];
             foreach ($this->fields as $field) {
-                $event = new FieldEvent\PreBindParameter(
-                    $field,
-                    $dataSourceFieldParameters[$field->getName()] ?? null
-                );
-                $this->eventDispatcher->dispatch($event);
-                $parameter = $event->getParameter();
+                $fieldName = $field->getName();
+                $fieldRawValue = $fieldsParameters[$fieldName] ?? null;
+                $this->boundParameters[$fieldName] = $fieldRawValue;
 
-                $field->bindParameter($parameter);
-
-                $event = new FieldEvent\PostBindParameter($field);
+                $event = new FieldEvent\PreBindParameter($field, $fieldRawValue);
                 $this->eventDispatcher->dispatch($event);
+
+                $field->bindParameter($event->getParameter());
             }
         }
 
@@ -247,7 +251,7 @@ class DataSource implements DataSourceInterface
         $view = new DataSourceView(
             $this->getName(),
             $event->getFields(),
-            $this->getParameters(),
+            $this->getBoundParameters(),
             $this->getOtherParameters()
         );
 
@@ -256,43 +260,24 @@ class DataSource implements DataSourceInterface
         return $view;
     }
 
-    public function getParameters(): array
+    public function getBoundParameters(): array
     {
         $this->checkFieldsClarity();
         if (true === array_key_exists('parameters', $this->cache)) {
             return $this->cache['parameters'];
         }
 
-        $parameters = [];
+        $event = new DataSourceEvent\PostGetParameters($this, [
+            $this->name => [
+                DataSourceInterface::PARAMETER_FIELDS => $this->boundParameters
+            ]
+        ]);
 
-        $event = new DataSourceEvent\PreGetParameters($this, $parameters);
         $this->eventDispatcher->dispatch($event);
-        $parameters = $event->getParameters();
 
-        $dataSourceName = $this->name;
-
-        foreach ($this->fields as $field) {
-            $event = new FieldEvent\PostGetParameter($field, $field->getParameter());
-            $this->eventDispatcher->dispatch($event);
-
-            if (false === array_key_exists($dataSourceName, $parameters)) {
-                $parameters[$dataSourceName] = [];
-            }
-            if (false === array_key_exists(DataSourceInterface::PARAMETER_FIELDS, $parameters[$dataSourceName])) {
-                $parameters[$dataSourceName][DataSourceInterface::PARAMETER_FIELDS] = [];
-            }
-            $parameters[$dataSourceName][DataSourceInterface::PARAMETER_FIELDS][$field->getName()]
-                = $event->getParameter();
-        }
-
-        $event = new DataSourceEvent\PostGetParameters($this, $parameters);
-        $this->eventDispatcher->dispatch($event);
-        $parameters = $event->getParameters();
-
-        // Clearing parameters from empty values.
-        $parameters = self::cleanData($parameters);
-
+        $parameters = self::cleanData($event->getParameters());
         $this->cache['parameters'] = $parameters;
+
         return $parameters;
     }
 
@@ -302,7 +287,7 @@ class DataSource implements DataSourceInterface
             return $this->factory->getAllParameters();
         }
 
-        return $this->getParameters();
+        return $this->getBoundParameters();
     }
 
     public function getOtherParameters(): array
