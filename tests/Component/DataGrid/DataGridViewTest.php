@@ -24,10 +24,7 @@ class DataGridViewTest extends TestCase
 {
     public function testAddHasGetRemoveColumn(): void
     {
-        $dataGridFactory = $this->createMock(DataGridFactoryInterface::class);
-
         $dataGrid = $this->createMock(DataGridInterface::class);
-        $dataGrid->method('getFactory')->willReturn($dataGridFactory);
 
         $columnType = $this->createMock(ColumnTypeInterface::class);
         $column = $this->createMock(ColumnInterface::class);

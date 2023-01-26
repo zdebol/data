@@ -22,9 +22,9 @@ final class DataGridFactory implements DataGridFactoryInterface
 {
     private EventDispatcherInterface $eventDispatcher;
     /**
-     * @var array<string, DataGridInterface>
+     * @var array<array-key,string>
      */
-    private array $dataGrids;
+    private array $dataGridNames;
     /**
      * @var array<ColumnTypeInterface>
      */
@@ -39,7 +39,7 @@ final class DataGridFactory implements DataGridFactoryInterface
         iterable $columnTypes
     ) {
         $this->eventDispatcher = $eventDispatcher;
-        $this->dataGrids = [];
+        $this->dataGridNames = [];
         $this->columnTypes = [];
         foreach ($columnTypes as $columnType) {
             $this->columnTypes[$columnType->getId()] = $columnType;
@@ -62,11 +62,11 @@ final class DataGridFactory implements DataGridFactoryInterface
 
     public function createDataGrid(string $name): DataGridInterface
     {
-        if (true === array_key_exists($name, $this->dataGrids)) {
+        if (true === in_array($name, $this->dataGridNames, true)) {
             throw new DataGridException("Datagrid name \"{$name}\" is not unique.");
         }
 
-        $this->dataGrids[$name] = new DataGrid($this, $this->eventDispatcher, $name);
-        return $this->dataGrids[$name];
+        $this->dataGridNames[] = $name;
+        return new DataGrid($this, $this->eventDispatcher, $name);
     }
 }
