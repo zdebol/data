@@ -23,8 +23,6 @@ final class AttributesPostBuildView implements DataSourceEventSubscriberInterfac
 
     public function __invoke(PostBuildView $event): void
     {
-        $view = $event->getView();
-
-        $view->setAttribute('container_attr', []);
+        $event->getView()->setAttribute('container_attr', []);
     }
 }

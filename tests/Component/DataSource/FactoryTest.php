@@ -69,40 +69,4 @@ final class FactoryTest extends TestCase
 
         $factory->createDataSource('collection', ['collection' => []], '');
     }
-
-    public function testGetAllAndOtherDataSourceParameters(): void
-    {
-        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        $driveFactoryManager = new DriverFactoryManager([new CollectionFactory($eventDispatcher, [new Text([])])]);
-        $factory = new DataSourceFactory($eventDispatcher, $driveFactoryManager);
-
-        $params1 = [
-            'datasource1' => [
-                'fields' => [
-                    'test' => 'a'
-                ]
-            ]
-        ];
-
-        $params2 = [
-            'datasource2' => [
-                'fields' => [
-                    'test' => 'b'
-                ]
-            ]
-        ];
-
-        $result = array_merge($params1, $params2);
-
-        $dataSource1 = $factory->createDataSource('collection', [], 'datasource1');
-        $dataSource1->addField('test', 'text', ['comparison' => 'eq']);
-        $dataSource1->bindParameters($params1);
-        $dataSource2 = $factory->createDataSource('collection', [], 'datasource2');
-        $dataSource2->addField('test', 'text', ['comparison' => 'eq']);
-        $dataSource2->bindParameters($params2);
-
-        self::assertEquals($factory->getOtherParameters($dataSource1), $params2);
-        self::assertEquals($factory->getOtherParameters($dataSource2), $params1);
-        self::assertEquals($factory->getAllParameters(), $result);
-    }
 }

@@ -22,37 +22,22 @@ use Iterator;
  */
 interface DataGridInterface extends ArrayAccess, Countable, Iterator
 {
-    public function getFactory(): DataGridFactoryInterface;
-
     public function getName(): string;
-
     /**
-     * @return array<ColumnInterface>
+     * @return array<array-key,ColumnInterface>
      */
     public function getColumns(): array;
-
     public function hasColumn(string $name): bool;
-
     public function hasColumnType(string $type): bool;
-
     public function getColumn(string $name): ColumnInterface;
-
     /**
-     * @param string $name
-     * @param string $type
      * @param array<string,mixed> $options
-     * @return DataGridInterface
      */
     public function addColumn(string $name, string $type, array $options = []): DataGridInterface;
-
     public function addColumnInstance(ColumnInterface $column): DataGridInterface;
-
     public function removeColumn(string $name): DataGridInterface;
-
     public function clearColumns(): void;
-
     public function createView(): DataGridViewInterface;
-
     /**
      * @param iterable<int|string,array<string,mixed>|object> $data
      */

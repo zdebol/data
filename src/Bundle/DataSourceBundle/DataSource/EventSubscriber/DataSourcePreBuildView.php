@@ -17,7 +17,7 @@ use FSi\Component\DataSource\DataSourceEventSubscriberInterface;
 use function array_merge;
 use function asort;
 
-final class DataSourcePostBuildView implements DataSourceEventSubscriberInterface
+final class DataSourcePreBuildView implements DataSourceEventSubscriberInterface
 {
     public static function getPriority(): int
     {

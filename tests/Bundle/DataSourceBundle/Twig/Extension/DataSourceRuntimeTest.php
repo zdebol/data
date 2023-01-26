@@ -98,7 +98,7 @@ final class DataSourceRuntimeTest extends TestCase
         $field2->method('getType')->willReturn($fieldType);
         $field3->method('getType')->willReturn($fieldType);
 
-        $dataSourceView = new DataSourceView('datasource', [$field1, $field2, $field3], [], []);
+        $dataSourceView = new DataSourceView('datasource', [$field1, $field2, $field3], []);
 
         self::assertEquals(2, $this->runtime->dataSourceFilterCount($dataSourceView));
     }

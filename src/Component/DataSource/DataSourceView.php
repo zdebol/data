@@ -32,10 +32,6 @@ final class DataSourceView implements DataSourceViewInterface
      */
     private array $parameters;
     /**
-     * @var array<string, array<string, array<string, mixed>>>
-     */
-    private array $otherParameters;
-    /**
      * @var array<string,FieldViewInterface>
      */
     private array $fields;
@@ -48,13 +44,11 @@ final class DataSourceView implements DataSourceViewInterface
      * @param string $name
      * @param array<FieldInterface> $fields
      * @param array<string, array<string, array<string, mixed>>> $parameters
-     * @param array<string, array<string, array<string, mixed>>> $otherParameters
      */
-    public function __construct(string $name, array $fields, array $parameters, array $otherParameters)
+    public function __construct(string $name, array $fields, array $parameters)
     {
         $this->name = $name;
         $this->parameters = $parameters;
-        $this->otherParameters = $otherParameters;
         $this->attributes = [];
         $this->fields = [];
         $this->iterator = null;
@@ -71,16 +65,6 @@ final class DataSourceView implements DataSourceViewInterface
     public function getParameters(): array
     {
         return $this->parameters;
-    }
-
-    public function getAllParameters(): array
-    {
-        return array_merge($this->otherParameters, $this->parameters);
-    }
-
-    public function getOtherParameters(): array
-    {
-        return $this->otherParameters;
     }
 
     /**

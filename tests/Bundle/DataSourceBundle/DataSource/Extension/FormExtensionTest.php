@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Tests\FSi\Bundle\DataSourceBundle\DataSource\Extension;
 
 use DateTimeImmutable;
-use FSi\Bundle\DataSourceBundle\DataSource\EventSubscriber\DataSourcePostBuildView;
+use FSi\Bundle\DataSourceBundle\DataSource\EventSubscriber\DataSourcePreBuildView;
 use FSi\Bundle\DataSourceBundle\DataSource\EventSubscriber\FieldPreBindParameter;
 use FSi\Bundle\DataSourceBundle\DataSource\Extension\FormFieldExtension;
 use FSi\Bundle\DataSourceBundle\DataSource\FormStorage;
@@ -121,7 +121,7 @@ final class FormExtensionTest extends TestCase
         ;
 
         $event = new PreBuildView($fields);
-        $subscriber = new DataSourcePostBuildView();
+        $subscriber = new DataSourcePreBuildView();
         $subscriber($event);
 
         $sortedFields = array_map(static fn(FieldInterface $field): string => $field->getName(), $event->getFields());

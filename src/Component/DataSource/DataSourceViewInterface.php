@@ -24,19 +24,8 @@ use SeekableIterator;
 interface DataSourceViewInterface extends AttributesContainerInterface, ArrayAccess, Countable, SeekableIterator
 {
     public function getName(): string;
-
     /**
      * @return array<string, array<string, array<string, mixed>>>
      */
     public function getParameters(): array;
-
-    /**
-     * @return array<string, array<string, array<string, mixed>>>
-     */
-    public function getAllParameters(): array;
-
-    /**
-     * @return array<string, array<string, array<string, mixed>>>
-     */
-    public function getOtherParameters(): array;
 }

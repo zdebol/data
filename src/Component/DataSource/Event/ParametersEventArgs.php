@@ -27,8 +27,7 @@ abstract class ParametersEventArgs extends DataSourceEventArgs
     public function __construct(DataSourceInterface $dataSource, $parameters)
     {
         parent::__construct($dataSource);
-
-        $this->setParameters($parameters);
+        $this->parameters = $parameters;
     }
 
     /**

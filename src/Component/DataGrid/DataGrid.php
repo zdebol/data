@@ -25,11 +25,6 @@ use ReturnTypeWillChange;
 use RuntimeException;
 
 use function array_key_exists;
-use function count;
-use function current;
-use function key;
-use function next;
-use function reset;
 use function sprintf;
 
 final class DataGrid implements DataGridInterface
@@ -53,11 +48,6 @@ final class DataGrid implements DataGridInterface
         $this->name = $name;
         $this->rowset = null;
         $this->columns = [];
-    }
-
-    public function getFactory(): DataGridFactoryInterface
-    {
-        return $this->dataGridFactory;
     }
 
     public function getName(): string

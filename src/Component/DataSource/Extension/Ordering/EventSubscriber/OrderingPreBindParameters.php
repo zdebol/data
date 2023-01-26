@@ -11,13 +11,14 @@ declare(strict_types=1);
 
 namespace FSi\Component\DataSource\Extension\Ordering\EventSubscriber;
 
-use FSi\Component\DataSource\Event\PreBindParameters;
 use FSi\Component\DataSource\DataSourceEventSubscriberInterface;
+use FSi\Component\DataSource\Event\PreBindParameters;
 use FSi\Component\DataSource\Exception\DataSourceException;
 use FSi\Component\DataSource\Extension\Ordering\OrderingExtension;
 use FSi\Component\DataSource\Extension\Ordering\Storage;
 
 use function array_key_exists;
+use function count;
 use function in_array;
 use function is_array;
 use function sprintf;
@@ -28,7 +29,7 @@ final class OrderingPreBindParameters implements DataSourceEventSubscriberInterf
 
     public static function getPriority(): int
     {
-        return 0;
+        return -1;
     }
 
     public function __construct(Storage $storage)
@@ -41,15 +42,21 @@ final class OrderingPreBindParameters implements DataSourceEventSubscriberInterf
         $dataSource = $event->getDataSource();
         $dataSourceName = $dataSource->getName();
         $parameters = $event->getParameters();
+        if (false === array_key_exists($dataSourceName, $parameters)) {
+            return;
+        }
+
+        $dataSourceParameters = $parameters[$dataSourceName];
+        if (false === is_array($dataSourceParameters)) {
+            return;
+        }
 
         if (
-            true === array_key_exists($dataSourceName, $parameters)
-            && true === is_array($parameters[$dataSourceName])
-            && true === array_key_exists(OrderingExtension::PARAMETER_SORT, $parameters[$dataSourceName])
-            && true === is_array($parameters[$dataSourceName][OrderingExtension::PARAMETER_SORT])
+            true === array_key_exists(OrderingExtension::PARAMETER_SORT, $dataSourceParameters)
+            && true === is_array($dataSourceParameters[OrderingExtension::PARAMETER_SORT])
         ) {
             $priority = 0;
-            $sortingParameters = $parameters[$dataSourceName][OrderingExtension::PARAMETER_SORT];
+            $sortingParameters = $dataSourceParameters[OrderingExtension::PARAMETER_SORT];
             foreach ($sortingParameters as $fieldName => $direction) {
                 if (false === in_array($direction, ['asc', 'desc'])) {
                     throw new DataSourceException(sprintf("Unknown sorting direction %s specified", $direction));
@@ -59,11 +66,14 @@ final class OrderingPreBindParameters implements DataSourceEventSubscriberInterf
                 $this->storage->setFieldSorting($field, $priority, 'asc' === $direction);
                 $priority++;
             }
-
-            $this->storage->setDataSourceParameters(
-                $dataSource->getName(),
-                [OrderingExtension::PARAMETER_SORT => $sortingParameters]
-            );
+        } else {
+            $sortingParameters = [];
         }
+
+        if (0 !== count($sortingParameters)) {
+            $dataSourceParameters[OrderingExtension::PARAMETER_SORT] = $sortingParameters;
+        }
+
+        $this->storage->setDataSourceParameters($dataSourceName, $dataSourceParameters);
     }
 }

@@ -157,7 +157,7 @@ final class ORMDriverTest extends TestCase
             self::assertNotSame($result1, $result2);
             unset($result1, $result2);
 
-            self::assertEquals($parameters, $dataSource->getParameters());
+            self::assertEquals($parameters, $dataSource->getBoundParameters());
 
             $dataSource->setMaxResults(20);
             $parameters = [

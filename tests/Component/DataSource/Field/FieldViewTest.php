@@ -30,13 +30,11 @@ class FieldViewTest extends TestCase
         $field = $this->createMock(FieldInterface::class);
         $field->expects(self::atLeastOnce())->method('getName')->willReturn('somename');
         $field->expects(self::atLeastOnce())->method('getType')->willReturn($fieldType);
-        $field->expects(self::atLeastOnce())->method('getParameter')->willReturn('someparam');
 
         $fieldView = new FieldView($field);
 
         self::assertEquals($field->getName(), $fieldView->getName());
         self::assertEquals($field->getType()->getId(), $fieldView->getType());
-        self::assertEquals($field->getParameter(), $fieldView->getParameter());
     }
 
     public function testCorrectReferenceToDataSourceView(): void
