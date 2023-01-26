@@ -288,23 +288,22 @@ final class DataSourceRuntime implements RuntimeExtensionInterface
      * @param array<string,mixed> $vars
      * @return string
      */
-    public function dataSourceMaxResults(DataSourceViewInterface $view, array $options = [], array $vars = []): string
-    {
+    public function dataSourceMaxResults(
+        DataSourceViewInterface $view,
+        array $options = [],
+        array $vars = []
+    ): string {
         $options = $this->resolveMaxResultsOptions($options, $view);
         $blockNames = [
-            'datasource_' . $view->getName() . '_max_results',
+            "datasource_{$view->getName()}_max_results",
             'datasource_max_results',
         ];
 
-        $baseParameters = $view->getAllParameters();
-        if (false === array_key_exists($view->getName(), $baseParameters)) {
-            $baseParameters[$view->getName()] = [];
-        }
-
+        $parameters = $view->getParameters();
         $results = [];
         foreach ($options['results'] as $resultsPerPage) {
-            $baseParameters[$view->getName()][PaginationExtension::PARAMETER_MAX_RESULTS] = $resultsPerPage;
-            $results[$resultsPerPage] = $this->getUrl($view->getName(), $options, $baseParameters);
+            $parameters[$view->getName()][PaginationExtension::PARAMETER_MAX_RESULTS] = $resultsPerPage;
+            $results[$resultsPerPage] = $this->getUrl($view->getName(), $options, $parameters);
         }
 
         $viewData = [

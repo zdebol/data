@@ -81,25 +81,4 @@ interface DataSourceInterface
      * @return array<string, array<string, array<string, mixed>>>
      */
     public function getBoundParameters(): array;
-    /**
-     * Returns all parameters from all datasources on page.
-     *
-     * Works properly only if factory is assigned, or just created through factory,
-     * and all others datasources were created through that factory. Otherwise (if
-     * no factory assigned, or if it's the only one datasource that far) it will
-     * return the same result as getParameters method.
-     *
-     * @return array<string, array<string, array<string, mixed>>>
-     */
-    public function getAllParameters(): array;
-    /**
-     * Returns all parameters from all datasources on page except this one.
-     *
-     * Constraints similars to these of getAllParameters method - if no factory
-     * assigned, method will return empty array.
-     *
-     * @return array<string, array<string, array<string, mixed>>>
-     */
-    public function getOtherParameters(): array;
-    public function getFactory(): ?DataSourceFactoryInterface;
 }

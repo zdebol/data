@@ -24,19 +24,4 @@ interface DataSourceFactoryInterface
         array $driverOptions = [],
         string $name = 'datasource'
     ): DataSourceInterface;
-
-    /**
-     * Return array of all parameters from all dataSources.
-     *
-     * @return array<string, array<string, array<string, mixed>>>
-     */
-    public function getAllParameters(): array;
-
-    /**
-     * Return array of all parameters form all dataSources except given.
-     *
-     * @param DataSourceInterface<mixed> $except
-     * @return array<string, array<string, array<string, mixed>>>
-     */
-    public function getOtherParameters(DataSourceInterface $except): array;
 }

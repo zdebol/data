@@ -24,6 +24,7 @@ use function count;
 use function get_class;
 use function gettype;
 use function is_array;
+use function preg_match;
 use function sprintf;
 
 /**
@@ -37,7 +38,6 @@ class DataSource implements DataSourceInterface
      */
     private DriverInterface $driver;
     private EventDispatcherInterface $eventDispatcher;
-    private ?DataSourceFactoryInterface $factory;
     private string $name;
     /**
      * @var array<FieldInterface>
@@ -67,14 +67,10 @@ class DataSource implements DataSourceInterface
     private bool $dirty;
 
     /**
-     * @param string $name
-     * @param DataSourceFactoryInterface $factory
-     * @param EventDispatcherInterface $eventDispatcher
      * @param DriverInterface<T> $driver
      */
     public function __construct(
         string $name,
-        DataSourceFactoryInterface $factory,
         EventDispatcherInterface $eventDispatcher,
         DriverInterface $driver
     ) {
@@ -85,7 +81,6 @@ class DataSource implements DataSourceInterface
         }
 
         $this->name = $name;
-        $this->factory = $factory;
         $this->eventDispatcher = $eventDispatcher;
         $this->driver = $driver;
         $this->boundParameters = [];
@@ -162,7 +157,8 @@ class DataSource implements DataSourceInterface
         if (false === is_array($parameters)) {
             throw new DataSourceException(
                 sprintf(
-                    'Parameters after PreBindParameters event must be an array but are %s.',
+                    'Parameters after %s event must be an array but are %s.',
+                    DataSourceEvent\PreBindParameters::class,
                     true === is_object($parameters) ? get_class($parameters) : gettype($parameters)
                 )
             );
@@ -198,7 +194,11 @@ class DataSource implements DataSourceInterface
             return $this->cache['result']['result'];
         }
 
-        $result = $this->driver->getResult($this->fields, $this->getFirstResult(), $this->getMaxResults());
+        $result = $this->driver->getResult(
+            $this->fields,
+            $this->getFirstResult(),
+            $this->getMaxResults()
+        );
 
         foreach ($this->getFields() as $field) {
             $field->setDirty(false);
@@ -248,12 +248,10 @@ class DataSource implements DataSourceInterface
         $view = new DataSourceView(
             $this->getName(),
             $event->getFields(),
-            $this->getBoundParameters(),
-            $this->getOtherParameters()
+            $this->getBoundParameters()
         );
 
         $this->eventDispatcher->dispatch(new DataSourceEvent\PostBuildView($this, $view));
-
         return $view;
     }
 
@@ -276,29 +274,6 @@ class DataSource implements DataSourceInterface
         $this->cache['parameters'] = $parameters;
 
         return $parameters;
-    }
-
-    public function getAllParameters(): array
-    {
-        if (null !== $this->factory) {
-            return $this->factory->getAllParameters();
-        }
-
-        return $this->getBoundParameters();
-    }
-
-    public function getOtherParameters(): array
-    {
-        if (null !== $this->factory) {
-            return $this->factory->getOtherParameters($this);
-        }
-
-        return [];
-    }
-
-    public function getFactory(): ?DataSourceFactoryInterface
-    {
-        return $this->factory;
     }
 
     /**

@@ -22,20 +22,13 @@ final class DataSourceViewTest extends TestCase
 {
     public function testGetParameters(): void
     {
-        $view = new DataSourceView('datasource', [], ['datasource' => []], ['other_datasource' => []]);
+        $view = new DataSourceView('datasource', [], ['datasource' => []]);
         self::assertEquals(['datasource' => []], $view->getParameters());
-        self::assertEquals(['other_datasource' => []], $view->getOtherParameters());
-
-        $allParameters = $view->getAllParameters();
-        self::assertEquals(
-            ['datasource' => [], 'other_datasource' => []],
-            $allParameters
-        );
     }
 
     public function testOptionsManipulation(): void
     {
-        $view = new DataSourceView('datasource', [], [], []);
+        $view = new DataSourceView('datasource', [], []);
 
         self::assertFalse($view->hasAttribute('option1'));
         $view->setAttribute('option1', 'value1');
@@ -74,7 +67,7 @@ final class DataSourceViewTest extends TestCase
         $field2 = $this->createMock(FieldInterface::class);
         $field2->method('getType')->willReturn($fieldType2);
 
-        $view = new DataSourceView('datasource', [$field1, $field2], [], []);
+        $view = new DataSourceView('datasource', [$field1, $field2], []);
 
         self::assertCount(2, $view);
         self::assertTrue(isset($view['name1']));
@@ -96,7 +89,7 @@ final class DataSourceViewTest extends TestCase
         $field->method('getType')->willReturn($fieldType);
 
         $this->expectException(DataSourceViewException::class);
-        new DataSourceView('datasource', [$field, $field], [], []);
+        new DataSourceView('datasource', [$field, $field], []);
     }
 
     public function testInterfacesImplementation(): void
@@ -113,7 +106,7 @@ final class DataSourceViewTest extends TestCase
             $fields[] = $field;
         }
 
-        $view = new DataSourceView('datasource', [$fields[0]], [], []);
+        $view = new DataSourceView('datasource', [$fields[0]], []);
 
         self::assertCount(1, $view);
         self::assertTrue(isset($view['name0']));
@@ -123,13 +116,13 @@ final class DataSourceViewTest extends TestCase
             self::assertEquals('name0', $key);
         }
 
-        $view = new DataSourceView('datasource', [$fields[0], $fields[1], $fields[2]], [], []);
+        $view = new DataSourceView('datasource', [$fields[0], $fields[1], $fields[2]], []);
 
         self::assertEquals('name0', $view->key());
         $view->next();
         self::assertEquals('name1', $view->key());
 
-        $view = new DataSourceView('datasource', [$fields[0], $fields[1], $fields[2], $fields[3], $fields[4]], [], []);
+        $view = new DataSourceView('datasource', [$fields[0], $fields[1], $fields[2], $fields[3], $fields[4]], []);
 
         // After adding fields iterator resets on its own.
         self::assertEquals('name0', $view->key());
