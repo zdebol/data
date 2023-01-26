@@ -49,6 +49,7 @@ final class CollectionPreGetResult implements DataSourceEventSubscriberInterface
             ;
             $orderings[$fieldName] = strtoupper($direction);
         }
+
         $criteria->orderBy($orderings);
     }
 }

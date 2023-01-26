@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace Tests\FSi\Component\DataSource;
 
+use DateTimeImmutable;
 use FSi\Component\DataSource\DataSource;
-use FSi\Component\DataSource\DataSourceFactoryInterface;
 use FSi\Component\DataSource\Driver\DriverInterface;
 use FSi\Component\DataSource\Event\PostBuildView;
 use FSi\Component\DataSource\Event\PostGetParameters;
@@ -170,7 +170,7 @@ final class DataSourceTest extends TestCase
             ->willReturn($testResult)
         ;
 
-        $dataSource->addField('field', 'type', ['comparison' => 'eq']);
+        $dataSource->addField('field', 'type', []);
         $dataSource->bindParameters($firstData);
         $dataSource->bindParameters($secondData);
 
@@ -195,55 +195,84 @@ final class DataSourceTest extends TestCase
     public function testPreAndPostGetParametersCalls(): void
     {
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-
-        $fieldType = $this->createMock(FieldTypeInterface::class);
-
-        $driver = $this->createDriverMock();
-        $driver->method('getFieldType')->willReturn($fieldType);
-
-        $dataSource = new DataSource(
-            'datasource',
-            $eventDispatcher,
-            $driver
-        );
-
-        $field = $this->createMock(FieldInterface::class);
-        $field->method('getName')->willReturn('key');
-        $field->expects(self::never())->method('getParameter');
-
-        $field2 = $this->createMock(FieldInterface::class);
-        $field2->method('getName')->willReturn('key2');
-        $field2->expects(self::never())->method('getParameter');
-
-        $fieldType->method('createField')
-            ->withConsecutive(
-                ['datasource', 'field', []],
-                ['datasource', 'field2', []]
-            )
-            ->willReturnOnConsecutiveCalls($field, $field2)
-        ;
-
-        $eventDispatcher->expects(self::exactly(4))
+        $eventDispatcher
             ->method('dispatch')
             ->withConsecutive(
                 [self::isInstanceOf(PreBindParameters::class)],
                 [self::isInstanceOf(PreBindParameter::class)],
                 [self::isInstanceOf(PreBindParameter::class)],
+                [
+                    self::callback(
+                        static function (PreBindParameter $event): bool {
+                            $event->setParameter(new DateTimeImmutable($event->getParameter()));
+                            return true;
+                        }
+                    )
+                ],
                 [self::isInstanceOf(PostGetParameters::class)]
             )
         ;
 
+        $fieldType = $this->createMock(FieldTypeInterface::class);
+
+        $driver = $this->createDriverMock();
+        $driver
+            ->expects(self::exactly(3))
+            ->method('getFieldType')
+            ->with('type')
+            ->willReturn($fieldType)
+        ;
+
+        $dataSource = new DataSource('datasource', $eventDispatcher, $driver);
+
+        $field = $this->createMock(FieldInterface::class);
+        $field->method('getName')->willReturn('field');
+        $field->expects(self::never())->method('getParameter');
+
+        $field2 = $this->createMock(FieldInterface::class);
+        $field2->method('getName')->willReturn('field2');
+        $field2->expects(self::never())->method('getParameter');
+
+        $field3 = $this->createMock(FieldInterface::class);
+        $field3->method('getName')->willReturn('field3');
+        $field3->expects(self::never())->method('getParameter');
+
+        $fieldType
+            ->expects(self::exactly(3))
+            ->method('createField')
+            ->withConsecutive(
+                ['datasource', 'field', []],
+                ['datasource', 'field2', []],
+                ['datasource', 'field3', []]
+            )
+            ->willReturnOnConsecutiveCalls($field, $field2, $field3)
+        ;
+
         $dataSource->addField('field', 'type', []);
         $dataSource->addField('field2', 'type', []);
+        $dataSource->addField('field3', 'type', []);
 
         $dataSource->bindParameters([
             'datasource' => [
-                'fields' => ['key' => 'a', 'key2' => 'b', 'ignoredKey' => 'c']
+                'fields' => [
+                    'field' => 'a',
+                    'field2' => 'b',
+                    'ignoredKey' => 'c',
+                    'field3' => '2022-01-01 10:00'
+                ]
             ]
         ]);
 
         self::assertEquals(
-            ['datasource' => ['fields' => ['key' => 'a', 'key2' => 'b']]],
+            [
+                'datasource' => [
+                    'fields' => [
+                        'field' => 'a',
+                        'field2' => 'b',
+                        'field3' => '2022-01-01 10:00'
+                    ]
+                ]
+            ],
             $dataSource->getBoundParameters()
         );
     }
@@ -284,7 +313,7 @@ final class DataSourceTest extends TestCase
         $testResult = new TestResult();
         $driver->method('getResult')->willReturn($testResult);
 
-        $dataSource->addField('field', 'text', ['comparison' => 'eq']);
+        $dataSource->addField('field', 'text', []);
 
         $eventDispatcher->expects(self::exactly(2))
             ->method('dispatch')
