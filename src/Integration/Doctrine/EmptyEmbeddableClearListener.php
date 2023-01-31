@@ -46,7 +46,10 @@ final class EmptyEmbeddableClearListener
             $embeddedMeta = $entityManager->getClassMetadata($class);
             $embeddedParentMeta = $classMetadata;
             $embeddedParentObject = $object;
-            if (true === array_key_exists('declaredField', $embeddedData)) {
+            if (
+                true === array_key_exists('declaredField', $embeddedData)
+                && null !== $embeddedData['declaredField']
+            ) {
                 $embeddedParentObject = $this->getPropertyAccessor()->getValue(
                     $object,
                     $embeddedData['declaredField']
