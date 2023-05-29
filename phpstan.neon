@@ -16,5 +16,5 @@ parameters:
     ignoreErrors:
         - message: '#Property Symfony\\Component\\HttpFoundation\\Request::\$request \(Symfony\\Component\\HttpFoundation\\InputBag\) does not accept Symfony\\Component\\HttpFoundation\\ParameterBag\.#'
           path: tests/Bundle/DataGridBundle/DataGrid/EventSubscriber/BindRequestTest.php
-        - message: '#Strict comparison using === between false and array\<string, string\> will always evaluate to false\.#'
+        - message: '#Strict comparison using === between false and array will always evaluate to false\.#'
           path: src/Component/DataIndexer/DoctrineDataIndexer.php
