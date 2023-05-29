@@ -34,6 +34,12 @@ class BooleanColumnExtension extends ColumnAbstractTypeExtension
     public function initOptions(OptionsResolver $optionsResolver): void
     {
         $optionsResolver->setDefaults([
+            'choice_translation_domain' => 'DataGridBundle',
+        ]);
+
+        $optionsResolver->setAllowedTypes('choice_translation_domain', 'string');
+
+        $optionsResolver->setDefaults([
             'true_value' => 'datagrid.boolean.yes',
             'false_value' => 'datagrid.boolean.no',
         ]);
@@ -41,12 +47,12 @@ class BooleanColumnExtension extends ColumnAbstractTypeExtension
         $optionsResolver->setNormalizer(
             'true_value',
             fn(Options $options, string $value): string
-                => $this->translator->trans($value, [], $options['translation_domain'] ?? 'DataGridBundle')
+                => $this->translator->trans($value, [], $options['choice_translation_domain'])
         );
         $optionsResolver->setNormalizer(
             'false_value',
             fn(Options $options, string $value): string
-                => $this->translator->trans($value, [], $options['translation_domain'] ?? 'DataGridBundle')
+                => $this->translator->trans($value, [], $options['choice_translation_domain'])
         );
     }
 }
