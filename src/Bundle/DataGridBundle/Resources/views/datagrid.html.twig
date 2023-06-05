@@ -162,16 +162,18 @@
 
 {% block datagrid_column_type_web_file_cell %}
 {% apply spaceless %}
-<td>
+<td{{ block('datagrid_cell_attributes') }}>
     <div>
         {% endapply %}
-        {% if is_web_file(cell.value) %}
-            {% if cell.getAttribute('resolve_file_url') %}
-                <a href="{{ cell.value|file_url }}" target="_blank">{{ cell.value|file_name }}</a>
-            {% else %}
-                {{ cell.value|file_name }}
+        {% for file in cell.value %}
+            {% if is_web_file(file) %}
+                {% if cell.getAttribute('resolve_file_url') %}
+                    <a href="{{ file|file_url }}" target="_blank">{{ file|file_name }}</a>
+                {% else %}
+                    {{ file|file_name }}
+                {% endif %}
             {% endif %}
-        {% endif %}
+        {% endfor %}
         {% apply spaceless %}
     </div>
 </td>
@@ -179,19 +181,17 @@
 {% endblock %}
 
 {% block datagrid_column_type_web_image_cell %}
-{% apply spaceless %}
-<td>
-    <div style="width: {{ cell.attributes.width + 2 * 5 }}px; {% if cell.attributes.height is not null %}height: {{ cell.attributes.height + 2 * 5 }}px;{% endif %}">
-        {% endapply %}
-        {% if is_web_file(cell.value) %}
-            <img src="{{ cell.value|file_url }}"
-                 alt="{{ cell.value|file_name }}"
-                 {% if cell.attributes.width is not null %}width="{{ cell.attributes.width + 2 * 5 }}"
-                 {% endif %}{% if cell.attributes.height is not null %}height="{{ cell.attributes.height + 2 * 5 }}"{% endif %}
-            >
-        {% endif %}
-        {% apply spaceless %}
-    </div>
+<td{{ block('datagrid_cell_attributes') }}>
+    {% for image in cell.value %}
+        <div style="width: {{ cell.attributes.width + 2 * 5 }}px; {% if cell.attributes.height is not null %}height: {{ cell.attributes.height + 2 * 5 }}px;{% endif %}" class="text-center">
+            {% if is_web_file(image) %}
+                <img src="{{ image|file_url }}"
+                     alt="{{ image|file_name }}"
+                     {% if cell.attributes.width is not null %}width="{{ cell.attributes.width }}"
+                     {% endif %}{% if cell.attributes.height is not null %}height="{{ cell.attributes.height }}"{% endif %}
+                >
+            {% endif %}
+        </div>
+    {% endfor %}
 </td>
-{% endapply %}
 {% endblock %}
