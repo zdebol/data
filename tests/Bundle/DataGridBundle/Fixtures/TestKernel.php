@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace Tests\FSi\Bundle\DataGridBundle\Fixtures;
 
 use FSi\Bundle\DataGridBundle\DataGridBundle;
+use FSi\Component\Files\Integration\Symfony\FilesBundle;
+use Oneup\FlysystemBundle\OneupFlysystemBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
@@ -37,6 +39,8 @@ final class TestKernel extends Kernel
             new TwigBundle(),
             new DataGridBundle(),
             new FixturesBundle(),
+            new OneupFlysystemBundle(),
+            new FilesBundle(),
         ];
     }
 

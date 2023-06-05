@@ -9,5 +9,15 @@
                  public="true"
                  autowire="true"
         />
+        
+        <service id="Nyholm\Psr7\Factory\Psr17Factory" />
+        <service id="nyholm.psr7.psr17_factory" class="Nyholm\Psr7\Factory\Psr17Factory" />
+        <service id="Psr\Http\Message\RequestFactoryInterface" alias="nyholm.psr7.psr17_factory" />
+        <service id="Psr\Http\Message\ResponseFactoryInterface" alias="nyholm.psr7.psr17_factory" />
+        <service id="Psr\Http\Message\ServerRequestFactoryInterface" alias="nyholm.psr7.psr17_factory" />
+        <service id="Psr\Http\Message\StreamFactoryInterface" alias="nyholm.psr7.psr17_factory" />
+        <service id="Psr\Http\Message\UploadedFileFactoryInterface" alias="nyholm.psr7.psr17_factory" />
+        <service id="Psr\Http\Message\UriFactoryInterface" alias="nyholm.psr7.psr17_factory" />
+
     </services>
 </container>

@@ -87,12 +87,14 @@ class ConfigurationBuilderTest extends TestCase
         $dataGrid = $this->getMockBuilder(DataGridInterface::class)->disableOriginalConstructor()->getMock();
         $dataGrid->method('getName')->willReturn('news');
 
-        $dataGrid->expects(self::exactly(4))
+        $dataGrid->expects(self::exactly(6))
             ->method('addColumn')
             ->withConsecutive(
                 ['id', 'number', ['label' => 'ID']],
                 ['title_short', 'text', ['label' => 'Short title']],
                 ['created_at', 'date', ['label' => 'Created at']],
+                ['file', 'web_file', ['label' => 'File']],
+                ['image', 'web_image', ['label' => 'Image']],
                 ['actions', 'action', [
                     'actions' => ['test' => ['route_name' => 'test', 'parameters_field_mapping' => ['id' => 'id']]]
                 ]]

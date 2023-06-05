@@ -6,12 +6,9 @@
     <services>
         <defaults autoconfigure="true" autowire="true" public="false" />
 
-        <prototype namespace="FSi\Bundle\DataGridBundle\Twig\Extension\" 
-                   resource="../../Twig/Extension"
-                   exclude="../../Twig/Extension/Files"
-        >
-            <bind key="$themes">%datagrid.twig.themes%</bind>
-        </prototype>
+        <!-- Column type -->
+        <service id="FSi\Bundle\DataGridBundle\DataGrid\ColumnType\Files\File" />
+        <service id="FSi\Bundle\DataGridBundle\DataGrid\ColumnType\Files\Image" />
 
     </services>
 

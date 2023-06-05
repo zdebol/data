@@ -11,10 +11,9 @@ declare(strict_types=1);
 
 namespace Tests\FSi\Bundle\DataGridBundle\Twig\Extension;
 
-use FSi\Bundle\DataGridBundle\Twig\Extension\DataGridRuntime;
-use Tests\FSi\Bundle\DataGridBundle\Fixtures\StubTranslator;
-use Tests\FSi\Bundle\DataGridBundle\Fixtures\TwigRuntimeLoader;
 use FSi\Bundle\DataGridBundle\Twig\Extension\DataGridExtension;
+use FSi\Bundle\DataGridBundle\Twig\Extension\DataGridRuntime;
+use FSi\Bundle\DataGridBundle\Twig\Extension\Files\FilesDummyExtension;
 use FSi\Component\DataGrid\Column\CellViewInterface;
 use FSi\Component\DataGrid\Column\HeaderViewInterface;
 use FSi\Component\DataGrid\DataGridViewInterface;
@@ -26,6 +25,8 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Tests\FSi\Bundle\DataGridBundle\Fixtures\StubTranslator;
+use Tests\FSi\Bundle\DataGridBundle\Fixtures\TwigRuntimeLoader;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
@@ -402,6 +403,7 @@ final class DataGridRuntimeTest extends TestCase
         $twig->addExtension(new FormExtension());
 
         $this->twig = $twig;
+        $this->twig->addExtension(new FilesDummyExtension());
         $this->extension = new DataGridExtension();
         $this->runtime = new DataGridRuntime($this->translator, $twig, ['datagrid.html.twig']);
 
