@@ -11,11 +11,15 @@ declare(strict_types=1);
 
 namespace Tests\FSi\Bundle\DataGridBundle\Fixtures;
 
+use FSi\Component\Files\WebFile;
+
 class Entity
 {
     private int $id;
     private string $name;
     private ?string $author = null;
+    private ?WebFile $file = null;
+    private ?WebFile $image = null;
     private ?EntityCategory $category = null;
 
     public function __construct(int $id, string $name)
@@ -51,6 +55,28 @@ class Entity
     public function getAuthor(): ?string
     {
         return $this->author;
+    }
+
+    public function getFile(): ?WebFile
+    {
+        return $this->file;
+    }
+
+    public function setFile(?WebFile $file): self
+    {
+        $this->file = $file;
+        return $this;
+    }
+
+    public function getImage(): ?WebFile
+    {
+        return $this->image;
+    }
+
+    public function setImage(?WebFile $image): self
+    {
+        $this->image = $image;
+        return $this;
     }
 
     public function getCategory(): ?EntityCategory

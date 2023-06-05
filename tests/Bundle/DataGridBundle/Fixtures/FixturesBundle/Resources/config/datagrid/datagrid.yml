@@ -27,6 +27,18 @@ columns:
             editable: true
             label: Author
 
+    file:
+        type: web_file
+        options:
+            label: File
+            resolve_file_url: true
+
+    image:
+        type: web_image
+        options:
+            label: Image
+            width: 200
+
     actions:
         type: action
         options:

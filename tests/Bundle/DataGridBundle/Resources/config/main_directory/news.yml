@@ -12,6 +12,14 @@ columns:
         type: date
         options:
             label: Created at
+    file:
+        type: web_file
+        options:
+            label: File
+    image:
+        type: web_image
+        options:
+            label: Image
     actions:
         type: action
         options:
