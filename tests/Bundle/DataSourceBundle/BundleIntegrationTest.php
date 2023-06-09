@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Bundle\DataSourceBundle;
+namespace Tests\FSi\Bundle\DataSourceBundle;
 
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
