@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace FSi\Component\DataSource\Driver\Elastica\Field;
+namespace FSi\Component\DataSource\Driver\Elastica\FieldType;
 
 use FSi\Component\DataSource\Field\Type\TimeTypeInterface;
 

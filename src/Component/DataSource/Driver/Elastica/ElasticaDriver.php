@@ -18,6 +18,7 @@ use Elastica\SearchableInterface;
 use FSi\Component\DataSource\Driver\AbstractDriver;
 use FSi\Component\DataSource\Driver\Elastica\Event\PostGetResult;
 use FSi\Component\DataSource\Driver\Elastica\Event\PreGetResult;
+use FSi\Component\DataSource\Driver\Elastica\FieldType\FieldTypeInterface;
 use FSi\Component\DataSource\Result;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use RuntimeException;
@@ -105,7 +106,7 @@ class ElasticaDriver extends AbstractDriver
             $query->setSize($max);
         }
 
-        $result = new ElasticaResult($this->searchable->search(Query::create($query)));
+        $result = new ElasticaResult($this->searchable->search(Query::create($query)), $this->searchable);
         $event = new PostGetResult($this, $fields, $result);
         $this->getEventDispatcher()->dispatch($event);
 

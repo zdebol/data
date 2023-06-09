@@ -8,5 +8,7 @@
                  autoconfigure="true"
                  autowire="true"
         />
+
+        <service id="test.fos_elastica.resetter" alias="fos_elastica.resetter" public="true" />
     </services>
 </container>

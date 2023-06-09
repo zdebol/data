@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\FSi\Component\DataSource\Driver\Elastica\Field;
+namespace Tests\FSi\Component\DataSource\Driver\Elastica\FieldType;
 
 use Tests\FSi\Component\DataSource\Driver\Elastica\BaseTest;
 

@@ -13,7 +13,7 @@ namespace Tests\FSi\Component\DataSource\Driver\Elastica;
 
 use Elastica\SearchableInterface;
 use FSi\Component\DataSource\Driver\Elastica\ElasticaDriver;
-use FSi\Component\DataSource\Driver\Elastica\FieldTypeInterface as ElasticaFieldTypeInterfaceAlias;
+use FSi\Component\DataSource\Driver\Elastica\FieldType\FieldTypeInterface as ElasticaFieldTypeInterfaceAlias;
 use FSi\Component\DataSource\Field\Type\FieldTypeInterface as DataSourceFieldTypeInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

@@ -14,6 +14,7 @@ namespace Tests\FSi\Bundle\DataSourceBundle\Fixtures\FixturesBundle\Controller;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use FOS\ElasticaBundle\Index\IndexManager;
 use FSi\Component\DataSource\DataSourceFactoryInterface;
 use FSi\Component\DataSource\DataSourceInterface;
 use RuntimeException;
@@ -26,13 +27,16 @@ use Twig\Environment;
 final class TestController
 {
     private DataSourceFactoryInterface $dataSourceFactory;
+    private IndexManager $indexManager;
     private Environment $twig;
 
     public function __construct(
         DataSourceFactoryInterface $DataSourceFactory,
+        IndexManager $indexManager,
         Environment $twig
     ) {
         $this->dataSourceFactory = $DataSourceFactory;
+        $this->indexManager = $indexManager;
         $this->twig = $twig;
     }
 
@@ -70,20 +74,31 @@ final class TestController
             case 'doctrine-orm':
                 $parameters = ['entity' => News::class];
                 break;
+            case 'elastica':
+                $parameters = ['searchable' => $this->indexManager->getIndex('news')];
+                break;
             default:
                 throw new RuntimeException("\"{$driver}\" is not supported");
         }
 
         $dataSource = $this->dataSourceFactory->createDataSource($driver, $parameters, 'news');
-        if ('doctrine-orm' === $driver) {
+        if ('doctrine-orm' === $driver || 'elastica' === $driver) {
             $dataSource->addField('groups', 'entity', [
-                'comparison' => 'memberOf',
+                'comparison' => ('doctrine-orm' === $driver) ? 'memberOf' : 'eq',
                 'form_options' => [
                     'label' => 'Group',
                     'class' => Group::class
                 ]
             ]);
         }
+
+        $dataSource->addField('title', 'text', [
+            'comparison' => ('elastica' === $driver) ? 'match' : 'contains',
+            'form_options' => [
+                'label' => 'Title',
+            ],
+            'form_order' => -1,
+        ]);
 
         $dataSource->addField('createDate', 'date', [
             'comparison' => 'between',
@@ -97,7 +112,8 @@ final class TestController
                 'label' => 'Create date to',
                 'widget' => 'single_text',
                 'input' => 'datetime_immutable'
-            ]
+            ],
+            'form_order' => -4,
         ]);
 
         $dataSource->addField('createDateTime', 'datetime', [
@@ -112,7 +128,8 @@ final class TestController
                 'label' => 'Create date time to',
                 'widget' => 'single_text',
                 'input' => 'datetime_immutable'
-            ]
+            ],
+            'form_order' => -3,
         ]);
 
         $dataSource->addField('createTime', 'time', [
@@ -121,7 +138,8 @@ final class TestController
             'form_options' => [
                 'label' => 'Create time',
                 'input' => 'datetime_immutable'
-            ]
+            ],
+            'form_order' => -2,
         ]);
 
         return $dataSource;

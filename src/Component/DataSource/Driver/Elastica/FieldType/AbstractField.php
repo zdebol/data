@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace FSi\Component\DataSource\Driver\Elastica\Field;
+namespace FSi\Component\DataSource\Driver\Elastica\FieldType;
 
 use Elastica\Query\Exists;
 use FSi\Component\DataSource\Driver\Elastica\Exception\ElasticaDriverException;
@@ -17,7 +17,6 @@ use Elastica\Query\BoolQuery;
 use Elastica\Query\Range;
 use Elastica\Query\Term;
 use Elastica\Query\Terms;
-use FSi\Component\DataSource\Driver\Elastica\FieldTypeInterface;
 use FSi\Component\DataSource\Field\FieldInterface;
 use FSi\Component\DataSource\Field\Type\AbstractFieldType;
 use Symfony\Component\OptionsResolver\Options;

@@ -19,6 +19,8 @@ use Elastica\Query\MatchQuery;
 use Elastica\Query\Term;
 use FSi\Component\DataSource\Driver\Elastica\ElasticaResult;
 
+use function getenv;
+
 class DriverOptionsTest extends BaseTest
 {
     public function testFieldOptionInField(): void
@@ -97,7 +99,7 @@ class DriverOptionsTest extends BaseTest
         ?Query\AbstractQuery $termFilter = null,
         ?Query $masterQuery = null
     ): void {
-        $client  = new Client('http://elasticsearch:9200');
+        $client  = new Client(getenv('ELASTICSEARCH_URL') ?: []);
 
         $index = $client->getIndex('test_index');
         if ($index->exists()) {

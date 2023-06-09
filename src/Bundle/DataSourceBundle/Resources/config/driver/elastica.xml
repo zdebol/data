@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!-- CollectionFactory -->
+        <service id="FSi\Component\DataSource\Driver\Elastica\ElasticaFactory">
+            <argument type="service" id="event_dispatcher" />
+            <argument key="$fieldTypes" type="collection" />
+            <tag name="datasource.driver.factory"/>
+        </service>
+
+        <!-- Fields -->
+        <prototype namespace="FSi\Component\DataSource\Driver\Elastica\FieldType\"
+                   resource="../../../../Component/DataSource/Driver/Elastica/FieldType"
+                   autoconfigure="true"
+                   autowire="true"
+        />
+
+    </services>
+</container>

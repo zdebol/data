@@ -16,6 +16,7 @@ use Elastica\Query\AbstractQuery;
 use Elastica\SearchableInterface;
 use FSi\Component\DataSource\Driver\DriverFactoryInterface;
 use FSi\Component\DataSource\Driver\DriverInterface;
+use FSi\Component\DataSource\Driver\Elastica\FieldType\FieldTypeInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

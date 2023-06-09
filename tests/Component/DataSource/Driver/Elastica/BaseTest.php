@@ -20,13 +20,13 @@ use FSi\Component\DataSource\DataSourceInterface;
 use FSi\Component\DataSource\Driver\DriverFactoryManager;
 use FSi\Component\DataSource\Driver\Elastica\ElasticaFactory;
 use FSi\Component\DataSource\Driver\Elastica\Event\PreGetResult;
-use FSi\Component\DataSource\Driver\Elastica\Field\Boolean;
-use FSi\Component\DataSource\Driver\Elastica\Field\Date;
-use FSi\Component\DataSource\Driver\Elastica\Field\DateTime;
-use FSi\Component\DataSource\Driver\Elastica\Field\Entity;
-use FSi\Component\DataSource\Driver\Elastica\Field\Number;
-use FSi\Component\DataSource\Driver\Elastica\Field\Text;
-use FSi\Component\DataSource\Driver\Elastica\Field\Time;
+use FSi\Component\DataSource\Driver\Elastica\FieldType\Boolean;
+use FSi\Component\DataSource\Driver\Elastica\FieldType\Date;
+use FSi\Component\DataSource\Driver\Elastica\FieldType\DateTime;
+use FSi\Component\DataSource\Driver\Elastica\FieldType\Entity;
+use FSi\Component\DataSource\Driver\Elastica\FieldType\Number;
+use FSi\Component\DataSource\Driver\Elastica\FieldType\Text;
+use FSi\Component\DataSource\Driver\Elastica\FieldType\Time;
 use FSi\Component\DataSource\Event\PostGetParameters;
 use FSi\Component\DataSource\Event\PreBindParameters;
 use FSi\Component\DataSource\Extension;
@@ -36,6 +36,8 @@ use FSi\Component\DataSource\Result;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+
+use function getenv;
 
 abstract class BaseTest extends TestCase
 {
@@ -89,7 +91,7 @@ abstract class BaseTest extends TestCase
         array $mapping = [],
         ?Closure $transform = null
     ): DataSourceInterface {
-        $client  = new Client('http://elasticsearch:9200');
+        $client  = new Client(getenv('ELASTICSEARCH_URL') ?: []);
         $index = $client->getIndex($indexName);
         if ($index->exists()) {
             $index->delete();

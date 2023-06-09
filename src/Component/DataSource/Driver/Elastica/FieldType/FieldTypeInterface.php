@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace FSi\Component\DataSource\Driver\Elastica;
+namespace FSi\Component\DataSource\Driver\Elastica\FieldType;
 
 use Elastica\Query\BoolQuery;
 use FSi\Component\DataSource\Field\FieldInterface;

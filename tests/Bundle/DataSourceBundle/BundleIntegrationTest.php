@@ -13,6 +13,8 @@ namespace Tests\FSi\Bundle\DataSourceBundle;
 
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\ElasticaBundle\Index\IndexManager;
+use FOS\ElasticaBundle\Index\Resetter;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -196,6 +198,56 @@ final class BundleIntegrationTest extends WebTestCase
         self::assertSelectorTextNotContains('tr:last-child td:last-child', 'Another author');
     }
 
+    public function testDataSourceElasticaRendering(): void
+    {
+        $this->setupDataBase();
+        $this->client->request('GET', '/test/elastica');
+
+        self::assertSelectorTextContains('.total', 'Total: 2');
+
+        self::assertSelectorTextContains('tr:first-child td:first-child', 'A news');
+        self::assertSelectorTextContains('tr:first-child td:last-child', 'An author');
+
+        self::assertSelectorTextContains('tr:last-child td:first-child', 'Another news');
+        self::assertSelectorTextContains('tr:last-child td:last-child', 'Another author');
+
+        self::assertSelectorTextContains('label[for="news_fields_title"]', 'Title');
+        self::assertSelectorExists('input[name="news[fields][title]"][type="text"]');
+
+        self::assertSelectorTextContains('label[for="news_fields_active"]', 'Active');
+        self::assertSelectorExists('select[name="news[fields][active]"]');
+
+        self::assertSelectorTextContains('label[for="news_fields_createDate_from"]', 'Create date from');
+        self::assertSelectorExists('input[name="news[fields][createDate][from]"][type="date"]');
+        self::assertSelectorTextContains('label[for="news_fields_createDate_to"]', 'Create date to');
+        self::assertSelectorExists('input[name="news[fields][createDate][to]"][type="date"]');
+
+        self::assertSelectorTextContains('label[for="news_fields_createDateTime_from"]', 'Create date time from');
+        self::assertSelectorExists('input[name="news[fields][createDateTime][from]"][type="datetime-local"]');
+        self::assertSelectorTextContains('label[for="news_fields_createDateTime_to"]', 'Create date time to');
+        self::assertSelectorExists('input[name="news[fields][createDateTime][to]"][type="datetime-local"]');
+
+        self::assertSelectorExists('select[name="news[fields][createTime][hour]"]');
+        self::assertSelectorExists('select[name="news[fields][createTime][minute]"]');
+
+        self::assertSelectorTextContains('label[for="news_fields_views"]', 'Views');
+        self::assertSelectorExists('input[name="news[fields][views]"][type="number"]');
+
+        $this->client->submitForm('Filter', [
+            'news[fields][title]' => 'A news',
+            'news[fields][active]' => 0,
+            'news[fields][createDate][from]' => '2021-01-01',
+            'news[fields][createDateTime][from]' => '2021-01-01 15:00:00',
+            'news[fields][views]' => 10,
+            'news[fields][groups]' => $this->groupId
+        ], 'GET');
+
+        self::assertSelectorTextContains('tr:first-child td:first-child', 'A news');
+        self::assertSelectorTextContains('tr:first-child td:last-child', 'An author');
+        self::assertSelectorTextNotContains('tr:last-child td:first-child', 'Another news');
+        self::assertSelectorTextNotContains('tr:last-child td:last-child', 'Another author');
+    }
+
     protected static function getKernelClass(): string
     {
         return TestKernel::class;
@@ -223,6 +275,10 @@ final class BundleIntegrationTest extends WebTestCase
         $container = $this->client->getContainer();
         /** @var EntityManagerInterface $manager */
         $manager = $container->get('doctrine.orm.entity_manager');
+
+        /** @var Resetter $resetter */
+        $resetter = $this->getContainer()->get('test.fos_elastica.resetter');
+        $resetter->resetIndex('news');
 
         $group = new Group();
         $group->setName('Breaking news');
@@ -253,6 +309,10 @@ final class BundleIntegrationTest extends WebTestCase
         $manager->persist($news);
         $manager->persist($otherNews);
         $manager->flush();
+
+        /** @var IndexManager $indexManager */
+        $indexManager = $this->getContainer()->get(IndexManager::class);
+        $indexManager->getIndex('news')->refresh();
 
         $this->groupId = $group->getId();
     }

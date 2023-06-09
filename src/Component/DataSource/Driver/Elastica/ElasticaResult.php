@@ -13,6 +13,7 @@ namespace FSi\Component\DataSource\Driver\Elastica;
 
 use ArrayIterator;
 use Countable;
+use Elastica\SearchableInterface;
 use FSi\Component\DataSource\Result;
 use Iterator;
 use Elastica\ResultSet;
@@ -24,10 +25,12 @@ use Elastica\ResultSet;
 class ElasticaResult implements Countable, Result
 {
     private ResultSet $resultSet;
+    private SearchableInterface $searchable;
 
-    public function __construct(ResultSet $resultSet)
+    public function __construct(ResultSet $resultSet, SearchableInterface $searchable)
     {
         $this->resultSet = $resultSet;
+        $this->searchable = $searchable;
     }
 
     public function count(): int
@@ -43,6 +46,11 @@ class ElasticaResult implements Countable, Result
     public function hasAggregations(): bool
     {
         return $this->resultSet->hasAggregations();
+    }
+
+    public function getSearchable(): SearchableInterface
+    {
+        return $this->searchable;
     }
 
     /**

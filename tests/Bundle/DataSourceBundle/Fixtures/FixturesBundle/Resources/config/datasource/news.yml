@@ -1,11 +1,5 @@
 ---
 fields:
-    title:
-        type: text
-        options:
-            comparison: contains
-            form_options:
-                label: Title
     active:
         type: boolean
         options:

@@ -9,6 +9,8 @@
 
 declare(strict_types=1);
 
+// phpcs:disable
+
 return [
     'p1' => [
         'name'      => 'Jan',
