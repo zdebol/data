@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace FSi\Bundle\DataSourceBundle;
 
+use FSi\Bundle\DataSourceBundle\DependencyInjection\Compiler\FOSElasticaPass;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use FSi\Bundle\DataSourceBundle\DependencyInjection\Compiler\DataSourcePass;
@@ -20,8 +22,8 @@ final class DataSourceBundle extends Bundle
 {
     public function build(ContainerBuilder $container): void
     {
-        parent::build($container);
         $container->addCompilerPass(new DataSourcePass());
+        $container->addCompilerPass(new FOSElasticaPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 200);
     }
 
     public function getContainerExtension()

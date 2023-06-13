@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <defaults autoconfigure="true" autowire="true" public="false" />
+
+        <service id="FSi\Bundle\DataSourceBundle\Elastica\TransformerManager">
+            <argument type="tagged_iterator" tag="fos_elastica.elastica_to_model_transformer" index-by="index" />
+        </service>
+
+        <service id="FSi\Bundle\DataSourceBundle\Elastica\ResultTransformer" />
+    </services>
+</container>

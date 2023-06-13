@@ -11,10 +11,12 @@ declare(strict_types=1);
 
 namespace FSi\Bundle\DataSourceBundle\DependencyInjection;
 
+use Elastica\Client;
 use FSi\Component\DataSource\DataSourceEventSubscriberInterface;
 use FSi\Component\DataSource\Driver\Collection;
 use FSi\Component\DataSource\Driver\Doctrine;
 use FSi\Component\DataSource\Driver\DriverFactoryInterface;
+use FSi\Component\DataSource\Driver\Elastica;
 use FSi\Component\DataSource\Field\FieldExtensionInterface;
 use FSi\Component\DataSource\Field\Type\FieldTypeInterface;
 use Symfony\Component\Config\FileLocator;
@@ -24,6 +26,7 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 use function array_key_exists;
+use function class_exists;
 use function is_array;
 use function method_exists;
 
@@ -69,6 +72,9 @@ final class FSIDataSourceExtension extends Extension
         $loader->load('driver/collection.xml');
         $loader->load('driver/doctrine-orm.xml');
         $loader->load('driver/doctrine-dbal.xml');
+        if (true === class_exists(Client::class)) {
+            $loader->load('driver/elastica.xml');
+        }
     }
 
     private function registerForAutoconfiguration(ContainerBuilder $container): void
@@ -84,6 +90,9 @@ final class FSIDataSourceExtension extends Extension
         ;
         $container->registerForAutoconfiguration(Doctrine\ORM\FieldType\FieldTypeInterface::class)
             ->addTag('datasource.driver.doctrine-orm.field')
+        ;
+        $container->registerForAutoconfiguration(Elastica\FieldType\FieldTypeInterface::class)
+            ->addTag('datasource.driver.elastica.field')
         ;
         $container->registerForAutoconfiguration(DataSourceEventSubscriberInterface::class)
             ->addTag('datasource.event_subscriber', ['default_priority_method' => 'getPriority'])

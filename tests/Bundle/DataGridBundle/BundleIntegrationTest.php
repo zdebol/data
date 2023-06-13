@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Bundle\DataGridBundle;
+namespace Tests\FSi\Bundle\DataGridBundle;
 
 use DOMAttr;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

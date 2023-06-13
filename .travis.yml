@@ -11,10 +11,20 @@ matrix:
         - php: 8.0
         - php: 8.1
 
+env:
+    global:
+        - ELASTICSEARCH_URL=http://127.0.0.1:9200
+
 cache:
     directories:
         - $HOME/.composer/cache
         - vendor
+
+before_install:
+    - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.17.8-amd64.deb
+    - sudo dpkg -i --force-confnew elasticsearch-7.17.8-amd64.deb
+    - sudo chown -R elasticsearch:elasticsearch /etc/default/elasticsearch
+    - sudo service elasticsearch restart
 
 before_script:
     - phpenv config-rm xdebug.ini

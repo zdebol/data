@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\FSi\Component\DataGrid\Extension\Gedmo\ColumnType;
+namespace Tests\FSi\Component\DataGrid\Gedmo\ColumnType;
 
 use Doctrine\Common\EventManager;
 use Doctrine\ORM\EntityManager;
