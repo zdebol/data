@@ -18,16 +18,18 @@ use Elastica\Query\Range;
 use Elastica\Query\Term;
 use Elastica\Query\Terms;
 use FSi\Component\DataSource\Field\FieldInterface;
-use FSi\Component\DataSource\Field\Type\AbstractFieldType;
+use FSi\Component\DataSource\Field\Type\AbstractFieldType as CoreAbstractFieldType;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-abstract class AbstractField extends AbstractFieldType implements FieldTypeInterface
+use function is_array;
+
+abstract class AbstractFieldField extends CoreAbstractFieldType implements FieldTypeInterface
 {
     public function buildQuery(BoolQuery $query, BoolQuery $filter, FieldInterface $field): void
     {
         $data = $field->getParameter();
-        if ($this->isEmpty($data)) {
+        if (true === $this->isEmpty($data)) {
             return;
         }
 
@@ -47,8 +49,8 @@ abstract class AbstractField extends AbstractFieldType implements FieldTypeInter
                 $filter->addMustNot($termFilter);
                 break;
             case 'between':
-                if (!is_array($data)) {
-                    throw new ElasticaDriverException("Between comparison needs an array");
+                if (false === is_array($data)) {
+                    throw new ElasticaDriverException("'between' comparison needs an array");
                 }
                 $from = array_shift($data);
                 $to = array_shift($data);
@@ -61,13 +63,14 @@ abstract class AbstractField extends AbstractFieldType implements FieldTypeInter
                 $filter->addMust(new Range($fieldPath, [$field->getOption('comparison') => $data]));
                 break;
             case 'in':
-                $filter->addMust(
-                    new Terms($fieldPath, $data)
-                );
+                if (false === is_array($data)) {
+                    throw new ElasticaDriverException("'in' comparison needs an array");
+                }
+                $filter->addMust(new Terms($fieldPath, $data));
                 break;
             case 'notIn':
-                if (!is_array($data)) {
-                    throw new ElasticaDriverException();
+                if (false === is_array($data)) {
+                    throw new ElasticaDriverException("'notIn' comparison needs an array");
                 }
                 $filter->addMustNot(new Terms($fieldPath, $data));
                 break;
@@ -75,7 +78,7 @@ abstract class AbstractField extends AbstractFieldType implements FieldTypeInter
                 $existsQuery = new Exists($fieldPath);
                 if ('null' === $data) {
                     $filter->addMustNot($existsQuery);
-                } elseif ($data === 'no_null') {
+                } elseif ('no_null' === $data) {
                     $filter->addMust($existsQuery);
                 }
                 break;
@@ -93,9 +96,7 @@ abstract class AbstractField extends AbstractFieldType implements FieldTypeInter
         $optionsResolver
             ->setDefault('field', null)
             ->setAllowedTypes('field', ['string', 'null'])
-            ->setNormalizer('field', function (Options $options, $value) {
-                return $value ?? $options['name'];
-            })
+            ->setNormalizer('field', static fn(Options $options, $value) => $value ?? $options['name'])
             ->setAllowedValues(
                 'comparison',
                 ['eq', 'neq', 'between', 'lt', 'lte', 'gt', 'gte', 'in', 'notIn', 'isNull']

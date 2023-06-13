@@ -62,7 +62,6 @@ class ElasticaResult implements Countable, Result
     }
 
     /**
-     * @param string $name
      * @return array<string, mixed>
      */
     public function getAggregation(string $name): array

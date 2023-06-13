@@ -19,7 +19,7 @@ use FSi\Component\DataSource\Field\Type\EntityTypeInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
-class Entity extends AbstractField implements EntityTypeInterface
+class Entity extends AbstractFieldField implements EntityTypeInterface
 {
     public function buildQuery(BoolQuery $query, BoolQuery $filter, FieldInterface $field): void
     {
@@ -44,7 +44,7 @@ class Entity extends AbstractField implements EntityTypeInterface
             $existsQuery = new Exists($fieldPath);
             if ('null' === $data) {
                 $filter->addMustNot($existsQuery);
-            } elseif ($data === 'no_null') {
+            } elseif ('no_null' === $data) {
                 $filter->addMust($existsQuery);
             }
         }

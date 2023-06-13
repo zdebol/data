@@ -27,7 +27,6 @@ class PreGetResult extends DriverEventArgs
     /**
      * @param DriverInterface<T> $driver
      * @param array<FieldInterface> $fields
-     * @param Query $query
      */
     public function __construct(DriverInterface $driver, array $fields, Query $query)
     {

@@ -17,12 +17,12 @@ use FSi\Component\DataSource\Field\FieldInterface;
 use FSi\Component\DataSource\Field\Type\BooleanTypeInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Boolean extends AbstractField implements BooleanTypeInterface
+class Boolean extends AbstractFieldField implements BooleanTypeInterface
 {
     public function buildQuery(BoolQuery $query, BoolQuery $filter, FieldInterface $field): void
     {
         $data = $field->getParameter();
-        if ($this->isEmpty($data)) {
+        if (true === $this->isEmpty($data)) {
             return;
         }
 

@@ -38,20 +38,15 @@ class ElasticaDriver extends AbstractDriver
     private ?Query $masterQuery;
 
     /**
-     * @param EventDispatcherInterface $eventDispatcher
      * @param array<FieldTypeInterface> $fieldTypes
-     * @param SearchableInterface $searchable
-     * @param AbstractQuery|null $userSubQuery
-     * @param AbstractQuery|null $userFilter
-     * @param Query|null $masterQuery
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         array $fieldTypes,
         SearchableInterface $searchable,
-        AbstractQuery $userSubQuery = null,
-        AbstractQuery $userFilter = null,
-        Query $masterQuery = null
+        ?AbstractQuery $userSubQuery = null,
+        ?AbstractQuery $userFilter = null,
+        ?Query $masterQuery = null
     ) {
         parent::__construct($eventDispatcher, $fieldTypes);
 
@@ -69,7 +64,7 @@ class ElasticaDriver extends AbstractDriver
 
         $this->getEventDispatcher()->dispatch(new PreGetResult($this, $fields, $query));
 
-        if ($this->userFilter !== null) {
+        if (null !== $this->userFilter) {
             $filters->addMust($this->userFilter);
         }
 
@@ -86,23 +81,27 @@ class ElasticaDriver extends AbstractDriver
             $fieldType->buildQuery($subQueries, $filters, $field);
         }
 
-        if ($this->userSubQuery !== null) {
+        if (null !== $this->userSubQuery) {
             $subQueries->addMust($this->userSubQuery);
         }
 
-        if ($subQueries->hasParam('should') || $subQueries->hasParam('must') || $subQueries->hasParam('must_not')) {
+        if (
+            true === $subQueries->hasParam('should')
+            || true === $subQueries->hasParam('must')
+            || true === $subQueries->hasParam('must_not')
+        ) {
             $query->setQuery($subQueries);
         }
 
         $tempFilters = $filters->getParams();
-        if (!empty($tempFilters)) {
+        if (0 !== count($tempFilters)) {
             $query->setPostFilter($filters);
         }
 
-        if (null !== $first) {
+        if ($first !== null) {
             $query->setFrom($first);
         }
-        if (null !== $max) {
+        if ($max !== null) {
             $query->setSize($max);
         }
 

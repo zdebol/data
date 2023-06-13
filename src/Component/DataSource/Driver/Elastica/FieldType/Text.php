@@ -17,7 +17,7 @@ use FSi\Component\DataSource\Field\FieldInterface;
 use FSi\Component\DataSource\Field\Type\TextTypeInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Text extends AbstractField implements TextTypeInterface
+class Text extends AbstractFieldField implements TextTypeInterface
 {
     public function buildQuery(BoolQuery $query, BoolQuery $filter, FieldInterface $field): void
     {
@@ -27,7 +27,7 @@ class Text extends AbstractField implements TextTypeInterface
         }
 
         $fieldPath = $field->getOption('field');
-        if (is_array($fieldPath)) {
+        if (true === is_array($fieldPath)) {
             $match = new Query\MultiMatch();
             $match->setFields($fieldPath);
             $match->setQuery($data);

@@ -13,7 +13,7 @@ namespace FSi\Component\DataSource\Driver\Elastica\FieldType;
 
 use FSi\Component\DataSource\Field\Type\NumberTypeInterface;
 
-class Number extends AbstractField implements NumberTypeInterface
+class Number extends AbstractFieldField implements NumberTypeInterface
 {
     public function getId(): string
     {

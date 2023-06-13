@@ -39,7 +39,6 @@ class ElasticaFactory implements DriverFactoryInterface
     }
 
     /**
-     * @param EventDispatcherInterface $eventDispatcher
      * @param array<FieldTypeInterface> $fieldTypes
      */
     public function __construct(EventDispatcherInterface $eventDispatcher, array $fieldTypes)

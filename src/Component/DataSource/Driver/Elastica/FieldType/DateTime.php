@@ -20,18 +20,18 @@ use FSi\Component\DataSource\Field\FieldInterface;
 use FSi\Component\DataSource\Field\Type\DateTimeTypeInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DateTime extends AbstractField implements DateTimeTypeInterface
+class DateTime extends AbstractFieldField implements DateTimeTypeInterface
 {
     public function buildQuery(BoolQuery $query, BoolQuery $filter, FieldInterface $field): void
     {
         $data = $field->getParameter();
-        if ($this->isEmpty($data)) {
+        if (true === $this->isEmpty($data)) {
             return;
         }
 
         $fieldPath = $field->getOption('field');
 
-        if ($field->getOption('comparison') === 'eq') {
+        if ('eq' === $field->getOption('comparison')) {
             $formattedDate = $data->format($this->getFormat());
             $filter->addMust(
                 new Range(
@@ -39,19 +39,19 @@ class DateTime extends AbstractField implements DateTimeTypeInterface
                     ['gte' => $formattedDate, 'lte' => $formattedDate]
                 )
             );
-        } elseif (in_array($field->getOption('comparison'), ['lt', 'lte', 'gt', 'gte'])) {
+        } elseif (true === in_array($field->getOption('comparison'), ['lt', 'lte', 'gt', 'gte'], true)) {
             $filter->addMust(
                 new Range(
                     $fieldPath,
                     [$field->getOption('comparison') => $data->format($this->getFormat())]
                 )
             );
-        } elseif ($field->getOption('comparison') === 'between') {
-            if (!is_array($data)) {
-                throw new \InvalidArgumentException();
+        } elseif ('between' === $field->getOption('comparison')) {
+            if (false === is_array($data)) {
+                throw new ElasticaDriverException("'between' comparison needs an array");
             }
 
-            if (!empty($data['from'])) {
+            if (null !== ($data['from'] ?? null)) {
                 $filter->addMust(
                     new Range(
                         $fieldPath,
@@ -60,7 +60,7 @@ class DateTime extends AbstractField implements DateTimeTypeInterface
                 );
             }
 
-            if (!empty($data['to'])) {
+            if (null !== ($data['to'] ?? null)) {
                 $filter->addMust(
                     new Range(
                         $fieldPath,
@@ -68,11 +68,11 @@ class DateTime extends AbstractField implements DateTimeTypeInterface
                     )
                 );
             }
-        } elseif ($field->getOption('comparison') === 'isNull') {
+        } elseif ('isNull' === $field->getOption('comparison')) {
             $existsQuery = new Exists($fieldPath);
             if ('null' === $data) {
                 $filter->addMustNot($existsQuery);
-            } elseif ($data === 'no_null') {
+            } elseif ('no_null' === $data) {
                 $filter->addMust($existsQuery);
             }
         } else {

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace FSi\Bundle\DataSourceBundle\Elastica;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Elastica\SearchableInterface;
 use FOS\ElasticaBundle\Configuration\ConfigManager;
 use FOS\ElasticaBundle\Elastica\Index;
 use FSi\Component\DataIndexer\DoctrineDataIndexer;
@@ -27,19 +28,17 @@ final class ResultTransformer implements DataSourceEventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    private array $indexMap = [];
+    private ?array $indexMap = null;
     private TransformerManager $transformerManager;
     private ManagerRegistry $managerRegistry;
+    private ConfigManager $configManager;
 
     public function __construct(
         ConfigManager $configManager,
         TransformerManager $transformerManager,
         ManagerRegistry $managerRegistry
     ) {
-        $indexNames = $configManager->getIndexNames();
-        array_walk($indexNames, function (string $indexName) use ($configManager): void {
-            $this->indexMap[$configManager->getIndexConfiguration($indexName)->getElasticSearchName()] = $indexName;
-        });
+        $this->configManager = $configManager;
         $this->transformerManager = $transformerManager;
         $this->managerRegistry = $managerRegistry;
     }
@@ -60,17 +59,12 @@ final class ResultTransformer implements DataSourceEventSubscriberInterface
             return;
         }
 
-        $searchable = $result->getSearchable();
-        if (false === $searchable instanceof Index) {
+        $indexName = $this->getIndexName($result->getSearchable());
+        if (null === $indexName) {
             return;
         }
 
-        $index = $this->indexMap[$searchable->getOriginalName()] ?? null;
-        if (null === $index) {
-            return;
-        }
-
-        $transformer = $this->transformerManager->getTransformer($index);
+        $transformer = $this->transformerManager->getTransformer($indexName);
         if (null === $transformer) {
             return;
         }
@@ -81,12 +75,29 @@ final class ResultTransformer implements DataSourceEventSubscriberInterface
         $dataIndexer = new DoctrineDataIndexer($this->managerRegistry, $dataClass);
         $transformedResult = [];
         foreach ($entities as $entity) {
-            $index = $dataIndexer->getIndex($entity);
-            $transformedResult[$index] = $entity;
+            $indexName = $dataIndexer->getIndex($entity);
+            $transformedResult[$indexName] = $entity;
         }
 
         $event->setResult(
             new TransformedElasticaResult($result->count(), $transformedResult, $result->getAggregations())
         );
+    }
+
+    private function getIndexName(SearchableInterface $searchable): ?string
+    {
+        if (false === $searchable instanceof Index) {
+            return null;
+        }
+
+        if (null === $this->indexMap) {
+            $indexNames = $this->configManager->getIndexNames();
+            array_walk($indexNames, function (string $indexName): void {
+                $this->indexMap[$this->configManager->getIndexConfiguration($indexName)->getElasticSearchName()]
+                    = $indexName;
+            });
+        }
+
+        return $this->indexMap[$searchable->getOriginalName()] ?? null;
     }
 }
