@@ -21,8 +21,6 @@ interface ColumnTypeExtensionInterface
     public static function getExtendedColumnTypes(): array;
 
     /**
-     * @param ColumnInterface $column
-     * @param CellViewInterface $view
      * @param int|string $index
      * @param array<string,mixed>|object $source
      */
@@ -31,7 +29,6 @@ interface ColumnTypeExtensionInterface
     public function buildHeaderView(ColumnInterface $column, HeaderViewInterface $view): void;
 
     /**
-     * @param ColumnInterface $column
      * @param mixed $value
      * @return mixed
      */

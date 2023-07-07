@@ -68,8 +68,6 @@ abstract class ColumnAbstractType implements ColumnTypeInterface
     }
 
     /**
-     * @param ColumnInterface $column
-     * @param CellViewInterface $view
      * @param int|string $index
      * @param array<string,mixed>|object $source
      */

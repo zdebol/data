@@ -15,10 +15,10 @@ use FSi\Component\DataGrid\Column\ColumnInterface;
 use FSi\Component\DataGrid\ColumnType\Text;
 use FSi\Component\DataGrid\ColumnTypeExtension\DefaultColumnOptionsExtension;
 use FSi\Component\DataGrid\ColumnTypeExtension\ValueFormatColumnOptionsExtension;
+use FSi\Component\DataGrid\ColumnTypeExtension\ValueFormatter;
 use FSi\Component\DataGrid\DataGridInterface;
 use FSi\Component\DataGrid\DataMapper\PropertyAccessorMapper;
 use InvalidArgumentException;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use ValueError;
@@ -255,7 +255,7 @@ final class ValueFormatColumnOptionsExtensionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->extension = new ValueFormatColumnOptionsExtension();
+        $this->extension = new ValueFormatColumnOptionsExtension(new ValueFormatter());
     }
 
     /**
