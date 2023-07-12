@@ -55,12 +55,7 @@ class ValueFormatColumnOptionsExtension extends ColumnAbstractTypeExtension
         /** @var string $emptyValue */
         $emptyValue = $column->getOption('empty_value');
 
-        return $this->valueFormatter->format(
-            $value,
-            $glue,
-            $format,
-            $emptyValue
-        );
+        return $this->valueFormatter->format($value, $glue, $format, $emptyValue);
     }
 
     public function initOptions(OptionsResolver $optionsResolver): void
@@ -84,10 +79,11 @@ class ValueFormatColumnOptionsExtension extends ColumnAbstractTypeExtension
                 /** @var string|callable|null $format */
                 $format = $options['value_format'];
 
+                // Introduce validation instead of normalization after Symfony 6.x
                 if (null === $glue && null === $format && 1 < count($fieldMapping)) {
-                    throw new InvalidArgumentException(sprintf(
-                        'At least one of "value_format" or "value_glue" option is missing in column.'
-                    ));
+                    throw new InvalidArgumentException(
+                        'At least one of "value_format" or "value_glue" option is missing.'
+                    );
                 }
 
                 return $glue;
