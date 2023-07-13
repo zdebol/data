@@ -144,8 +144,11 @@ class DateTime extends ColumnAbstractType
                         );
                     }
                     $fieldInputType = $inputType['input_type'] ?? $this->guessInputType($value[$field]);
+                    if (true === is_string($fieldInputType)) {
+                        $fieldInputType = strtolower($fieldInputType);
+                    }
 
-                    switch (strtolower($fieldInputType)) {
+                    switch ($fieldInputType) {
                         case 'string':
                             $mappingFormat = $inputType['datetime_format'] ?? null;
                             if (null === $mappingFormat) {

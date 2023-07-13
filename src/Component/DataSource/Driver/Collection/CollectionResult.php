@@ -14,11 +14,14 @@ namespace FSi\Component\DataSource\Driver\Collection;
 use ArrayAccess;
 use ArrayIterator;
 use Countable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
 use FSi\Component\DataSource\Result;
 use ReturnTypeWillChange;
+
+use function array_slice;
 
 /**
  * @template T
@@ -39,12 +42,20 @@ class CollectionResult implements ArrayAccess, Countable, Result
      */
     public function __construct(Selectable $collection, Criteria $criteria)
     {
-        $this->collection = $collection->matching($criteria);
+        $offset = $criteria->getFirstResult();
+        $length = $criteria->getMaxResults();
 
-        $countCriteria = clone $criteria;
-        $countCriteria->setFirstResult(null);
-        $countCriteria->setMaxResults(null);
-        $this->count = $collection->matching($countCriteria)->count();
+        $searchAndSortCriteria = clone $criteria;
+        $searchAndSortCriteria->setFirstResult(null);
+        $searchAndSortCriteria->setMaxResults(null);
+
+        $filteredAndSortedData = $collection->matching($searchAndSortCriteria)->toArray();
+        $this->count = count($filteredAndSortedData);
+
+        if (null !== $offset || null !== $length) {
+            $filteredAndSortedData = array_slice($filteredAndSortedData, (int) $offset, $length, true);
+        }
+        $this->collection = new ArrayCollection($filteredAndSortedData);
     }
 
     public function count(): int
