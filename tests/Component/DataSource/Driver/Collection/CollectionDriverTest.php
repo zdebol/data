@@ -164,7 +164,7 @@ class CollectionDriverTest extends TestCase
         $dataSource->bindParameters($parameters);
         $result = $dataSource->getResult();
         self::assertInstanceOf(CollectionResult::class, $result);
-        self::assertEquals('title99', $result[0]->getTitle());
+        self::assertEquals('title99', $result->getIterator()->current()->getTitle());
 
         // Checking sorting.
         $parameters = [
@@ -179,7 +179,7 @@ class CollectionDriverTest extends TestCase
         $dataSource->bindParameters($parameters);
         $result = $dataSource->getResult();
         self::assertInstanceOf(CollectionResult::class, $result);
-        self::assertEquals('author99@domain2.com', $result[0]->getAuthor());
+        self::assertEquals('author99@domain2.com', $result->getIterator()->current()->getAuthor());
 
         //Test for clearing fields.
         $dataSource->clearFields();
@@ -278,7 +278,7 @@ class CollectionDriverTest extends TestCase
         $dataSource->bindParameters($parameters);
         $result = $dataSource->getResult();
         self::assertInstanceOf(CollectionResult::class, $result);
-        self::assertFalse($result[0]->isActive());
+        self::assertFalse($result->getIterator()->current()->isActive());
 
         $parameters = [
             $dataSource->getName() => [
@@ -291,7 +291,7 @@ class CollectionDriverTest extends TestCase
         $dataSource->bindParameters($parameters);
         $result = $dataSource->getResult();
         self::assertInstanceOf(CollectionResult::class, $result);
-        self::assertFalse($result[0]->isActive());
+        self::assertFalse($result->getIterator()->current()->isActive());
 
         // test 'notIn' comparison
         $dataSource->addField('title_is_not', 'text', [
@@ -391,6 +391,7 @@ class CollectionDriverTest extends TestCase
                 ->createQueryBuilder()
                 ->select('n')
                 ->from(News::class, 'n')
+                ->indexBy('n', 'n.id')
                 ->getQuery()
                 ->execute(),
             'criteria' => Criteria::create()->orderBy(['title' => Criteria::ASC]),
