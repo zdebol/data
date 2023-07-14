@@ -15,11 +15,13 @@ use FSi\Component\DataGrid\Column\ColumnInterface;
 use FSi\Component\DataGrid\ColumnType\Text;
 use FSi\Component\DataGrid\ColumnTypeExtension\DefaultColumnOptionsExtension;
 use FSi\Component\DataGrid\ColumnTypeExtension\ValueFormatColumnOptionsExtension;
+use FSi\Component\DataGrid\ColumnTypeExtension\ValueFormatter;
 use FSi\Component\DataGrid\DataGridInterface;
 use FSi\Component\DataGrid\DataMapper\PropertyAccessorMapper;
 use InvalidArgumentException;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use ValueError;
 
@@ -66,15 +68,20 @@ final class ValueFormatColumnOptionsExtensionTest extends TestCase
 
     public function testEmptyFormatAndGlueWithArrayValue(): void
     {
+        $optionsResolver = $this->createOptionsResolver();
+        $this->extension->initOptions($optionsResolver);
+
         $options = [
             'value_format' => null,
             'value_glue' => null,
             'empty_value' => '',
-            'field_mapping' => [],
+            'field_mapping' => ['value', 'another_value'],
         ];
 
         $this->expectException(InvalidArgumentException::class);
-        $this->assertFilteredValue($options, ['foo', 'bar'], 'unreachable');
+        $this->expectExceptionMessage('At least one of "value_format" or "value_glue" option is missing.');
+
+        $optionsResolver->resolve($options);
     }
 
     public function testTemplate(): void
@@ -141,16 +148,6 @@ final class ValueFormatColumnOptionsExtensionTest extends TestCase
         $this->assertFilteredValue($options, ['foo', 'bar'], '');
     }
 
-    public function testArrayEmptyValue(): void
-    {
-        $options = [
-            'empty_value' => [],
-            'field_mapping' => [],
-        ];
-
-        $this->assertFilteredValue($options, [null], '');
-    }
-
     public function testEmptyValue(): void
     {
         $options = [
@@ -172,54 +169,11 @@ final class ValueFormatColumnOptionsExtensionTest extends TestCase
         $this->assertFilteredValue($options, ['val', '', null], 'val empty empty');
     }
 
-    public function testMultipleEmptyValueWithArrayValue(): void
-    {
-        $options = [
-            'empty_value' => [
-                'fo' => 'foo',
-                'ba' => 'bar'
-            ],
-            'value_glue' => ' ',
-            'field_mapping' => ['fo', 'ba'],
-        ];
-
-        $this->assertFilteredValue($options, ['fo' => null, 'ba' => null], 'foo bar');
-    }
-
-    public function testEmptyValueThatNotExistsInMappingFields(): void
-    {
-        $options = [
-            'empty_value' => [
-                'fo' => 'empty',
-            ],
-            'field_mapping' => ['fos'],
-        ];
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->assertFilteredValue($options, ['unused'], 'unreachable');
-    }
-
-    public function testMultipleEmptyValueWithArrayValueAndTemplate(): void
-    {
-        $options = [
-            'empty_value' => [
-                'fo' => 'empty-foo',
-                'ba' => 'empty-bar'
-            ],
-            'value_format' => '"%s" "%s" "%s"',
-            'field_mapping' => ['fo', 'ba', 'ca'],
-        ];
-
-        $this->assertFilteredValue($options, ['fo' => '', 'ba' => '', 'ca' => null], '"empty-foo" "empty-bar" ""');
-    }
-
     public function testClosureFormat(): void
     {
         $options = [
-            'empty_value' => [],
-            'value_format' => function ($data) {
-                return $data['fo'] . '-' . $data['ba'];
-            },
+            'empty_value' => '',
+            'value_format' => static fn (array $data): string => $data['fo'] . '-' . $data['ba'],
             'field_mapping' => ['fo', 'ba'],
         ];
 
@@ -255,7 +209,7 @@ final class ValueFormatColumnOptionsExtensionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->extension = new ValueFormatColumnOptionsExtension();
+        $this->extension = new ValueFormatColumnOptionsExtension(new ValueFormatter());
     }
 
     /**
@@ -271,5 +225,17 @@ final class ValueFormatColumnOptionsExtensionTest extends TestCase
         );
 
         $this->assertSame($filteredValue, $this->extension->filterValue($column, $value));
+    }
+
+    private function createOptionsResolver(): OptionsResolver
+    {
+        $optionsResolver = new OptionsResolver();
+        $optionsResolver->setDefault(
+            'field_mapping',
+            static fn(Options $options, $previousValue) => $previousValue ?? [$options['name']]
+        );
+
+        $optionsResolver->setAllowedTypes('field_mapping', 'array');
+        return $optionsResolver;
     }
 }

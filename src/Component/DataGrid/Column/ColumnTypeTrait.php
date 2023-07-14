@@ -28,10 +28,8 @@ trait ColumnTypeTrait
     protected array $columnTypeExtensions;
 
     /**
-     * @param ColumnInterface $column
      * @param int|string $index
      * @param array<string,mixed>|object $source
-     * @return CellViewInterface
      */
     public function createCellView(ColumnInterface $column, $index, $source): CellViewInterface
     {
@@ -57,7 +55,6 @@ trait ColumnTypeTrait
     }
 
     /**
-     * @param string $name
      * @param array<string,mixed> $options
      * @return array<string,mixed>
      */
@@ -81,19 +78,18 @@ trait ColumnTypeTrait
     }
 
     /**
-     * @param ColumnInterface $column
      * @param array<string,mixed>|object $object
      * @return mixed
      */
     protected function getValue(ColumnInterface $column, $object)
     {
-        $values = [];
         if (false === $column->hasOption('field_mapping') || 0 === count($column->getOption('field_mapping'))) {
             throw new DataGridColumnException(
-                sprintf('"field_mapping" option is missing in column "%s"', $column->getName())
+                "\"field_mapping\" option is missing in column \"{$column->getName()}\""
             );
         }
 
+        $values = [];
         foreach ($column->getOption('field_mapping') as $field) {
             $values[$field] = $this->dataMapper->getData($field, $object);
         }
@@ -107,7 +103,6 @@ trait ColumnTypeTrait
     }
 
     /**
-     * @param ColumnInterface $column
      * @param mixed $value
      * @return mixed
      */
@@ -121,8 +116,6 @@ trait ColumnTypeTrait
     abstract protected function buildHeaderView(ColumnInterface $column, HeaderViewInterface $view): void;
 
     /**
-     * @param ColumnInterface $column
-     * @param CellViewInterface $view
      * @param int|string $index
      * @param array<string,mixed>|object $source
      */

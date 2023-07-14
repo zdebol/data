@@ -143,6 +143,7 @@ class DateTime extends ColumnAbstractType
                             sprintf('"%s" should be an array.', $field)
                         );
                     }
+
                     $fieldInputType = $inputType['input_type'] ?? $this->guessInputType($value[$field]);
                     if (true === is_string($fieldInputType)) {
                         $fieldInputType = strtolower($fieldInputType);

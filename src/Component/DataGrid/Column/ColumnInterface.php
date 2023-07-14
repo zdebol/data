@@ -22,7 +22,6 @@ interface ColumnInterface
     public function getDataGrid(): DataGridInterface;
 
     /**
-     * @param string $name
      * @return mixed
      */
     public function getOption(string $name);
