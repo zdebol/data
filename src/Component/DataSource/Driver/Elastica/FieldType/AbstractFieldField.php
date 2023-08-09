@@ -52,9 +52,12 @@ abstract class AbstractFieldField extends CoreAbstractFieldType implements Field
                 if (false === is_array($data)) {
                     throw new ElasticaDriverException("'between' comparison needs an array");
                 }
-                $from = array_shift($data);
-                $to = array_shift($data);
-                $filter->addMust(new Range($fieldPath, ['gte' => $from, 'lte' => $to]));
+                if (null !== ($data['from'] ?? null)) {
+                    $filter->addMust(new Range($fieldPath, ['gte' => $data['from']]));
+                }
+                if (null !== ($data['to'] ?? null)) {
+                    $filter->addMust(new Range($fieldPath, ['lte' => $data['to']]));
+                }
                 break;
             case 'lt':
             case 'lte':

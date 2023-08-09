@@ -77,8 +77,12 @@ class NumberTest extends BaseTest
     public function testFilterByNumberBetween(): void
     {
         $this->dataSource->addField('salary', 'number', ['comparison' => 'between']);
-        $result = $this->filterDataSource(['salary' => [123, 783]]);
+        $result = $this->filterDataSource(['salary' => ['from' => 123, 'to' => 783]]);
 
         $this->assertCount(7, $result);
+
+        $result = $this->filterDataSource(['salary' => ['from' => 321, 'to' => null]]);
+
+        $this->assertCount(10, $result);
     }
 }
