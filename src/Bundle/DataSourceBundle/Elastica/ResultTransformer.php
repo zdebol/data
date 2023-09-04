@@ -31,12 +31,12 @@ final class ResultTransformer implements DataSourceEventSubscriberInterface
     private ?array $indexMap = null;
     private TransformerManager $transformerManager;
     private ManagerRegistry $managerRegistry;
-    private ConfigManager $configManager;
+    private ?ConfigManager $configManager;
 
     public function __construct(
-        ConfigManager $configManager,
         TransformerManager $transformerManager,
-        ManagerRegistry $managerRegistry
+        ManagerRegistry $managerRegistry,
+        ?ConfigManager $configManager = null
     ) {
         $this->configManager = $configManager;
         $this->transformerManager = $transformerManager;
@@ -86,13 +86,22 @@ final class ResultTransformer implements DataSourceEventSubscriberInterface
 
     private function getIndexName(SearchableInterface $searchable): ?string
     {
+        if (null === $this->configManager) {
+            return null;
+        }
+
         if (false === $searchable instanceof Index) {
             return null;
         }
 
         if (null === $this->indexMap) {
             $indexNames = $this->configManager->getIndexNames();
+            $this->indexMap = [];
             array_walk($indexNames, function (string $indexName): void {
+                if (null === $this->configManager) {
+                    return;
+                }
+
                 $this->indexMap[$this->configManager->getIndexConfiguration($indexName)->getElasticSearchName()]
                     = $indexName;
             });
