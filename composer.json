@@ -13,9 +13,9 @@
     "require": {
         "php": "^7.4|^8.0",
         "psr/event-dispatcher": "^1.0",
-        "symfony/event-dispatcher" : "^4.4|^5.4",
-        "symfony/property-access": "^4.4|^5.4",
-        "symfony/options-resolver": "^5.4",
+        "symfony/event-dispatcher" : "^4.4|^5.4|^6.0",
+        "symfony/property-access": "^4.4|^5.4|^6.0",
+        "symfony/options-resolver": "^5.4|^6.0",
         "twig/twig": "^3.3"
     },
     "require-dev": {
