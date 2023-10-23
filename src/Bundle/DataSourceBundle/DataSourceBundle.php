@@ -11,12 +11,13 @@ declare(strict_types=1);
 
 namespace FSi\Bundle\DataSourceBundle;
 
-use FSi\Bundle\DataSourceBundle\DependencyInjection\Compiler\FOSElasticaPass;
-use Symfony\Component\DependencyInjection\Compiler\PassConfig;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use FSi\Bundle\DataSourceBundle\DependencyInjection\Compiler\DataSourcePass;
+use FSi\Bundle\DataSourceBundle\DependencyInjection\Compiler\FOSElasticaPass;
 use FSi\Bundle\DataSourceBundle\DependencyInjection\FSIDataSourceExtension;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 final class DataSourceBundle extends Bundle
 {
@@ -26,7 +27,7 @@ final class DataSourceBundle extends Bundle
         $container->addCompilerPass(new FOSElasticaPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 200);
     }
 
-    public function getContainerExtension()
+    public function getContainerExtension(): ?ExtensionInterface
     {
         if (null === $this->extension) {
             $this->extension = new FSIDataSourceExtension();
