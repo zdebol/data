@@ -289,8 +289,8 @@ final class BundleIntegrationTest extends WebTestCase
         $news = new News();
         $news->setTitle('A news');
         $news->setAuthor('An author');
-        $news->setCreateDate(new DateTimeImmutable('2021-01-01 15:00'));
-        $news->setCreateTime(new DateTimeImmutable('1970-01-01 16:00'));
+        $news->setCreateDate(new DateTimeImmutable('2021-01-01 15:00:00'));
+        $news->setCreateTime(new DateTimeImmutable('1970-01-01 16:00:00'));
         $news->setActive(false);
         $news->setViews(10);
         $news->addGroup($group);
@@ -298,8 +298,8 @@ final class BundleIntegrationTest extends WebTestCase
         $otherNews = new News();
         $otherNews->setTitle('Another news');
         $otherNews->setAuthor('Another author');
-        $otherNews->setCreateDate(new DateTimeImmutable('2021-02-01 13:00'));
-        $otherNews->setCreateTime(new DateTimeImmutable('1970-01-01 14:00'));
+        $otherNews->setCreateDate(new DateTimeImmutable('2021-02-01 13:00:00'));
+        $otherNews->setCreateTime(new DateTimeImmutable('1970-01-01 14:00:00'));
         $otherNews->setActive(true);
         $otherNews->setViews(5);
         $otherNews->addGroup($otherGroup);

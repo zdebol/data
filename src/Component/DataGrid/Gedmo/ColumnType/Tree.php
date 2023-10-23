@@ -139,7 +139,7 @@ final class Tree extends ColumnAbstractType
     private function getTreeListener(ObjectManager $om): TreeListener
     {
         if (true === $om instanceof EntityManager) {
-            foreach ($om->getEventManager()->getListeners() as $listeners) {
+            foreach ($om->getEventManager()->getAllListeners() as $listeners) {
                 $listeners = (array) $listeners;
                 foreach ($listeners as $listener) {
                     if (true === $listener instanceof TreeListener) {
