@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace Tests\FSi\Component\DataSource\Driver\Elastica\FieldType;
 
-use Tests\FSi\Component\DataSource\Driver\Elastica\BaseTest;
+use Tests\FSi\Component\DataSource\Driver\Elastica\TestBase;
 
-class TimeTest extends BaseTest
+class TimeTest extends TestBase
 {
     public function setUp(): void
     {

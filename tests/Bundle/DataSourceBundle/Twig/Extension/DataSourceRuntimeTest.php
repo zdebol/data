@@ -13,7 +13,6 @@ namespace Tests\FSi\Bundle\DataSourceBundle\Twig\Extension;
 
 use FSi\Bundle\DataSourceBundle\Twig\Extension\DataSourceExtension;
 use FSi\Bundle\DataSourceBundle\Twig\Extension\DataSourceRuntime;
-use FSi\Component\DataSource\DataSourceInterface;
 use FSi\Component\DataSource\DataSourceView;
 use FSi\Component\DataSource\DataSourceViewInterface;
 use FSi\Component\DataSource\Field\FieldInterface;
@@ -21,6 +20,7 @@ use FSi\Component\DataSource\Field\FieldViewInterface;
 use FSi\Component\DataSource\Field\Type\FieldTypeInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -38,6 +38,8 @@ use Twig\TemplateWrapper;
  */
 final class DataSourceRuntimeTest extends TestCase
 {
+    use ConsecutiveParams;
+
     private Environment $twig;
     private DataSourceExtension $extension;
     private DataSourceRuntime $runtime;
@@ -91,7 +93,7 @@ final class DataSourceRuntimeTest extends TestCase
 
         $fieldType = $this->createMock(FieldTypeInterface::class);
         $fieldType->method('createView')
-            ->withConsecutive([$field1], [$field2], [$field3])
+            ->with(...self::withConsecutive([$field1], [$field2], [$field3]))
             ->willReturnOnConsecutiveCalls($fieldView1, $fieldView2, $fieldView3)
         ;
         $field1->method('getType')->willReturn($fieldType);
@@ -109,7 +111,7 @@ final class DataSourceRuntimeTest extends TestCase
 
         $template = $this->getTemplateMock();
         $template->method('hasBlock')
-            ->withConsecutive(['datasource_datasource_filter'], ['datasource_filter'])
+            ->with(...self::withConsecutive(['datasource_datasource_filter'], ['datasource_filter']))
             ->willReturnOnConsecutiveCalls(false, true)
         ;
 

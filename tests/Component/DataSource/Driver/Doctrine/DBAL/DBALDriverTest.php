@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Tests\FSi\Component\DataSource\Driver\Doctrine\DBAL;
 
 use Doctrine\DBAL\Connection;
-use FSi\Component\DataSource\DataSourceInterface;
 use FSi\Component\DataSource\Driver\Doctrine\DBAL\DBALDriver;
 use FSi\Component\DataSource\Driver\Doctrine\DBAL\Event\PostGetResult;
 use FSi\Component\DataSource\Driver\Doctrine\DBAL\Event\PreGetResult;
@@ -27,10 +26,13 @@ use FSi\Component\DataSource\Driver\Doctrine\DBAL\FieldType\Text;
 use FSi\Component\DataSource\Driver\Doctrine\DBAL\FieldType\Time;
 use FSi\Component\DataSource\Field\FieldInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 final class DBALDriverTest extends TestBase
 {
+    use ConsecutiveParams;
+
     private Connection $connection;
 
     /**
@@ -79,7 +81,10 @@ final class DBALDriverTest extends TestBase
 
         $eventDispatcher->expects(self::exactly(2))
             ->method('dispatch')
-            ->withConsecutive([self::isInstanceOf(PreGetResult::class)], [self::isInstanceOf(PostGetResult::class)]);
+            ->with(...self::withConsecutive(
+                [self::isInstanceOf(PreGetResult::class)],
+                [self::isInstanceOf(PostGetResult::class)]
+            ));
         $driver->getResult([], 0, 20);
     }
 

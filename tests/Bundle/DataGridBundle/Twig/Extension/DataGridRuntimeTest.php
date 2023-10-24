@@ -20,6 +20,7 @@ use FSi\Component\DataGrid\DataGridViewInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
@@ -35,6 +36,8 @@ use Twig\TemplateWrapper;
 
 final class DataGridRuntimeTest extends TestCase
 {
+    use ConsecutiveParams;
+
     private Environment $twig;
     private DataGridExtension $extension;
     private DataGridRuntime $runtime;
@@ -149,7 +152,7 @@ final class DataGridRuntimeTest extends TestCase
         $template = $this->getTemplateMock();
 
         $template->method('hasBlock')
-            ->withConsecutive(['datagrid_grid'], ['datagrid'])
+            ->with(...self::withConsecutive(['datagrid_grid'], ['datagrid']))
             ->willReturnOnConsecutiveCalls(false, true)
         ;
         $template->method('hasBlock')->with()->willReturn(true);
@@ -193,7 +196,7 @@ final class DataGridRuntimeTest extends TestCase
         $template = $this->getTemplateMock();
 
         $template->method('hasBlock')
-            ->withConsecutive(['datagrid_grid_header'], ['datagrid_header'])
+            ->with(...self::withConsecutive(['datagrid_grid_header'], ['datagrid_header']))
             ->willReturnOnConsecutiveCalls(false, true)
         ;
 
@@ -220,14 +223,14 @@ final class DataGridRuntimeTest extends TestCase
         $template = $this->getTemplateMock();
 
         $template->method('hasBlock')
-            ->withConsecutive(
+            ->with(...self::withConsecutive(
                 ['datagrid_grid_column_name_title_header'],
                 ['datagrid_grid_column_type_text_header'],
                 ['datagrid_column_name_title_header'],
                 ['datagrid_column_type_text_header'],
                 ['datagrid_grid_column_header'],
                 ['datagrid_column_header']
-            )
+            ))
             ->willReturnOnConsecutiveCalls(false, false, false, false, false, true);
 
         $dataGridView = $this->getDataGridView('grid');
@@ -256,7 +259,7 @@ final class DataGridRuntimeTest extends TestCase
         $template = $this->getTemplateMock();
 
         $template->method('hasBlock')
-            ->withConsecutive(['datagrid_grid_rowset'], ['datagrid_rowset'])
+            ->with(...self::withConsecutive(['datagrid_grid_rowset'], ['datagrid_rowset']))
             ->willReturnOnConsecutiveCalls(false, true)
         ;
 
@@ -282,14 +285,14 @@ final class DataGridRuntimeTest extends TestCase
         $template = $this->getTemplateMock();
 
         $template->method('hasBlock')
-            ->withConsecutive(
+            ->with(...self::withConsecutive(
                 ['datagrid_grid_column_name_title_cell'],
                 ['datagrid_grid_column_type_text_cell'],
                 ['datagrid_column_name_title_cell'],
                 ['datagrid_column_type_text_cell'],
                 ['datagrid_grid_column_cell'],
                 ['datagrid_column_cell']
-            )->willReturnOnConsecutiveCalls(false, false, false, false, false, true);
+            ))->willReturnOnConsecutiveCalls(false, false, false, false, false, true);
 
         $dataGridView = $this->getDataGridView('grid');
         $this->runtime->setTheme($dataGridView, new TemplateWrapper($this->twig, $template));
@@ -321,14 +324,14 @@ final class DataGridRuntimeTest extends TestCase
         $template = $this->getTemplateMock();
 
         $template->method('hasBlock')
-            ->withConsecutive(
+            ->with(...self::withConsecutive(
                 ['datagrid_grid_column_name_title_cell_form'],
                 ['datagrid_grid_column_type_text_cell_form'],
                 ['datagrid_column_name_title_cell_form'],
                 ['datagrid_column_type_text_cell_form'],
                 ['datagrid_grid_column_cell_form'],
                 ['datagrid_column_cell_form']
-            )->willReturnOnConsecutiveCalls(false, false, false, false, false, true);
+            ))->willReturnOnConsecutiveCalls(false, false, false, false, false, true);
 
         $dataGridView = $this->getDataGridView('grid');
         $this->runtime->setTheme($dataGridView, new TemplateWrapper($this->twig, $template));
@@ -356,12 +359,12 @@ final class DataGridRuntimeTest extends TestCase
         $template = $this->getTemplateMock();
 
         $template->method('hasBlock')
-            ->withConsecutive(
+            ->with(...self::withConsecutive(
                 ['datagrid_grid_column_type_action_cell_action_edit'],
                 ['datagrid_column_type_action_cell_action_edit'],
                 ['datagrid_grid_column_type_action_cell_action'],
                 ['datagrid_column_type_action_cell_action'],
-            )->willReturnOnConsecutiveCalls(false, false, false, true);
+            ))->willReturnOnConsecutiveCalls(false, false, false, true);
 
         $dataGridView = $this->getDataGridView('grid');
         $this->runtime->setTheme($dataGridView, new TemplateWrapper($this->twig, $template));

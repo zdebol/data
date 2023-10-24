@@ -39,7 +39,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 use function getenv;
 
-abstract class BaseTest extends TestCase
+abstract class TestBase extends TestCase
 {
     private ?EventDispatcherInterface $eventDispatcher = null;
     private ?Storage $orderingStorage = null;

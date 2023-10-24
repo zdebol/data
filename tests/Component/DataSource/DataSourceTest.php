@@ -25,10 +25,13 @@ use FSi\Component\DataSource\Field\Type\FieldTypeInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 use Tests\FSi\Component\DataSource\Fixtures\TestResult;
 
 final class DataSourceTest extends TestCase
 {
+    use ConsecutiveParams;
+
     /**
      * @doesNotPerformAssertions
      */
@@ -197,7 +200,7 @@ final class DataSourceTest extends TestCase
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
             ->method('dispatch')
-            ->withConsecutive(
+            ->with(...self::withConsecutive(
                 [self::isInstanceOf(PreBindParameters::class)],
                 [self::isInstanceOf(PreBindParameter::class)],
                 [self::isInstanceOf(PreBindParameter::class)],
@@ -210,7 +213,7 @@ final class DataSourceTest extends TestCase
                     )
                 ],
                 [self::isInstanceOf(PostGetParameters::class)]
-            )
+            ))
         ;
 
         $fieldType = $this->createMock(FieldTypeInterface::class);
@@ -240,11 +243,11 @@ final class DataSourceTest extends TestCase
         $fieldType
             ->expects(self::exactly(3))
             ->method('createField')
-            ->withConsecutive(
+            ->with(...self::withConsecutive(
                 ['datasource', 'field', []],
                 ['datasource', 'field2', []],
                 ['datasource', 'field3', []]
-            )
+            ))
             ->willReturnOnConsecutiveCalls($field, $field2, $field3)
         ;
 
@@ -284,11 +287,11 @@ final class DataSourceTest extends TestCase
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher->expects(self::exactly(3))
             ->method('dispatch')
-            ->withConsecutive(
+            ->with(...self::withConsecutive(
                 [self::isInstanceOf(PreBuildView::class)],
                 [self::isInstanceOf(PostGetParameters::class)],
                 [self::isInstanceOf(PostBuildView::class)]
-            );
+            ));
 
         $dataSource = new DataSource(
             'datasource',
@@ -317,10 +320,10 @@ final class DataSourceTest extends TestCase
 
         $eventDispatcher->expects(self::exactly(2))
             ->method('dispatch')
-            ->withConsecutive(
+            ->with(...self::withConsecutive(
                 [self::isInstanceOf(PreBindParameters::class)],
                 [self::isInstanceOf(PreBindParameter::class)]
-            )
+            ))
         ;
 
         $dataSource->bindParameters(['datasource' => []]);

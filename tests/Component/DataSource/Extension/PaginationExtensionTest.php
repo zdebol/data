@@ -36,7 +36,7 @@ final class PaginationExtensionTest extends TestCase
     /**
      * @return array<int,array{first_result: int, max_results: int, page:int|null, current_page: int}>
      */
-    public function paginationCases(): array
+    public static function paginationCases(): array
     {
         return [
             [

@@ -117,7 +117,7 @@ final class ValueFormatColumnOptionsExtensionTest extends TestCase
             'field_mapping' => [],
         ];
 
-        if (PHP_VERSION_ID < 80000) {
+        if (PHP_VERSION_ID < 80000 && true === method_exists($this, 'expectError')) {
             $this->expectError();
         } else {
             $this->expectException(ValueError::class);

@@ -120,7 +120,7 @@ final class EntityValueFormatColumnOptionsExtensionTest extends TestCase
             'value_glue' => '<br />',
         ];
 
-        if (PHP_VERSION_ID < 80000) {
+        if (PHP_VERSION_ID < 80000 && true === method_exists($this, 'expectError')) {
             $this->expectError();
         } else {
             $this->expectException(ArgumentCountError::class);
