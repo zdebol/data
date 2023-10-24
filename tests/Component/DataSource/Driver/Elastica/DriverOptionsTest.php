@@ -21,7 +21,7 @@ use FSi\Component\DataSource\Driver\Elastica\ElasticaResult;
 
 use function getenv;
 
-class DriverOptionsTest extends BaseTest
+class DriverOptionsTest extends TestBase
 {
     public function testFieldOptionInField(): void
     {

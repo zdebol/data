@@ -17,11 +17,14 @@ use FSi\Component\DataGrid\Event\PreSetDataEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\Kernel;
 
 class ConfigurationBuilderTest extends TestCase
 {
+    use ConsecutiveParams;
+
     /**
      * @var Kernel&MockObject
      */
@@ -71,11 +74,11 @@ class ConfigurationBuilderTest extends TestCase
 
         $dataGrid->expects(self::exactly(3))
             ->method('addColumn')
-            ->withConsecutive(
+            ->with(...self::withConsecutive(
                 ['id', 'number', ['label' => 'ID']],
                 ['title', 'text', []],
                 ['author', 'text', []]
-            )
+            ))
         ;
 
         $this->createConfigurationBuilder(null)(new PreSetDataEvent($dataGrid, []));
@@ -89,7 +92,7 @@ class ConfigurationBuilderTest extends TestCase
 
         $dataGrid->expects(self::exactly(6))
             ->method('addColumn')
-            ->withConsecutive(
+            ->with(...self::withConsecutive(
                 ['id', 'number', ['label' => 'ID']],
                 ['title_short', 'text', ['label' => 'Short title']],
                 ['created_at', 'date', ['label' => 'Created at']],
@@ -98,7 +101,7 @@ class ConfigurationBuilderTest extends TestCase
                 ['actions', 'action', [
                     'actions' => ['test' => ['route_name' => 'test', 'parameters_field_mapping' => ['id' => 'id']]]
                 ]]
-            );
+            ));
 
         $mainDirectory = sprintf('%s/../../Resources/config/main_directory', __DIR__);
         $this->createConfigurationBuilder($mainDirectory)(new PreSetDataEvent($dataGrid, []));
@@ -150,10 +153,6 @@ class ConfigurationBuilderTest extends TestCase
 
     private function createConfigurationBuilder(?string $mainConfigDirectory): ConfigurationBuilder
     {
-        return new ConfigurationBuilder(
-            $this->kernel,
-            'Resources/config/datagrid',
-            $mainConfigDirectory
-        );
+        return new ConfigurationBuilder($this->kernel, 'Resources/config/datagrid', $mainConfigDirectory);
     }
 }

@@ -394,7 +394,7 @@ final class FormExtensionTest extends TestCase
     /**
      * @return array<array{class-string<FieldTypeInterface>,?string}>
      */
-    public function getDatasourceFieldTypes(): array
+    public static function getDatasourceFieldTypes(): array
     {
         return [
             [TextTypeInterface::class, 'isNull'],

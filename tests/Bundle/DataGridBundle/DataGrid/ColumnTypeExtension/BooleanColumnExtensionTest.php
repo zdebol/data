@@ -19,11 +19,14 @@ use FSi\Component\DataGrid\DataGridInterface;
 use FSi\Component\DataGrid\DataMapper\DataMapperInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class BooleanColumnExtensionTest extends TestCase
 {
+    use ConsecutiveParams;
+
     public function testColumnOptions(): void
     {
         $dataMapper = $this->createMock(DataMapperInterface::class);
@@ -53,12 +56,12 @@ final class BooleanColumnExtensionTest extends TestCase
         /** @var TranslatorInterface&MockObject $translator */
         $translator = $this->createMock(TranslatorInterface::class);
 
-        $translator->expects(self::atLeast(2))
+        $translator->expects(self::exactly(2))
             ->method('trans')
-            ->withConsecutive(
+            ->with(...self::withConsecutive(
                 ['datagrid.boolean.yes', [], 'DataGridBundle'],
                 ['datagrid.boolean.no', [], 'DataGridBundle']
-            )->willReturnOnConsecutiveCalls('YES', 'NO');
+            ))->willReturnOnConsecutiveCalls('YES', 'NO');
 
         return $translator;
     }

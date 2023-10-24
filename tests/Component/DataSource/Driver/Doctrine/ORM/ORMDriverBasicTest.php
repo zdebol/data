@@ -20,25 +20,25 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\Driver\SymfonyFileLocator;
-use FSi\Component\DataSource\DataSourceInterface;
-use FSi\Component\DataSource\Driver\Doctrine\ORM\ORMDriver;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\Event\PostGetResult;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\Event\PreGetResult;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\Exception\DoctrineDriverException;
+use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\AbstractFieldType;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\Boolean;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\Date;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\DateTime;
-use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\AbstractFieldType;
-use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\FieldTypeInterface;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\Entity;
+use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\FieldTypeInterface;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\Number;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\Text;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\Time;
+use FSi\Component\DataSource\Driver\Doctrine\ORM\ORMDriver;
 use FSi\Component\DataSource\Field\FieldInterface;
 use FSi\Component\DataSource\Field\Type\FieldTypeInterface as CoreFieldTypeInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Tests\FSi\Component\DataSource\Fixtures\Entity\Category;
 use Tests\FSi\Component\DataSource\Fixtures\Entity\Group;
@@ -46,6 +46,8 @@ use Tests\FSi\Component\DataSource\Fixtures\Entity\News;
 
 final class ORMDriverBasicTest extends TestCase
 {
+    use ConsecutiveParams;
+
     /**
      * @return array<array<string>>
      */
@@ -187,7 +189,10 @@ final class ORMDriverBasicTest extends TestCase
 
         $eventDispatcher->expects(self::exactly(2))
             ->method('dispatch')
-            ->withConsecutive([self::isInstanceOf(PreGetResult::class)], [self::isInstanceOf(PostGetResult::class)]);
+            ->with(...self::withConsecutive(
+                [self::isInstanceOf(PreGetResult::class)],
+                [self::isInstanceOf(PostGetResult::class)]
+            ));
         $driver->getResult([], 0, 20);
     }
 

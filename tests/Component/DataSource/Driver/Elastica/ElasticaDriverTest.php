@@ -17,7 +17,7 @@ use FSi\Component\DataSource\Driver\Elastica\FieldType\FieldTypeInterface as Ela
 use FSi\Component\DataSource\Field\Type\FieldTypeInterface as DataSourceFieldTypeInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ElasticaDriverTest extends BaseTest
+class ElasticaDriverTest extends TestBase
 {
     public function testDriverHasExtensions(): void
     {
@@ -38,7 +38,7 @@ class ElasticaDriverTest extends BaseTest
     /**
      * @return array<int, array<int, string>>
      */
-    public function fieldNameProvider(): array
+    public static function fieldNameProvider(): array
     {
         return [
             ['text'],

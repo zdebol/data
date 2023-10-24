@@ -17,11 +17,14 @@ use FSi\Component\DataSource\Event\PreBindParameters;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
 class ConfigurationBuilderTest extends TestCase
 {
+    use ConsecutiveParams;
+
     /**
      * @var Kernel&MockObject
      */
@@ -71,10 +74,10 @@ class ConfigurationBuilderTest extends TestCase
 
         $dataSource->expects(self::exactly(2))
             ->method('addField')
-            ->withConsecutive(
+            ->with(...self::withConsecutive(
                 ['title', 'text', ['comparison' => 'like', 'label' => 'News Title']],
                 ['author', 'text', ['comparison' => 'like']]
-            );
+            ));
 
         $this->createConfigurationBuilder(null)(new PreBindParameters($dataSource, []));
     }
@@ -88,10 +91,10 @@ class ConfigurationBuilderTest extends TestCase
 
         $dataSource->expects(self::exactly(2))
             ->method('addField')
-            ->withConsecutive(
+            ->with(...self::withConsecutive(
                 ['title_short', 'text', ['label' => 'Short title']],
                 ['created_at', 'date', ['label' => 'Created at']]
-            )
+            ))
         ;
 
         $mainDirectory = sprintf('%s/../../Resources/config/main_directory', __DIR__);

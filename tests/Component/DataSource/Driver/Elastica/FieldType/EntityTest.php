@@ -11,10 +11,10 @@ declare(strict_types=1);
 
 namespace Tests\FSi\Component\DataSource\Driver\Elastica\FieldType;
 
-use Tests\FSi\Component\DataSource\Driver\Elastica\BaseTest;
+use Tests\FSi\Component\DataSource\Driver\Elastica\TestBase;
 use Tests\FSi\Component\DataSource\Driver\Elastica\Fixtures\Branch;
 
-class EntityTest extends BaseTest
+class EntityTest extends TestBase
 {
     public function setUp(): void
     {

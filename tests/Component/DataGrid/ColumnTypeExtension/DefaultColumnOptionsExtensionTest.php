@@ -15,9 +15,12 @@ use FSi\Component\DataGrid\Column\ColumnInterface;
 use FSi\Component\DataGrid\Column\HeaderViewInterface;
 use FSi\Component\DataGrid\ColumnTypeExtension\DefaultColumnOptionsExtension;
 use PHPUnit\Framework\TestCase;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class DefaultColumnOptionsExtensionTest extends TestCase
 {
+    use ConsecutiveParams;
+
     public function testBuildHeaderView(): void
     {
         $extension = new DefaultColumnOptionsExtension();
@@ -27,12 +30,12 @@ class DefaultColumnOptionsExtensionTest extends TestCase
 
         $column->expects(self::exactly(2))
             ->method('getOption')
-            ->withConsecutive(['label'], ['display_order'])
+            ->with(...self::withConsecutive(['label'], ['display_order']))
             ->willReturnOnConsecutiveCalls('foo', 100);
 
         $view->expects(self::exactly(2))
             ->method('setAttribute')
-            ->withConsecutive(['label', 'foo'], ['display_order', 100]);
+            ->with(...self::withConsecutive(['label', 'foo'], ['display_order', 100]));
 
         $extension->buildHeaderView($column, $view);
     }

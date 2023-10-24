@@ -13,13 +13,11 @@ namespace Tests\FSi\Bundle\DataSourceBundle;
 
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\SchemaTool;
 use FOS\ElasticaBundle\Index\IndexManager;
 use FOS\ElasticaBundle\Index\Resetter;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tests\FSi\Bundle\DataSourceBundle\Fixtures\TestKernel;
 use Tests\FSi\Component\DataSource\Fixtures\Entity\Group;
@@ -59,9 +57,9 @@ final class BundleIntegrationTest extends WebTestCase
         self::assertSelectorExists('input[name="news[fields][createDate][to]"][type="date"]');
 
         self::assertSelectorTextContains('label[for="news_fields_createDateTime_from"]', 'Create date time from');
-        self::assertSelectorExists('input[name="news[fields][createDateTime][from]"][type="datetime-local"]');
+        self::assertSelectorExists('input[name="news[fields][createDateTime][from]"]');
         self::assertSelectorTextContains('label[for="news_fields_createDateTime_to"]', 'Create date time to');
-        self::assertSelectorExists('input[name="news[fields][createDateTime][to]"][type="datetime-local"]');
+        self::assertSelectorExists('input[name="news[fields][createDateTime][to]"]');
 
         self::assertSelectorExists('select[name="news[fields][createTime][hour]"]');
         self::assertSelectorExists('select[name="news[fields][createTime][minute]"]');
@@ -73,7 +71,7 @@ final class BundleIntegrationTest extends WebTestCase
             'news[fields][title]' => 'A news',
             'news[fields][active]' => 0,
             'news[fields][createDate][from]' => '2021-01-01',
-            'news[fields][createDateTime][from]' => '2021-01-01 15:00:00',
+            'news[fields][createDateTime][from]' => '2021-01-01 15:00',
             'news[fields][createTime][hour]' => '16',
             'news[fields][createTime][minute]' => '00',
             'news[fields][views]' => 10
@@ -94,7 +92,6 @@ final class BundleIntegrationTest extends WebTestCase
 
     public function testDataSourceDoctrineORMRendering(): void
     {
-        $this->setupDataBase();
         $this->client->request('GET', '/test/doctrine-orm');
 
         self::assertSelectorTextContains('.total', 'Total: 2');
@@ -117,9 +114,9 @@ final class BundleIntegrationTest extends WebTestCase
         self::assertSelectorExists('input[name="news[fields][createDate][to]"][type="date"]');
 
         self::assertSelectorTextContains('label[for="news_fields_createDateTime_from"]', 'Create date time from');
-        self::assertSelectorExists('input[name="news[fields][createDateTime][from]"][type="datetime-local"]');
+        self::assertSelectorExists('input[name="news[fields][createDateTime][from]"]');
         self::assertSelectorTextContains('label[for="news_fields_createDateTime_to"]', 'Create date time to');
-        self::assertSelectorExists('input[name="news[fields][createDateTime][to]"][type="datetime-local"]');
+        self::assertSelectorExists('input[name="news[fields][createDateTime][to]"]');
 
         self::assertSelectorExists('select[name="news[fields][createTime][hour]"]');
         self::assertSelectorExists('select[name="news[fields][createTime][minute]"]');
@@ -149,7 +146,6 @@ final class BundleIntegrationTest extends WebTestCase
 
     public function testDataSourceDoctrineDBALRendering(): void
     {
-        $this->setupDataBase();
         $this->client->request('GET', '/test/doctrine-dbal');
 
         self::assertSelectorTextContains('.total', 'Total: 2');
@@ -172,9 +168,9 @@ final class BundleIntegrationTest extends WebTestCase
         self::assertSelectorExists('input[name="news[fields][createDate][to]"][type="date"]');
 
         self::assertSelectorTextContains('label[for="news_fields_createDateTime_from"]', 'Create date time from');
-        self::assertSelectorExists('input[name="news[fields][createDateTime][from]"][type="datetime-local"]');
+        self::assertSelectorExists('input[name="news[fields][createDateTime][from]"]');
         self::assertSelectorTextContains('label[for="news_fields_createDateTime_to"]', 'Create date time to');
-        self::assertSelectorExists('input[name="news[fields][createDateTime][to]"][type="datetime-local"]');
+        self::assertSelectorExists('input[name="news[fields][createDateTime][to]"]');
 
         self::assertSelectorExists('select[name="news[fields][createTime][hour]"]');
         self::assertSelectorExists('select[name="news[fields][createTime][minute]"]');
@@ -200,7 +196,6 @@ final class BundleIntegrationTest extends WebTestCase
 
     public function testDataSourceElasticaRendering(): void
     {
-        $this->setupDataBase();
         $this->client->request('GET', '/test/elastica');
 
         self::assertSelectorTextContains('.total', 'Total: 2');
@@ -223,9 +218,9 @@ final class BundleIntegrationTest extends WebTestCase
         self::assertSelectorExists('input[name="news[fields][createDate][to]"][type="date"]');
 
         self::assertSelectorTextContains('label[for="news_fields_createDateTime_from"]', 'Create date time from');
-        self::assertSelectorExists('input[name="news[fields][createDateTime][from]"][type="datetime-local"]');
+        self::assertSelectorExists('input[name="news[fields][createDateTime][from]"]');
         self::assertSelectorTextContains('label[for="news_fields_createDateTime_to"]', 'Create date time to');
-        self::assertSelectorExists('input[name="news[fields][createDateTime][to]"][type="datetime-local"]');
+        self::assertSelectorExists('input[name="news[fields][createDateTime][to]"]');
 
         self::assertSelectorExists('select[name="news[fields][createTime][hour]"]');
         self::assertSelectorExists('select[name="news[fields][createTime][minute]"]');
@@ -256,29 +251,25 @@ final class BundleIntegrationTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = self::createClient(['debug' => false]);
+        $this->setupDatabase();
     }
 
-    private function setupDataBase(): void
+    private function setupDatabase(): void
     {
-        $application = new Application($this->client->getKernel());
-        $application->setAutoExit(false);
-        $application->find('doctrine:schema:drop')->run(
-            new ArrayInput(['--force' => true, '--quiet' => true]),
-            new NullOutput()
-        );
-        $application->find('doctrine:schema:create')->run(
-            new ArrayInput(['--quiet' => true]),
-            new NullOutput()
-        );
-
         /** @var ContainerInterface $container */
         $container = $this->client->getContainer();
-        /** @var EntityManagerInterface $manager */
-        $manager = $container->get('doctrine.orm.entity_manager');
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $container->get('doctrine.orm.entity_manager');
 
         /** @var Resetter $resetter */
         $resetter = $this->getContainer()->get('test.fos_elastica.resetter');
         $resetter->resetIndex('news');
+
+        $metadata = $entityManager->getMetadataFactory()->getAllMetadata();
+
+        $tool = new SchemaTool($entityManager);
+        $tool->dropSchema($metadata);
+        $tool->createSchema($metadata);
 
         $group = new Group();
         $group->setName('Breaking news');
@@ -304,11 +295,11 @@ final class BundleIntegrationTest extends WebTestCase
         $otherNews->setViews(5);
         $otherNews->addGroup($otherGroup);
 
-        $manager->persist($group);
-        $manager->persist($otherGroup);
-        $manager->persist($news);
-        $manager->persist($otherNews);
-        $manager->flush();
+        $entityManager->persist($group);
+        $entityManager->persist($otherGroup);
+        $entityManager->persist($news);
+        $entityManager->persist($otherNews);
+        $entityManager->flush();
 
         /** @var IndexManager $indexManager */
         $indexManager = $this->getContainer()->get(IndexManager::class);

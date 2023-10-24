@@ -16,7 +16,7 @@ use Elastica\Result;
 use FSi\Component\DataSource\Driver\Elastica\ElasticaResult;
 use FSi\Component\DataSource\Extension\Ordering\OrderingExtension;
 
-class FetchAndOrderTest extends BaseTest
+class FetchAndOrderTest extends TestBase
 {
     public function setUp(): void
     {

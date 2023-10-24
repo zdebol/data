@@ -64,7 +64,7 @@ final class OrderingExtensionTest extends TestCase
      *     expected_parameters: array<string,mixed>
      * }>
      */
-    public function orderingDataProvider(): array
+    public static function orderingDataProvider(): array
     {
         return [
             [

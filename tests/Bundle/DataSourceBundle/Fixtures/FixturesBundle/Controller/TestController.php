@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\Collection;
 use FOS\ElasticaBundle\Index\IndexManager;
 use FSi\Component\DataSource\DataSourceFactoryInterface;
 use FSi\Component\DataSource\DataSourceInterface;
+use IntlDateFormatter;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -122,12 +123,16 @@ final class TestController
             'form_from_options' => [
                 'label' => 'Create date time from',
                 'widget' => 'single_text',
-                'input' => 'datetime_immutable'
+                'input' => 'datetime_immutable',
+                'format' => 'Y-m-d HH:mm:ss',
+                'html5' => false
             ],
             'form_to_options' => [
                 'label' => 'Create date time to',
                 'widget' => 'single_text',
-                'input' => 'datetime_immutable'
+                'input' => 'datetime_immutable',
+                'format' => 'Y-m-d HH:mm:ss',
+                'html5' => false
             ],
             'form_order' => -3,
         ]);

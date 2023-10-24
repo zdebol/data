@@ -24,7 +24,7 @@ class DBALFieldsTest extends TestBase
     /**
      * @return array<int,array{string,string,array<int,array{string,mixed,mixed}>}>
      */
-    public function fieldsProvider(): array
+    public static function fieldsProvider(): array
     {
         return [
             [
