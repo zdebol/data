@@ -26,7 +26,7 @@
         "doctrine/orm": "^2.14",
         "doctrine/persistence": "^2.3",
         "friendsofsymfony/elastica-bundle": "^6.3",
-        "fsi/files": "^2.0",
+        "fsi/files": "^2.0|>=2.0.2",
         "gedmo/doctrine-extensions": "^3.5",
         "nyholm/psr7": "^1.8",
         "oneup/flysystem-bundle": "^4.4",
@@ -52,7 +52,7 @@
         "symfony/translation": "^4.4|^5.4|^6.0",
         "symfony/twig-bridge": "^4.4|^5.4|^6.0",
         "symfony/twig-bundle": "^4.4|^5.4|^6.0",
-        "symfony/validator": "^4.4|^5.4",
+        "symfony/validator": "^4.4|^5.4|^6.0",
         "symfony/yaml": "^4.4|^5.4|^6.0",
         "seec/phpunit-consecutive-params": "^1.1.1"
     },
