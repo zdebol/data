@@ -155,7 +155,7 @@ final class TreeTest extends TestCase
         $strategy->method('getName')->willReturn('nested');
 
         $evm = $this->createMock(EventManager::class);
-        $evm->method('getListeners')->willReturn([[$treeListener]]);
+        $evm->method('getAllListeners')->willReturn([[$treeListener]]);
 
         $treeRepository = $this->createMock(RepositoryInterface::class);
         $treeRepository->method('childCount')->willReturn(2);
