@@ -13,14 +13,12 @@ namespace Tests\FSi\Component\DataSource\Driver\Doctrine\ORM;
 
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\Mapping\Driver\SymfonyFileLocator;
 use FSi\Component\DataSource\DataSourceFactory;
 use FSi\Component\DataSource\DataSourceInterface;
-use FSi\Component\DataSource\Driver\Doctrine\ORM\ORMFactory;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\Event\PreGetResult;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\Boolean;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\Date;
@@ -29,6 +27,7 @@ use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\Entity;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\Number;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\Text;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\FieldType\Time;
+use FSi\Component\DataSource\Driver\Doctrine\ORM\ORMFactory;
 use FSi\Component\DataSource\Driver\Doctrine\ORM\ORMResult;
 use FSi\Component\DataSource\Driver\DriverFactoryManager;
 use FSi\Component\DataSource\Event\PostGetParameters;
@@ -54,28 +53,6 @@ final class ORMDriverTest extends TestCase
     private EntityManager $em;
     private ?EventDispatcherInterface $eventDispatcher = null;
     private ?Storage $orderingStorage = null;
-
-    protected function setUp(): void
-    {
-        $config = Setup::createConfiguration(true, null, null);
-        $config->setMetadataDriverImpl(
-            new XmlDriver(
-                new SymfonyFileLocator(
-                    [__DIR__ . '/../../../Fixtures/doctrine' => 'Tests\FSi\Component\DataSource\Fixtures\Entity'],
-                    '.orm.xml'
-                )
-            )
-        );
-        $em = EntityManager::create(['driver' => 'pdo_sqlite', 'memory' => true], $config);
-        $tool = new SchemaTool($em);
-        $tool->createSchema([
-            $em->getClassMetadata(News::class),
-            $em->getClassMetadata(Category::class),
-            $em->getClassMetadata(Group::class),
-        ]);
-        $this->load($em);
-        $this->em = $em;
-    }
 
     public function testNumberFieldComparingWithZero(): void
     {
@@ -176,7 +153,7 @@ final class ORMDriverTest extends TestCase
                     DataSourceInterface::PARAMETER_FIELDS => [
                         'author' => 'domain1.com',
                         'title' => ['title44', 'title58'],
-                        'created' => ['from' => new DateTimeImmutable(date('Y:m:d H:i:s', 35 * 24 * 60 * 60))],
+                        'created' => ['from' => '1970-02-05 01:00:00'],
                     ],
                 ],
             ];
@@ -697,6 +674,25 @@ final class ORMDriverTest extends TestCase
         $factory = $this->getDoctrineFactory();
         $this->expectException(InvalidOptionsException::class);
         $factory->createDriver([]);
+    }
+
+    protected function setUp(): void
+    {
+        $config = Setup::createConfiguration(true, null, null);
+        $config->setMetadataDriverImpl(
+            new SimplifiedXmlDriver(
+                [__DIR__ . '/../../../Fixtures/doctrine' => 'Tests\\FSi\\Component\\DataSource\\Fixtures\\Entity'],
+            )
+        );
+        $em = EntityManager::create(['driver' => 'pdo_sqlite', 'memory' => true], $config);
+        $tool = new SchemaTool($em);
+        $tool->createSchema([
+            $em->getClassMetadata(News::class),
+            $em->getClassMetadata(Category::class),
+            $em->getClassMetadata(Group::class),
+        ]);
+        $this->load($em);
+        $this->em = $em;
     }
 
     protected function tearDown(): void

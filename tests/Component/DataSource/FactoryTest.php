@@ -13,13 +13,10 @@ namespace Tests\FSi\Component\DataSource;
 
 use FSi\Component\DataSource\DataSourceFactory;
 use FSi\Component\DataSource\Driver\Collection\CollectionFactory;
-use FSi\Component\DataSource\Driver\Collection\FieldType\Text;
 use FSi\Component\DataSource\Driver\DriverFactoryManager;
 use FSi\Component\DataSource\Exception\DataSourceException;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
-
-use function array_merge;
 
 final class FactoryTest extends TestCase
 {
