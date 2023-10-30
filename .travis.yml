@@ -2,6 +2,11 @@ language: php
 
 dist: focal
 
+addons:
+  apt:
+    packages:
+      - "libonig5"
+
 matrix:
     include:
         - php: 7.4
@@ -37,6 +42,7 @@ before_install:
     - sudo service elasticsearch restart
 
 before_script:
+    - echo 'date.timezone = "Europe/Warsaw"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
     - phpenv config-rm xdebug.ini
     - export PATH="$HOME/bin:$PATH"
     - ./install_composer.sh

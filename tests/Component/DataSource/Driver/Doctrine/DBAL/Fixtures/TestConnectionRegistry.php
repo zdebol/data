@@ -43,12 +43,12 @@ if (class_exists(\Doctrine\DBAL\Connection::class)) {
 
         public function getConnections(): array
         {
-            return [$this->connection];
+            return [$this->getDefaultConnectionName() => $this->connection];
         }
 
         public function getConnectionNames(): array
         {
-            return [$this->getDefaultConnectionName()];
+            return [$this->getDefaultConnectionName() => $this->getDefaultConnectionName()];
         }
     }
 } else {
@@ -77,12 +77,12 @@ if (class_exists(\Doctrine\DBAL\Connection::class)) {
 
         public function getConnections(): array
         {
-            return [$this->connection];
+            return [$this->getDefaultConnectionName() => $this->connection];
         }
 
         public function getConnectionNames(): array
         {
-            return [$this->getDefaultConnectionName()];
+            return [$this->getDefaultConnectionName() => $this->getDefaultConnectionName()];
         }
     }
 }

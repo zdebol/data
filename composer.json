@@ -24,7 +24,7 @@
         "doctrine/dbal": "^3.3",
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/orm": "^2.14",
-        "doctrine/persistence": "^2.3",
+        "doctrine/persistence": "^2.0|^3.0",
         "friendsofsymfony/elastica-bundle": "^6.3",
         "fsi/files": "^2.0|>=2.0.2",
         "gedmo/doctrine-extensions": "^3.5",

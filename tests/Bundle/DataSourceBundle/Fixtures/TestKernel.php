@@ -45,9 +45,14 @@ final class TestKernel extends Kernel
         ];
     }
 
-    public function getProjectDir(): string
+    public function getCacheDir(): string
     {
-        return __DIR__;
+        return "{$this->getProjectDir()}/tests/Bundle/DataSourceBundle/Fixtures/var/cache";
+    }
+
+    public function getLogDir(): string
+    {
+        return "{$this->getProjectDir()}/tests/Bundle/DataSourceBundle/Fixtures/var/log";
     }
 
     protected function configureRoutes(RouteCollectionBuilder $routes): void
@@ -83,7 +88,7 @@ final class TestKernel extends Kernel
                 'driver' => 'pdo_sqlite',
                 'user' => 'admin',
                 'charset' => 'UTF8',
-                'path' => '%kernel.project_dir%/var/data.sqlite',
+                'path' => '%kernel.project_dir%/tests/Bundle/DataSourceBundle/Fixtures/var/data.sqlite',
                 'logging' => false
             ],
             'orm' => [
@@ -93,7 +98,7 @@ final class TestKernel extends Kernel
                     'datasource_bundle' => [
                         'mapping' => true,
                         'type' => 'xml',
-                        'dir' => '%kernel.project_dir%/../../../Component/DataSource/Fixtures/doctrine',
+                        'dir' => '%kernel.project_dir%/tests/Component/DataSource/Fixtures/doctrine',
                         'prefix' => 'Tests\FSi\Component\DataSource\Fixtures\Entity',
                         'is_bundle' => false
                     ]
